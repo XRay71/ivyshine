@@ -63,3 +63,5 @@ CheckForUpdates() {
         MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
     }
 }
+
+MsgBox("boo")
