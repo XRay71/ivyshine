@@ -14,7 +14,7 @@ CoordMode("Mouse", "Client")
 ; Check for updates
 ;=====================================
 CurrentVersionID := "001"
-CheckForUpdates()
+; CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
     WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
@@ -63,5 +63,3 @@ CheckForUpdates() {
         MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
     }
 }
-
-MsgBox("boo")
