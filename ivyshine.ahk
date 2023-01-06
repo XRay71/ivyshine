@@ -22,7 +22,7 @@ CheckForUpdates() {
     WinHttpRequest.WaitForResponse()
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
-    if (IsNumber(NewVersionID) && CurrentVersionID == NewVersionID) {
+    if (IsNumber(NewVersionID) && CurrentVersionID != NewVersionID) {
         if (!A_IsAdmin)
             Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
                 , "New version found!"
@@ -30,7 +30,7 @@ CheckForUpdates() {
         else
             Update := True
         
-        if (Update) {
+        if (Update != "No") {
             if (!A_IsAdmin) {
                 try {
                     Run("*RunAs " A_AhkPath " /restart " A_ScriptFullPath)
