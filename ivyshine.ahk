@@ -94,7 +94,7 @@ Globals["GUI"]["Settings"] := Map(
 "GuiY", "340",
 "AlwaysOnTop", "0",
 "Transparency", "0",
-"CurrentGUITab":"Settings"
+"CurrentGUITab", "Settings"
 )
 
 Globals["Settings"] := Map()
@@ -178,5 +178,5 @@ Globals["FieldConfigs"]["TestField"] := Map(
 "TestFieldStartPositionWidth", "",
 "TestFieldReturnMethod", "",
 "TestFieldTurnCamera", "",
-"TestFieldTurnCameraNum"
+"TestFieldTurnCameraNum", ""
 )
