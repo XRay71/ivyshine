@@ -17,7 +17,7 @@ CurrentVersionID := "001"
 CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
-    WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine-macro-old/main/version.txt", true)
+    WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
     WinHttpRequest.Send()
     WinHttpRequest.WaitForResponse()
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
