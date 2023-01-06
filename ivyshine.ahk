@@ -39,7 +39,7 @@ CheckForUpdates() {
             }
             
             Try {
-                Download("https://github.com/XRay71/ivyshine-macro/archive/main.zip", "NewVersion.zip")
+                Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
             } Catch Any {
                 MsgBox("Something went wrong while downloading the update!`r`nNothing has been changed.", "Error!", "OK Iconx")
                 if (FileExist("NewVersion.zip"))
