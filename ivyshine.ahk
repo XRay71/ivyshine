@@ -1,14 +1,31 @@
 #NoTrayIcon
-#WinActivateForce ; skips "gentle" window activation
-#UseHook True ; prevents hotkeys from being triggered by send commands
+#WinActivateForce
+#UseHook True
 #MaxThreads 255
 #SingleInstance Force
 #Include "%A_ScriptDir%"
-#Requires AutoHotkey v2.0 32-bit ; this script is written in v2 syntax
+#Requires AutoHotkey v2.0 32-bit
 
-SetWorkingDir(A_ScriptDir) ; sets working directory to be itself
-CoordMode("Pixel", "Client") ; measured via the working area of the screen
+SetWorkingDir(A_ScriptDir)
+CoordMode("Pixel", "Client")
 CoordMode("Mouse", "Client")
+
+;=====================================
+; Check Resolution
+;=====================================
+; CheckResolution()
+CheckResolution() {
+    if (A_ScreenDPI != 96 || A_ScreenWidth != 1280 || A_ScreenHeight != 720) {
+        CurrentScaling := Floor(A_ScreenDPI / 96 * 100)
+        MsgBox("The images taken for this macro were created for 1280x720p resolution on 100`% scaling.`r`nYou are currently on " A_ScreenWidth "x" A_ScreenHeight "p with " CurrentScaling "`% scaling.`r`nThe Windows display settings tab will now be opened.`r`nPlease change the resolution to be correct.", "Warning!", "OK Iconx")
+        Run("ms-settings:display")
+        DoReload := MsgBox("Press `"OK`" when you have changed your resolution to 1280x720p with 100`% scaling. Press `"Cancel`" to continue regardless.",, "OKCancel Iconx")
+        if (DoReload == "OK")
+            Reload
+    }
+    
+    WinClose("Settings")
+}
 
 ;=====================================
 ; Check for updates
@@ -63,3 +80,103 @@ CheckForUpdates() {
         MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
     }
 }
+
+;=====================================
+; Initialising
+;=====================================
+
+Globals := Map()
+
+Globals["GUI"] := Map()
+
+Globals["GUI"]["Settings"] := Map(
+"GuiX", "0",
+"GuiY", "340",
+"AlwaysOnTop", "0",
+"Transparency", "0",
+"CurrentGUITab":"Settings"
+)
+
+Globals["Settings"] := Map()
+
+Globals["Settings"]["Basic Settings"] := Map(
+"MoveSpeed", "28",
+"MoveMethod", "Glider",
+"NumberOfSprinklers", "1",
+"HiveSlotNumber", "1",
+"PrivateServerLink", ""
+)
+
+Globals["Settings"]["Bees"] := Map(
+"HasBearBee", "1",
+"HasGiftedVicious", "1"
+)
+
+Globals["Settings"]["Hotkeys"] := Map(
+"StartHotkey", "F1",
+"PauseHotkey", "F2",
+"StopHotkey", "F3"
+)
+
+Globals["Settings"]["Keybinds"] := Map(
+"KeyboardLayout", "qwerty",
+"BaseForwardKey", "w",
+"BaseBackwardKey", "s",
+"BaseLeftKey", "a",
+"BaseRightKey", "d",
+"CameraRightKey", ".",
+"CameraLeftKey", ",",
+"CameraInKey", "i",
+"CameraOutKey", "o",
+"CameraUpKey", "PgDn",
+"CameraDownKey", "PgUp",
+"AdditionalKeyDelay", "0"
+)
+
+Globals["Settings"]["rbxfpsunlocker"] := Map(
+"Runrbxfpsunlocker", "1",
+"FPSNumber", "30"
+)
+
+Globals["Settings"]["Unlocks"] := Map(
+"UnlockedRedCannon", "1",
+"UnlockedParachute", "1",
+"UnlockedGlider", "1",
+"NumberOfBees", "50"
+)
+
+Globals["Fields"] := Map()
+
+Globals["Fields"]["Field Rotation"] := Map(
+"FieldRotationList", "Pine Tree|",
+"CurrentlySelectedField", "Pine Tree",
+"NonRotationList", "Bamboo|Blue Flower|Cactus|Clover|Coconut|Dandelion|Mountain Top|Mushroom|Pepper|Pineapple|Pumpkin|Rose|Spider|Strawberry|Stump|Sunflower|"
+)
+
+Globals["FieldConfigs"] := Map()
+
+Globals["FieldConfigs"]["TestField"] := Map(
+"TestFieldFlowerLength", "",
+"TestFieldFlowerWidth", "",
+"TestFieldNorthWall", "",
+"TestFieldEastWall", "",
+"TestFieldSouthWall", "",
+"TestFieldWestWall", "",
+"TestFieldNorthWallDistance", "",
+"TestFieldEastWallDistance", "",
+"TestFieldSouthWallDistance", "",
+"TestFieldWestWallDistance", "",
+"TestFieldGatherPattern", "",
+"TestFieldPatternLength", "",
+"TestFieldPatternWidth", "",
+"TestFieldGatherWithShiftLock", "",
+"TestFieldInvertFB", "",
+"TestFieldInvertRL", "",
+"TestFieldGatherTime", "",
+"TestFieldBagPercent", "",
+"TestFieldStartPositionLength", "",
+"TestFieldStartPositionWidth", "",
+"TestFieldReturnMethod", "",
+"TestFieldTurnCamera", "",
+"TestFieldTurnCameraNum"
+)
