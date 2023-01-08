@@ -88,8 +88,8 @@ CheckForUpdates() {
 Try
 {
     Globals["Constants"]
-    CreateIni("lib\boo.ini", Globals["Constants"])
-    FileDelete("lib\boo.ini")
+    CreateIni("lib\temp.ini", Globals["Constants"])
+    FileDelete("lib\temp.ini")
 }
 Catch Any
     MissingFilesError()
