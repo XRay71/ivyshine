@@ -102,9 +102,8 @@ Try
         If (FileExist(Globals["Constants"]["Ini FilePaths"][ini])) {
             ReadIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
             UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
-        } Else {
+        } Else
             CreateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
-        }
     }
 }
 Catch Any
