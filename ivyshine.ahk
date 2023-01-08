@@ -3,7 +3,7 @@
 #UseHook True
 #Warn All, Off
 #MaxThreads 255
-#SingleInstance Force
+#SingleInstance Ignore
 #Include %A_ScriptDir%
 #Requires AutoHotkey v2.0 32-bit
 
