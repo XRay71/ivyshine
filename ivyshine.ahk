@@ -4,7 +4,7 @@
 #Warn All, Off
 #MaxThreads 255
 #SingleInstance Force
-#Include "%A_ScriptDir%"
+#Include %A_ScriptDir%
 #Requires AutoHotkey v2.0 32-bit
 
 SetWorkingDir(A_ScriptDir)
@@ -82,13 +82,13 @@ CheckForUpdates() {
 ;=====================================
 ; Initialising
 ;=====================================x
-#Include "*i lib\ahk\init\globals.ahk"
-#Include "*i lib\ahk\init\inifunctions.ahk"
+#Include *i lib\ahk\init\globals.ahk
+#Include *i lib\ahk\init\inifunctions.ahk
 
 Try
 {
     Globals["Constants"]
-    CreateIni("lib\temp.ini", Globals["Constants"])
+    UpdateIni("lib\temp.ini", Globals["Constants"])
     FileDelete("lib\temp.ini")
 }
 Catch Any
@@ -103,12 +103,74 @@ Try
             ReadIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
             UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
         } Else
-            CreateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+            UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+        
+        ReadIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+        UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
     }
 }
 Catch Any
     UnableToCreateFileError()
+;=====================================
+; Check Monitor
+;=====================================
+EnsureGUIVisibility()
+EnsureGUIVisibility() {
+    Global Globals
+    If (!Globals["GUI"]["Settings"]["GuiX"] && !Globals["GUI"]["Settings"]["GuiY"]) {
+        Globals["GUI"]["Settings"]["GuiX"] := 0
+        Globals["GUI"]["Settings"]["GuiY"] := 340
+        Return
+    }
+    
+    Loop(MonitorGetCount()) {
+        MonitorGetWorkArea(A_Index, &CurrentMonitorLeft, &CurrentMonitorTop, &CurrentMonitorRight, &CurrentMonitorBottom)
+        If (Globals["GUI"]["Settings"]["GuiX"] < CurrentMonitorLeft || Globals["GUI"]["Settings"]["GuiX"] + 550 > CurrentMonitorRight)
+            Globals["GUI"]["Settings"]["GuiX"] := Globals["GUI"]["Settings"]["GuiX"] < CurrentMonitorLeft ? CurrentMonitorLeft : CurrentMonitorRight - 550
+        If (Globals["GUI"]["Settings"]["GuiY"] < CurrentMonitorTop || Globals["GUI"]["Settings"]["GuiY"] + 350 > CurrentMonitorBottom)
+            Globals["GUI"]["Settings"]["GuiY"] := Globals["GUI"]["Settings"]["GuiY"] < CurrentMonitorTop ? CurrentMonitorTop : CurrentMonitorBottom - 350
+    }
+}
+;=====================================
+; Run rbxfpsunlocker (modified)
+; https://github.com/axstin/rbxfpsunlocker
+;=====================================
+#Include *i lib\rbxfpsunlocker\rbxfpsunlocker.ahk
 
+For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
+    Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := Process.ExecutablePath
+Try {
+    If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"])
+        RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+} Catch Any
+    MissingFilesError()
+;=====================================
+; Creating GUI
+;=====================================
+#Include *i lib\ahk\GUI\gui.ahk
+
+;=====================================
+; Main Functions
+;=====================================
+
+StartMacro() {
+    MsgBox("Start")
+    Return
+}
+
+PauseMacro() {
+    MsgBox("Pause")
+    Return
+}
+
+StopMacro() {
+    MsgBox("Stop")
+    Return
+}
+
+;=====================================
+; Errors
+;=====================================
 MissingFilesError() {
     MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit.", "Error: file not found!", "OK Icon!")
     ExitApp

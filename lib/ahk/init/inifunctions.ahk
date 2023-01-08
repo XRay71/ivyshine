@@ -1,41 +1,33 @@
-CreateIni(FilePath, Data) {
-    For Header, Pair in Data
-    {
-        For Key, Value in Pair
-        {
-            Try
-            IniWrite(Value, FilePath, Header, Key)
-            Catch Any
-                UnableToCreateFileError()
-        }
-    }
-    Return 1
-}
-
 UpdateIni(FilePath, Data) {
+    Content := ""
     For Header, Pair in Data
     {
+        Content .= "[" Header "]`r`n"
         For Key, Value in Pair
-        {
-            Try
-            IniWrite(Data[Header][Key], FilePath, Header, Key)
-            Catch Any
-                UnableToCreateFileError()
-        }
+            Content .= Key "=" Value "`r`n"
+        Content .= "`r`n"
     }
-    Return 1
+    Try {
+        IF (FileExist(FilePath))
+            FileDelete(FilePath)
+        FileAppend(Content, FilePath)
+    } Catch Any
+        UnableToCreateFileError()
 }
 
 ReadIni(FilePath, Data) {
-    For Header, Pair in Data
+    Content := FileRead(FilePath)
+    SectionName := ""
+    Loop Parse Content, "`r`n", A_Space A_Tab
     {
-        For Key, Value in Pair
+        Switch (Substr(A_LoopField, 1, 1))
         {
-            Try
-            Data[Header][Key] := IniRead(FilePath, Header, Key)
-            Catch Any
-                MissingFilesError()
+        Case "[":
+            SectionName := Substr(A_LoopField, 2, StrLen(A_LoopField) - 2)
+        
+        Default:
+            If (EqualsIndex := InStr(A_LoopField, "="))
+                Data[SectionName][SubStr(A_LoopField, 1, EqualsIndex - 1)] := SubStr(A_LoopField, EqualsIndex + 1)
         }
     }
-    Return 1
 }

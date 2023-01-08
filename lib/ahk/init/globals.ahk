@@ -59,8 +59,9 @@ Globals["Settings"]["Keybinds"] := Map(
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
-"Runrbxfpsunlocker", "1",
-"FPSNumber", "30"
+"Runrbxfpsunlocker", "0",
+"rbxfpsunlockerDirectory", "",
+"FPS", "30"
 )
 
 Globals["Settings"]["Unlocks"] := Map(
