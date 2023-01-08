@@ -24,8 +24,8 @@ CheckResolution() {
         If (DoReload == "OK")
             Reload
     }
-    
-    WinClose("Settings")
+    If (WinExist("Settings"))
+        WinClose("Settings")
 }
 
 ;=====================================
@@ -137,8 +137,10 @@ EnsureGUIVisibility() {
 ;=====================================
 #Include *i lib\rbxfpsunlocker\rbxfpsunlocker.ahk
 
+Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ""
 For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
     Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := Process.ExecutablePath
+IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["Ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory")
 Try {
     If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"])
         RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
@@ -153,17 +155,17 @@ Try {
 ; Main Functions
 ;=====================================
 
-StartMacro() {
+StartMacro(*) {
     MsgBox("Start")
     Return
 }
 
-PauseMacro() {
+PauseMacro(*) {
     MsgBox("Pause")
     Return
 }
 
-StopMacro() {
+StopMacro(*) {
     MsgBox("Stop")
     Return
 }

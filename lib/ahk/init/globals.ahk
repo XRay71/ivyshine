@@ -9,7 +9,7 @@ Globals["Constants"]["Ini FilePaths"] := Map(
 "Fields", "lib\init\fields.ini",
 "Field Settings", "lib\init\fieldsettings.ini",
 "Boost", "lib\init\boost.ini",
-"Boost Settings", "lib\init\boostsettings.ini",
+"Boost Settings", "lib\init\boostsettings.ini"
 )
 
 Globals["GUI"] := Map()
@@ -19,7 +19,7 @@ Globals["GUI"]["Settings"] := Map(
 "GuiY", "340",
 "AlwaysOnTop", "0",
 "Transparency", "0",
-"CurrentGUITab", "Settings"
+"CurrentGUITab", "1"
 )
 
 Globals["Settings"] := Map()
@@ -59,7 +59,7 @@ Globals["Settings"]["Keybinds"] := Map(
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
-"Runrbxfpsunlocker", "0",
+"Runrbxfpsunlocker", "1",
 "rbxfpsunlockerDirectory", "",
 "FPS", "30"
 )
