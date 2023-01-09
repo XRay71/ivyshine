@@ -82,8 +82,8 @@ CheckForUpdates() {
 ;=====================================
 ; Initialising
 ;=====================================x
-#Include *i lib\ahk\init\globals.ahk
-#Include *i lib\ahk\init\inifunctions.ahk
+#Include *i lib\ahk\init\Globals.ahk
+#Include *i lib\ahk\init\ini Functions.ahk
 
 Try
 {
@@ -149,8 +149,7 @@ Try {
 ;=====================================
 ; Creating GUI
 ;=====================================
-#Include *i lib\ahk\GUI\gui.ahk
-
+#Include *i lib\ahk\GUI\Gui.ahk
 ;=====================================
 ; Main Functions
 ;=====================================
@@ -170,6 +169,18 @@ StopMacro(*) {
     Return
 }
 
+ReloadMacro() {
+    Global Globals, IvyshineGui
+    RestoreFPSUnlocker()
+    WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+    Globals["GUI"]["Settings"]["GuiX"] := GuiX
+    Globals["GUI"]["Settings"]["GuiY"] := GuiY
+    For ini, Section in Globals
+        UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+    Sleep(100)
+    Reload
+}
+
 ;=====================================
 ; Errors
 ;=====================================
@@ -182,3 +193,5 @@ UnableToCreateFileError() {
     MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit.", "Error: file not found!", "OK Icon!")
     ExitApp
 }
+
+]::ReloadMacro()

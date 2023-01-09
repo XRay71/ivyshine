@@ -28,6 +28,8 @@ MainTabs := IvyshineGui.Add("Tab3", "x0 y0 w550 h350 vMainTabs -Wrap +0x8 +Botto
 MainTabs.Choose(Integer(Globals["GUI"]["Settings"]["CurrentGUITab"]))
 MainTabs.OnEvent("Change", MainTabChanged)
 
+#Include *i IvyshineGui\Settings.ahk
+
 IvyshineGui.Show("x" Globals["GUI"]["Settings"]["GuiX"] " y" Globals["GUI"]["Settings"]["GuiY"] " w550 h350")
 
 IvyshineGuiClose(Ivyshine) {
@@ -42,7 +44,7 @@ IvyshineGuiClose(Ivyshine) {
     ExitApp
 }
 
-#Include *i MacroInfo\macroinfo.ahk
+#Include *i MacroInfoGui\Macro Info.ahk
 ShowMacroInfoGui := 0
 
 Try

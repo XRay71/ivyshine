@@ -10,12 +10,9 @@ RunFPSUnlocker(FPS := 30) {
         SendInput("{Enter}")
         BlockInput("Default")
     }
-    Sleep(100)
     DetectHiddenWindows(DetectHiddenWindowsSetting)
-    If (!FPS)
-        FPSCapSelection := 0
-    Else
-        FPSCapSelection := 1
+    Sleep(100)
+    FPSCapSelection := (FPS ? 1 : 0)
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
     FileAppend(
@@ -41,7 +38,7 @@ RestoreFPSUnlocker() {
     Global Globals
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     DetectHiddenWindows(1)
-    If WinExist("ahk_exe rbxfpsunlocker.exe")
+    If (WinExist("ahk_exe rbxfpsunlocker.exe"))
         PostMessage(0x0010, 0xF060,,, "ahk_exe rbxfpsunlocker.exe")
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     If (FileExist("lib\rbxfpsunlocker\settings"))
