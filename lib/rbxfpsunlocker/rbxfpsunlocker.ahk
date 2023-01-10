@@ -1,3 +1,5 @@
+Ranrbxfpsunlocker := 0
+
 RunFPSUnlocker(FPS := 30) {
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     DetectHiddenWindows(1)
@@ -30,21 +32,25 @@ RunFPSUnlocker(FPS := 30) {
         , "lib\rbxfpsunlocker\settings")
     Run("lib\rbxfpsunlocker\rbxfpsunlocker.exe", "lib\rbxfpsunlocker", "Hide")
     Sleep(50)
+    Ranrbxfpsunlocker := 1
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
 }
 
 RestoreFPSUnlocker() {
-    Global Globals
-    DetectHiddenWindowsSetting := A_DetectHiddenWindows
-    DetectHiddenWindows(1)
-    If (WinExist("ahk_exe rbxfpsunlocker.exe"))
-        PostMessage(0x0010, 0xF060,,, "ahk_exe rbxfpsunlocker.exe")
-    DetectHiddenWindows(DetectHiddenWindowsSetting)
-    If (FileExist("lib\rbxfpsunlocker\settings"))
-        FileDelete("lib\rbxfpsunlocker\settings")
-    Sleep(100)
-    If (Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"])
-        Run(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], StrReplace(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], "\rbxfpsunlocker.exe"), "Hide")
-    Sleep(200)
+    Global Globals, Ranrbxfpsunlocker
+    If (Ranrbxfpsunlocker)
+    {
+        DetectHiddenWindowsSetting := A_DetectHiddenWindows
+        DetectHiddenWindows(1)
+        If (WinExist("ahk_exe rbxfpsunlocker.exe"))
+            PostMessage(0x0010, 0xF060,,, "ahk_exe rbxfpsunlocker.exe")
+        DetectHiddenWindows(DetectHiddenWindowsSetting)
+        If (FileExist("lib\rbxfpsunlocker\settings"))
+            FileDelete("lib\rbxfpsunlocker\settings")
+        Sleep(100)
+        If(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"])
+            Run(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], StrReplace(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], "\rbxfpsunlocker.exe"), "Hide")
+        Sleep(200)
+    }
 }

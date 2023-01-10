@@ -2,7 +2,7 @@ Globals := Map()
 
 Globals["Constants"] := Map()
 
-Globals["Constants"]["Ini FilePaths"] := Map(
+Globals["Constants"]["ini FilePaths"] := Map(
 "Constants", "lib\init\constants.ini",
 "GUI", "lib\init\gui.ini",
 "Settings", "lib\init\settings.ini",
@@ -59,7 +59,7 @@ Globals["Settings"]["Keybinds"] := Map(
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
-"Runrbxfpsunlocker", "1",
+"Runrbxfpsunlocker", "0",
 "rbxfpsunlockerDirectory", "",
 "FPS", "30"
 )

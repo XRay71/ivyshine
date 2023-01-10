@@ -99,14 +99,14 @@ Try
     DirCreate("lib\init")
     For ini, Section in Globals
     {
-        If (FileExist(Globals["Constants"]["Ini FilePaths"][ini])) {
-            ReadIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
-            UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+        If (FileExist(Globals["Constants"]["ini FilePaths"][ini])) {
+            ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         } Else
-            UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         
-        ReadIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
-        UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+        ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
     }
 }
 Catch Any
@@ -140,7 +140,7 @@ EnsureGUIVisibility() {
 Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ""
 For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
     Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := Process.ExecutablePath
-IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["Ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory")
+IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory")
 Try {
     If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"])
         RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
@@ -176,7 +176,11 @@ ReloadMacro() {
     Globals["GUI"]["Settings"]["GuiX"] := GuiX
     Globals["GUI"]["Settings"]["GuiY"] := GuiY
     For ini, Section in Globals
-        UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+    {
+        If (ini == "Constants")
+            Continue
+        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+    }
     Sleep(100)
     Reload
 }

@@ -7,23 +7,23 @@ IvyshineGui.MarginY := 4
 
 IvyshineGui.SetFont()
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StartHotkey"]) < 5) ? "s7" : "s6", "Segoe UI")
+IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StartHotkey"]) < 5) ? "s7" : "s6", "Calibri")
 StartButton := IvyshineGui.Add("Button", "x426 y328 w30 h20 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
 StartButton.OnEvent("Click", StartMacro)
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Segoe UI")
+IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Calibri")
 PauseButton := IvyshineGui.Add("Button", "xp+30 yp wp hp Center vPauseButton", Globals["Settings"]["Hotkeys"]["PauseHotkey"])
 PauseButton.OnEvent("Click", PauseMacro)
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Segoe UI")
+IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Calibri")
 StopButton := IvyshineGui.Add("Button", "xp+30 yp wp hp Center vStopButton", Globals["Settings"]["Hotkeys"]["StopHotkey"])
 StopButton.OnEvent("Click", StopMacro)
 
-IvyShineGui.SetFont("s7", "Segoe UI")
+IvyShineGui.SetFont("s7", "Calibri")
 InfoButton := IvyshineGui.Add("Button", "x516 yp wp hp Center vInfoButton", "v" CurrentVersionID)
 InfoButton.OnEvent("Click", ShowMacroInfo)
 
-IvyshineGui.SetFont("s10 Norm cBlack", "Segoe UI")
+IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
 MainTabs := IvyshineGui.Add("Tab3", "x0 y0 w550 h350 vMainTabs -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status"])
 MainTabs.Choose(Integer(Globals["GUI"]["Settings"]["CurrentGUITab"]))
 MainTabs.OnEvent("Change", MainTabChanged)
@@ -39,7 +39,7 @@ IvyshineGuiClose(Ivyshine) {
     Globals["GUI"]["Settings"]["GuiX"] := GuiX
     Globals["GUI"]["Settings"]["GuiY"] := GuiY
     For ini, Section in Globals
-        UpdateIni(Globals["Constants"]["Ini FilePaths"][ini], Globals[ini])
+        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
     Sleep(100)
     ExitApp
 }
@@ -64,7 +64,7 @@ ShowMacroinfo(*) {
 MainTabChanged(MainTab, *) {
     Global Globals
     Globals["GUI"]["Settings"]["CurrentGUITab"] := MainTab.Value
-    IniWrite(Globals["GUI"]["Settings"]["CurrentGUITab"], Globals["Constants"]["Ini FilePaths"]["GUI"], "Settings", "CurrentGUITab")
+    IniWrite(Globals["GUI"]["Settings"]["CurrentGUITab"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "CurrentGUITab")
 }
 
 SetCueBanner(HWND, Text, Show := True)
