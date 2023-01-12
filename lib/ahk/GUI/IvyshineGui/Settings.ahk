@@ -1,15 +1,14 @@
 MainTabs.UseTab(1)
 
 #Include *i Settings\Basic Settings.ahk
-#Include *i Settings\Unlocks.ahk
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
 
-ResetButton := IvyshineGui.Add("Button", "x8 yp+26 w150 h36 vResetButton", "Restore Defaults")
+ResetButton := IvyshineGui.Add("Button", "x7 yp+26 w151 h36 vResetButton", "Restore Defaults")
 ResetButton.OnEvent("Click", ResetAll)
 
-
+#Include *i Settings\Unlocks.ahk
 
 ResetAll(*) {
     Global Globals, IvyshineGui
@@ -57,6 +56,13 @@ SubmitSettings(ThisControl, *) {
     Else If (ThisControl.Hwnd == MoveMethodList.Hwnd) {
         Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
         IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
+        
+        For Field in Globals["Field Settings"] {
+            If (!Globals["Field Settings"][Field]["SettingsModified"]) {
+                Globals["Field Settings"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Settings"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
+                IniWrite(Globals["Field Settings"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Settings"], Field, "MoveMethod")
+            }
+        }
     }
     
     Global NumberOfSprinklersList
@@ -101,7 +107,7 @@ SubmitSettings(ThisControl, *) {
         
         If (Globals["Settings"]["Unlocks"]["UnlockedParachute"]) {
             MoveMethodList.Delete()
-            MoveMethodList.Add(["Walk", "Glider", "Cannon"])
+            MoveMethodList.Add(["Default", "Walk", "Glider", "Cannon"])
             MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
@@ -122,6 +128,42 @@ SubmitSettings(ThisControl, *) {
     Else If (ThisControl.Hwnd == UnlockedGliderCheckBox.Hwnd) {
         Globals["Settings"]["Unlocks"]["UnlockedGlider"] := UnlockedGliderCheckBox.Value
         IniWrite(Globals["Settings"]["Unlocks"]["UnlockedGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedGlider")
+    }
+    
+    Global HasGummyMaskCheckBox
+    Else If (ThisControl.Hwnd == HasGummyMaskCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasGummyMask"] := HasGummyMaskCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasGummyMask"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGummyMask")
+    }
+    
+    Global HasDiamondMaskCheckBox
+    Else If (ThisControl.Hwnd == HasDiamondMaskCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasDiamondMask"] := HasDiamondMaskCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasDiamondMask"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasDiamondMask")
+    }
+    
+    Global HasDemonMaskCheckBox
+    Else If (ThisControl.Hwnd == HasDemonMaskCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasDemonMask"] := HasDemonMaskCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasDemonMask"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasDemonMask")
+    }
+    
+    Global HasPetalWandCheckBox
+    Else If (ThisControl.Hwnd == HasPetalWandCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasPetalWand"] := HasPetalWandCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasPetalWand"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasPetalWand")
+    }
+    
+    Global HasTidePopperCheckBox
+    Else If (ThisControl.Hwnd == HasTidePopperCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasTidePopper"] := HasTidePopperCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasTidePopper"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasTidePopper")
+    }
+    
+    Global HasDarkScytheCheckBox
+    Else If (ThisControl.Hwnd == HasDarkScytheCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasDarkScythe"] := HasDarkScytheCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasDarkScythe"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasDarkScythe")
     }
     
     Global NumberOfBeesEdit

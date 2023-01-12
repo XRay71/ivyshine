@@ -11,7 +11,7 @@ MoveSpeedEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(MoveSpeedEdit.Hwnd, Round(Number(Globals["Settings"]["Basic Settings"]["MoveSpeed"]), 2))
 
 IvyshineGui.Add("Text", "x16 yp+23 h20 -Wrap +BackgroundTrans", "Move Method")
-MoveMethodList := IvyshineGui.Add("DropDownList", "x90 yp-3 w60 vMoveMethodList", ["Walk", "Glider", "Cannon"])
+MoveMethodList := IvyshineGui.Add("DropDownList", "x90 yp-3 w60 vMoveMethodList", ["Default", "Walk", "Glider", "Cannon"])
 MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
 MoveMethodList.OnEvent("Change", SubmitSettings)
 
