@@ -1,8 +1,15 @@
 MainTabs.UseTab(1)
 
 #Include *i Settings\Basic Settings.ahk
-ResetButton := IvyshineGui.Add("Button", "x424 y280 w116 h33 vResetButton", "Restore Defaults")
+#Include *i Settings\Unlocks.ahk
+
+IvyshineGui.SetFont()
+IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
+
+ResetButton := IvyshineGui.Add("Button", "x8 yp+26 w150 h36 vResetButton", "Restore Defaults")
 ResetButton.OnEvent("Click", ResetAll)
+
+
 
 ResetAll(*) {
     Global Globals, IvyshineGui
@@ -40,31 +47,28 @@ SubmitSettings(ThisControl, *) {
         If (IsNumber(NewMoveSpeed) && NewMoveSpeed <= 50 && NewMoveSpeed > 0) {
             NewMoveSpeed := Round(Number(NewMoveSpeed), 2)
             Globals["Settings"]["Basic Settings"]["MoveSpeed"] := NewMoveSpeed
-            IniWrite(NewMoveSpeed, Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveSpeed")
-            SetCueBanner(MoveSpeedEdit.Hwnd, NewMoveSpeed)
+            IniWrite(Globals["Settings"]["Basic Settings"]["MoveSpeed"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveSpeed")
+            SetCueBanner(MoveSpeedEdit.Hwnd, Globals["Settings"]["Basic Settings"]["MoveSpeed"])
         }
         MoveSpeedEdit.Text := MoveSpeedEdit.Value := ""
     }
     
     Global MoveMethodList
     Else If (ThisControl.Hwnd == MoveMethodList.Hwnd) {
-        NewMoveMethod := MoveMethodList.Text
-        Globals["Settings"]["Basic Settings"]["MoveMethod"] := NewMoveMethod
-        IniWrite(NewMoveMethod, Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
+        Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
+        IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
     }
     
     Global NumberOfSprinklersList
     Else If (ThisControl.Hwnd == NumberOfSprinklersList.Hwnd) {
-        NewNumberOfSprinklers := NumberOfSprinklersList.Value
-        Globals["Settings"]["Basic Settings"]["NumberOfSprinklers"] := NewNumberOfSprinklers
-        IniWrite(NewNumberOfSprinklers, Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "NumberOfSprinklers")
+        Globals["Settings"]["Basic Settings"]["NumberOfSprinklers"] := NumberOfSprinklersList.Value
+        IniWrite(Globals["Settings"]["Basic Settings"]["NumberOfSprinklers"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "NumberOfSprinklers")
     }
     
     Global HiveSlotList
     Else If (ThisControl.Hwnd == HiveSlotList.Hwnd) {
-        NewHiveSlotNumber := HiveSlotList.Value
-        Globals["Settings"]["Basic Settings"]["HiveSlotNumber"] := NewHiveSlotNumber
-        IniWrite(NewHiveSlotNumber, Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "HiveSlotNumber")
+        Globals["Settings"]["Basic Settings"]["HiveSlotNumber"] := HiveSlotList.Value
+        IniWrite(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "HiveSlotNumber")
     }
     
     Global PrivateServerLinkEdit
@@ -75,11 +79,60 @@ SubmitSettings(ThisControl, *) {
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         Else If ((!NewPrivateServerLink && SubmitButton)|| RegExMatch(NewPrivateServerLink, "i)^((http(s)?):\/\/)?((www|web)\.)?roblox\.com\/games\/(1537690962|4189852503)\/?([^\/]*)\?privateServerLinkCode=.{32}(\&[^\/]*)*$")) {
             Globals["Settings"]["Basic Settings"]["PrivateServerLink"] := NewPrivateServerLink
-            IniWrite(NewPrivateServerLink, Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
-            SetCueBanner(PrivateServerLinkEdit.Hwnd, NewPrivateServerLink)
+            IniWrite(Globals["Settings"]["Basic Settings"]["PrivateServerLink"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
+            SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         } Else{
             PrivateServerLinkMsgBoxResponded := MsgBox("It appears that the link you provided is invalid!`r`nPlease copy and paste it directly from the private server configuration page.", "Error: invalid link.", "OK Icon! Owner" IvyshineGui.Hwnd)
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         }
+    }
+    
+    Global UnlockedRedCannonCheckBox
+    Else If (ThisControl.Hwnd == UnlockedRedCannonCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["UnlockedRedCannon"] := UnlockedRedCannonCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedRedCannon"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedRedCannon")
+    }
+    
+    Global UnlockedParachuteCheckBox
+    Global UnlockedGliderCheckBox
+    Else If (ThisControl.Hwnd == UnlockedParachuteCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["UnlockedParachute"] := UnlockedParachuteCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedParachute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedParachute")
+        
+        If (Globals["Settings"]["Unlocks"]["UnlockedParachute"]) {
+            MoveMethodList.Delete()
+            MoveMethodList.Add(["Walk", "Glider", "Cannon"])
+            MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
+            Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
+            IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
+            UnlockedGliderCheckBox.Enabled := True
+        } Else {
+            MoveMethodList.Delete()
+            MoveMethodList.Add(["Walk"])
+            MoveMethodList.Choose("Walk")
+            Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
+            IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
+            UnlockedGliderCheckBox.Enabled := False
+            UnlockedGliderCheckBox.Value := 0
+            Globals["Settings"]["Unlocks"]["UnlockedGlider"] := UnlockedGliderCheckBox.Value
+            IniWrite(Globals["Settings"]["Unlocks"]["UnlockedGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedGlider")
+        }
+    }
+    
+    Else If (ThisControl.Hwnd == UnlockedGliderCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["UnlockedGlider"] := UnlockedGliderCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedGlider")
+    }
+    
+    Global NumberOfBeesEdit
+    Else If (ThisControl.Hwnd == NumberOfBeesEdit.Hwnd) {
+        NewNumberOfBees := Trim(NumberOfBeesEdit.Value)
+        If (IsInteger(NewNumberOfBees) && NewNumberOfBees <= 50 && NewNumberOfBees > 0) {
+            NewNumberOfBees := Round(Integer(NewNumberOfBees))
+            Globals["Settings"]["Basic Settings"]["NumberOfBees"] := NewNumberOfBees
+            IniWrite(Globals["Settings"]["Basic Settings"]["NumberOfBees"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "NumberOfBees")
+            SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Basic Settings"]["NumberOfBees"])
+        }
+        NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
     }
 }
