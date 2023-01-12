@@ -1,10 +1,11 @@
-#NoTrayIcon
+; #NoTrayIcon
 #WinActivateForce
 #UseHook True
 #Warn All, Off
 #MaxThreads 255
 #SingleInstance Ignore
 #Include %A_ScriptDir%
+#Include *i Settings\Basic Settings.ahk
 #Requires AutoHotkey v2.0 32-bit
 
 SetWorkingDir(A_ScriptDir)
@@ -153,6 +154,10 @@ Try {
 ;=====================================
 ; Main Functions
 ;=====================================
+
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
 
 StartMacro(*) {
     MsgBox("Start")

@@ -1,14 +1,26 @@
 MainTabs.UseTab(1)
 
 #Include *i Settings\Basic Settings.ahk
+#Include *i Settings\rbxfpsunlocker.ahk
+#Include *i Settings\Bees.ahk
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
 
-ResetButton := IvyshineGui.Add("Button", "x7 yp+26 w151 h36 vResetButton", "Restore Defaults")
+ResetButton := IvyshineGui.Add("Button", "x7 ys+50 w151 h20 vResetButton", "Restore Defaults")
 ResetButton.OnEvent("Click", ResetAll)
 
 #Include *i Settings\Unlocks.ahk
+#Include *i Settings\Hotkeys.ahk
+#Include *i Settings\Keybinds.ahk
+
+#Include *i ..\EditHotkeysGui\Edit Hotkeys.ahk
+ShowEditHotkeysGui := 0
+
+Try
+EditHotkeysGui.Show("Hide")
+Catch Any
+    MissingFilesError()
 
 ResetAll(*) {
     Global Globals, IvyshineGui
@@ -87,47 +99,95 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["PrivateServerLink"] := NewPrivateServerLink
             IniWrite(Globals["Settings"]["Basic Settings"]["PrivateServerLink"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
-        } Else{
+        } Else {
             PrivateServerLinkMsgBoxResponded := MsgBox("It appears that the link you provided is invalid!`r`nPlease copy and paste it directly from the private server configuration page.", "Error: invalid link.", "OK Icon! Owner" IvyshineGui.Hwnd)
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         }
     }
     
-    Global UnlockedRedCannonCheckBox
-    Else If (ThisControl.Hwnd == UnlockedRedCannonCheckBox.Hwnd) {
-        Globals["Settings"]["Unlocks"]["UnlockedRedCannon"] := UnlockedRedCannonCheckBox.Value
-        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedRedCannon"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedRedCannon")
+    Global RunrbxfpsunlockerCheckBox
+    Global FPSEdit
+    Else If (ThisControl.Hwnd == RunrbxfpsunlockerCheckBox.Hwnd) {
+        Global Ranrbxfpsunlocker
+        Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"] := RunrbxfpsunlockerCheckBox.Value
+        IniWrite(Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "Runrbxfpsunlocker")
+        FPSEdit.Enabled := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
+        If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]) {
+            SetCueBanner(FPSEdit.Hwnd, (Globals["Settings"]["rbxfpsunlocker"]["FPS"] == 0 ? "inf" : Globals["Settings"]["rbxfpsunlocker"]["FPS"]))
+            RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+        } Else {
+            RestoreFPSUnlocker()
+        }
     }
     
-    Global UnlockedParachuteCheckBox
-    Global UnlockedGliderCheckBox
-    Else If (ThisControl.Hwnd == UnlockedParachuteCheckBox.Hwnd) {
-        Globals["Settings"]["Unlocks"]["UnlockedParachute"] := UnlockedParachuteCheckBox.Value
-        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedParachute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedParachute")
+    Else If (ThisControl.Hwnd == FPSEdit.Hwnd) {
+        Global Ranrbxfpsunlocker
+        If (FPSEdit.Value == "" && !SubmitButton)
+            Return
+        Globals["Settings"]["rbxfpsunlocker"]["FPS"] := (FPSEdit.Value ? FPSEdit.Value : 0)
+        IniWrite(Globals["Settings"]["rbxfpsunlocker"]["FPS"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "FPS")
+        SetCueBanner(FPSEdit.Hwnd, (Globals["Settings"]["rbxfpsunlocker"]["FPS"] == 0 ? "inf" : Globals["Settings"]["rbxfpsunlocker"]["FPS"]))
+        FPSEdit.Value := FPSEdit.Text := ""
+        RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+    }
+    
+    Global HasBearBeeCheckBox
+    Else If (ThisControl.Hwnd == HasBearBeeCheckBox.Hwnd) {
+        Globals["Settings"]["Bees"]["HasBearBee"] := HasBearBeeCheckBox.Value
+        IniWrite(Globals["Settings"]["Bees"]["HasBearBee"], Globals["Constants"]["ini FilePaths"]["Settings"], "Bees", "HasBearBee")
+    }
+    
+    Global HasGiftedViciousCheckBox
+    Else If (ThisControl.Hwnd == HasGiftedViciousCheckBox.Hwnd) {
+        Globals["Settings"]["Bees"]["HasGiftedVicious"] := HasGiftedViciousCheckBox.Value
+        IniWrite(Globals["Settings"]["Bees"]["HasGiftedVicious"], Globals["Constants"]["ini FilePaths"]["Settings"], "Bees", "HasGiftedVicious")
+    }
+    
+    Global HasRedCannonCheckBox
+    Else If (ThisControl.Hwnd == HasRedCannonCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasRedCannon"] := HasRedCannonCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasRedCannon"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasRedCannon")
+    }
+    
+    Global HasParachuteCheckBox
+    Global HasGliderCheckBox
+    Else If (ThisControl.Hwnd == HasParachuteCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasParachute"] := HasParachuteCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasParachute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasParachute")
         
-        If (Globals["Settings"]["Unlocks"]["UnlockedParachute"]) {
+        If (Globals["Settings"]["Unlocks"]["HasParachute"]) {
             MoveMethodList.Delete()
             MoveMethodList.Add(["Default", "Walk", "Glider", "Cannon"])
             MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
-            UnlockedGliderCheckBox.Enabled := True
+            HasGliderCheckBox.Enabled := True
+            For Field in Globals["Field Settings"] {
+                If (!Globals["Field Settings"][Field]["SettingsModified"]) {
+                    Globals["Field Settings"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Settings"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
+                    IniWrite(Globals["Field Settings"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Settings"], Field, "MoveMethod")
+                }
+            }
         } Else {
             MoveMethodList.Delete()
             MoveMethodList.Add(["Walk"])
             MoveMethodList.Choose("Walk")
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
-            UnlockedGliderCheckBox.Enabled := False
-            UnlockedGliderCheckBox.Value := 0
-            Globals["Settings"]["Unlocks"]["UnlockedGlider"] := UnlockedGliderCheckBox.Value
-            IniWrite(Globals["Settings"]["Unlocks"]["UnlockedGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedGlider")
+            HasGliderCheckBox.Enabled := False
+            HasGliderCheckBox.Value := 0
+            Globals["Settings"]["Unlocks"]["HasGlider"] := HasGliderCheckBox.Value
+            IniWrite(Globals["Settings"]["Unlocks"]["HasGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGlider")
+            For Field in Globals["Field Settings"] {
+                Globals["Field Settings"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Settings"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
+                IniWrite(Globals["Field Settings"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Settings"], Field, "MoveMethod")
+            }
         }
     }
     
-    Else If (ThisControl.Hwnd == UnlockedGliderCheckBox.Hwnd) {
-        Globals["Settings"]["Unlocks"]["UnlockedGlider"] := UnlockedGliderCheckBox.Value
-        IniWrite(Globals["Settings"]["Unlocks"]["UnlockedGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "UnlockedGlider")
+    Else If (ThisControl.Hwnd == HasGliderCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasGlider"] := HasGliderCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGlider")
     }
     
     Global HasGummyMaskCheckBox

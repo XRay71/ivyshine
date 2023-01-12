@@ -25,7 +25,7 @@ HiveSlotList := IvyshineGui.Add("DropDownList", "x65 yp-3 w85 vHiveSlotList", ["
 HiveSlotList.Choose(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"])
 HiveSlotList.OnEvent("Change", SubmitSettings)
 
-IvyshineGui.Add("Text", "x16 yp+24 h20 -Wrap +BackgroundTrans", "Private Server Link")
+IvyshineGui.Add("Text", "x16 yp+24 h20 -Wrap +BackgroundTrans", "Private Server Link:")
 PrivateServerLinkEdit := IvyshineGui.Add("Edit", "x16 yp+16 w134 vPrivateServerLinkEdit")
 PrivateServerLinkEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])

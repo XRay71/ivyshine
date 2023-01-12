@@ -6,21 +6,18 @@ IvyshineGui.MarginX := 4
 IvyshineGui.MarginY := 4
 
 IvyshineGui.SetFont()
+IvyshineGui.SetFont("s7", "Calibri")
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StartHotkey"]) < 5) ? "s7" : "s6", "Calibri")
-StartButton := IvyshineGui.Add("Button", "x426 y328 w30 h20 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
+StartButton := IvyshineGui.Add("Button", "x390 y328 w40 h20 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
 StartButton.OnEvent("Click", StartMacro)
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Calibri")
-PauseButton := IvyshineGui.Add("Button", "xp+30 yp wp hp Center vPauseButton", Globals["Settings"]["Hotkeys"]["PauseHotkey"])
+PauseButton := IvyshineGui.Add("Button", "xp+40 yp wp hp Center vPauseButton", Globals["Settings"]["Hotkeys"]["PauseHotkey"])
 PauseButton.OnEvent("Click", PauseMacro)
 
-IvyshineGui.SetFont((StrLen(Globals["Settings"]["Hotkeys"]["StopHotkey"]) < 5) ? "s7" : "s6", "Calibri")
-StopButton := IvyshineGui.Add("Button", "xp+30 yp wp hp Center vStopButton", Globals["Settings"]["Hotkeys"]["StopHotkey"])
+StopButton := IvyshineGui.Add("Button", "xp+40 yp wp hp Center vStopButton", Globals["Settings"]["Hotkeys"]["StopHotkey"])
 StopButton.OnEvent("Click", StopMacro)
 
-IvyShineGui.SetFont("s7", "Calibri")
-InfoButton := IvyshineGui.Add("Button", "x516 yp wp hp Center vInfoButton", "v" CurrentVersionID)
+InfoButton := IvyshineGui.Add("Button", "x510 yp wp hp Center vInfoButton", "v" CurrentVersionID)
 InfoButton.OnEvent("Click", ShowMacroInfo)
 
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
@@ -56,7 +53,7 @@ ShowMacroinfo(*) {
     Global ShowMacroInfoGui
     ShowMacroInfoGui := !ShowMacroInfoGui
     If (ShowMacroInfoGui)
-        MacroInfoGui.Show("AutoSize NoActivate")
+        MacroInfoGui.Show("AutoSize")
     Else
         MacroInfoGui.Hide()
 }
