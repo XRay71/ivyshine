@@ -30,6 +30,12 @@ Globals["Settings"]["AntiAFK"] := Map(
 "LastRun", A_NowUTC
 )
 
+Globals["Settings"]["Autoclicker"] := Map(
+"ClickAmount", "0",
+"ClickInterval", "10",
+"ClickCounter", "0"
+)
+
 Globals["Settings"]["Basic Settings"] := Map(
 "MoveSpeed", "28",
 "MoveMethod", "Default",
@@ -46,7 +52,8 @@ Globals["Settings"]["Collect/Kill"] := Map(
 Globals["Settings"]["Hotkeys"] := Map(
 "StartHotkey", "F1",
 "PauseHotkey", "F2",
-"StopHotkey", "F3"
+"StopHotkey", "F3",
+"AutoclickerHotkey", "F4"
 )
 
 Globals["Settings"]["Keybinds"] := Map(

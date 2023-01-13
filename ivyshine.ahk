@@ -166,6 +166,7 @@ ReleaseAllKeys()
 Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
 Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
 Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick)
 
 StartMacro(*) {
     MsgBox("Start")

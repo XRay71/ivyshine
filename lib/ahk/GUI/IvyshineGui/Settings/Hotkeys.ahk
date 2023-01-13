@@ -24,9 +24,10 @@ ShowHotkeysInfo(*) {
 PreviousEditHotkeysControl := ""
 
 StartEditHotkeys(ThisControl, *) {
+    Global Globals
     Global ShowEditHotkeysGui, PreviousEditHotkeysControl
-    Global StartHotkeyButton, PauseHotkeyButton, StopHotkeyButton
-    Global StartHotkeyHotkey, PauseHotkeyHotkey, StopHotkeyHotkey, EditHotkeysText
+    Global StartHotkeyButton, PauseHotkeyButton, StopHotkeyButton, AutoclickerHotkeyButton
+    Global StartHotkeyHotkey, PauseHotkeyHotkey, StopHotkeyHotkey, AutoclickerHotkeyHotkey, EditHotkeysText
     
     If (ThisControl.Hwnd == StartHotkeyButton.Hwnd) {
         StartHotkeyHotkey.Visible := 1
@@ -34,6 +35,7 @@ StartEditHotkeys(ThisControl, *) {
         StartHotkeyHotkey.Focus()
         PauseHotkeyHotkey.Visible := 0
         StopHotkeyHotkey.Visible := 0
+        AutoclickerHotkeyHotkey.Visible := 0
         EditHotkeysText.Text := "Editing the Start Hotkey (press enter to submit):"
     } Else If (ThisControl.Hwnd == PauseHotkeyButton.Hwnd) {
         StartHotkeyHotkey.Visible := 0
@@ -41,23 +43,49 @@ StartEditHotkeys(ThisControl, *) {
         PauseHotkeyHotkey.Value := Globals["Settings"]["Hotkeys"]["PauseHotkey"]
         PauseHotkeyHotkey.Focus()
         StopHotkeyHotkey.Visible := 0
+        AutoclickerHotkeyHotkey.Visible := 0
         EditHotkeysText.Text := "Editing the Pause Hotkey (press enter to submit):"
-        
     } Else If (ThisControl.Hwnd == StopHotkeyButton.Hwnd) {
         StartHotkeyHotkey.Visible := 0
         PauseHotkeyHotkey.Visible := 0
         StopHotkeyHotkey.Visible := 1
         StopHotkeyHotkey.Value := Globals["Settings"]["Hotkeys"]["StopHotkey"]
         StopHotkeyHotkey.Focus()
+        AutoclickerHotkeyHotkey.Visible := 0
         EditHotkeysText.Text := "Editing the Stop Hotkey (press enter to submit):"
+    } Else If (ThisControl.Hwnd == AutoclickerHotkeyButton.Hwnd) {
+        StartHotkeyHotkey.Visible := 0
+        PauseHotkeyHotkey.Visible := 0
+        StopHotkeyHotkey.Visible := 0
+        AutoclickerHotkeyHotkey.Visible := 1
+        AutoclickerHotkeyHotkey.Value := Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"]
+        AutoclickerHotkeyHotkey.Focus()
+        EditHotkeysText.Text := "Editing the Autoclicker Hotkey (press enter to submit):"
     }
     
     If (!PreviousEditHotkeysControl || ThisControl.Hwnd == PreviousEditHotkeysControl.Hwnd) {
         ShowEditHotkeysGui := !ShowEditHotkeysGui
-        If (ShowEditHotkeysGui)
+        If (ShowEditHotkeysGui){
+            Try {
+                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
+                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
+                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
+                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
+            }
             EditHotkeysGui.Show("AutoSize NoActivate")
-        Else
+        } Else {
+            Try {
+                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
+                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
+                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
+                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick)
+                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "On")
+                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "On")
+                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "On")
+                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "On")
+            }
             EditHotkeysGui.Hide()
+        }
     }
     
     PreviousEditHotkeysControl := ThisControl

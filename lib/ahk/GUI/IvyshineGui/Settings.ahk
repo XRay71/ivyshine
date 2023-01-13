@@ -381,4 +381,25 @@ SubmitSettings(ThisControl, *) {
         SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"])
         AdditionalKeyDelayEdit.Value := AdditionalKeyDelayEdit.Text := ""
     }
+    
+    Global AutoclickerIntervalEdit
+    Else If (ThisControl.Hwnd == AutoclickerIntervalEdit.Hwnd) {
+        If (IsNumber(AutoclickerIntervalEdit.Value) && AutoclickerIntervalEdit.Value > 0) {
+            Globals["Settings"]["Autoclicker"]["ClickInterval"] := AutoclickerIntervalEdit.Value
+            IniWrite(Globals["Settings"]["Autoclicker"]["ClickInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Autoclicker", "ClickInterval")
+            SetCueBanner(AutoclickerIntervalEdit.Hwnd, Globals["Settings"]["Autoclicker"]["ClickInterval"])
+        }
+        AutoclickerIntervalEdit.Value := AutoclickerIntervalEdit.Text := ""
+    }
+    
+    Global AutoclickerAmountEdit
+    Else If (ThisControl.Hwnd == AutoclickerAmountEdit.Hwnd) {
+        If (AutoclickerAmountEdit.Value == "" && !SubmitButton)
+            Return
+        Globals["Settings"]["Autoclicker"]["ClickAmount"] := (AutoclickerAmountEdit.Value ? AutoclickerAmountEdit.Value : "0")
+        IniWrite(Globals["Settings"]["Autoclicker"]["ClickAmount"], Globals["Constants"]["ini FilePaths"]["Settings"], "Autoclicker", "ClickAmount")
+        SetCueBanner(AutoclickerAmountEdit.Hwnd, (Globals["Settings"]["Autoclicker"]["ClickAmount"] ? Globals["Settings"]["Autoclicker"]["ClickAmount"] : "infinite"))
+        AutoclickerAmountEdit.Value := AutoclickerAmountEdit.Text := ""
+        Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
+    }
 }
