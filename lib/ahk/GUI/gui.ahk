@@ -8,7 +8,7 @@ IvyshineGui.MarginY := 4
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s7", "Calibri")
 
-StartButton := IvyshineGui.Add("Button", "x390 y328 w40 h20 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
+StartButton := IvyshineGui.Add("Button", "x390 y329 w40 h20 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
 StartButton.OnEvent("Click", StartMacro)
 
 PauseButton := IvyshineGui.Add("Button", "xp+40 yp wp hp Center vPauseButton", Globals["Settings"]["Hotkeys"]["PauseHotkey"])

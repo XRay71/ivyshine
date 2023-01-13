@@ -8,6 +8,7 @@
 #Include *i Settings\Basic Settings.ahk
 #Requires AutoHotkey v2.0 32-bit
 
+Thread("NoTimers", True)
 SetWorkingDir(A_ScriptDir)
 CoordMode("Pixel", "Client")
 CoordMode("Mouse", "Client")
@@ -155,12 +156,20 @@ Try {
 ; Main Functions
 ;=====================================
 
+#Include *i lib\ahk\Main\Functions.ahk
+
+; Try
+ReleaseAllKeys()
+; Catch Any
+;     MissingFilesError()
+
 Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
 Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
 Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
 
 StartMacro(*) {
     MsgBox("Start")
+    ReleaseAllKeys()
     Return
 }
 

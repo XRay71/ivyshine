@@ -32,7 +32,7 @@ EditHotkeysGuiClose(*) {
 
 SubmitEditHotkeys(*) {
     Global Globals
-    Global EditHotkeysGui
+    Global EditHotkeysGui, IvyshineGui
     Global StartHotkeyHotkey, PauseHotkeyHotkey, StopHotkeyHotkey
     
     ThisControl := EditHotkeysGui.FocusedCtrl

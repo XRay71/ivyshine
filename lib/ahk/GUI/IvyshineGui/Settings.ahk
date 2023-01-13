@@ -12,10 +12,13 @@ ResetButton.OnEvent("Click", ResetAll)
 
 #Include *i Settings\Unlocks.ahk
 #Include *i Settings\Hotkeys.ahk
+#Include *i Settings\Miscellaneous.ahk
+#Include *i Settings\AntiAFK.ahk
 #Include *i Settings\Keybinds.ahk
+#Include *i Settings\Autoclicker.ahk
 
 #Include *i ..\EditHotkeysGui\Edit Hotkeys.ahk
-ShowEditHotkeysGui := 0
+ShowEditHotkeysGui := False
 
 Try
 EditHotkeysGui.Show("Hide")
@@ -45,11 +48,11 @@ SubmitSettings(ThisControl, *) {
     Global Globals
     Global IvyshineGui
     
-    SubmitButton := 0
+    SubmitButton := False
     Global SubmitSettingsButton
     If (ThisControl.Hwnd == SubmitSettingsButton.Hwnd) {
         ThisControl := IvyshineGui.FocusedCtrl
-        SubmitButton := 1
+        SubmitButton := True
     }
     
     Global MoveSpeedEdit
@@ -175,7 +178,7 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
             HasGliderCheckBox.Enabled := False
-            HasGliderCheckBox.Value := 0
+            HasGliderCheckBox.Value := False
             Globals["Settings"]["Unlocks"]["HasGlider"] := HasGliderCheckBox.Value
             IniWrite(Globals["Settings"]["Unlocks"]["HasGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGlider")
             For Field in Globals["Field Settings"] {
@@ -236,5 +239,146 @@ SubmitSettings(ThisControl, *) {
             SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Basic Settings"]["NumberOfBees"])
         }
         NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
+    }
+    
+    Global RunAntiAFKCheckBox, AntiAFKEdit, AntiAFKDescriptorText, AntiAFKProgress
+    Else If (ThisControl.Hwnd == RunAntiAFKCheckBox.Hwnd) {
+        Globals["Settings"]["AntiAFK"]["RunAntiAFK"] := RunAntiAFKCheckBox.Value
+        IniWrite(Globals["Settings"]["AntiAFK"]["RunAntiAFK"], Globals["Constants"]["ini FilePaths"]["Settings"], "AntiAFK", "RunAntiAFK")
+        If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
+            AntiAFKEdit.Enabled := True
+            AntiAFKEdit.Value := AntiAFKEdit.Text := ""
+            SetCueBanner(AntiAFKEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"])
+            AntiAFKDescriptorText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] == 1 ? " minute." : " minutes.")
+            Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
+            SetTimer(AntiAFK, 500, -1)
+            AntiAFKProgress.Value := 0
+        } Else {
+            AntiAFKEdit.Enabled := False
+            SetTimer(AntiAFK, 0)
+            AntiAFKProgress.Value := 0
+            AntiAFKDescriptorText.Text := " minutes."
+        }
+    }
+    
+    Else If (ThisControl.Hwnd == AntiAFKEdit.Hwnd) {
+        If (IsNumber(AntiAFKEdit.Value) && AntiAFKEdit.Value > 0 && AntiAFKEdit.Value <= 20) {
+            Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] := Round(Number(AntiAFKEdit.Value))
+            IniWrite(Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"], Globals["Constants"]["ini FilePaths"]["Settings"], "AntiAFK", "AntiAFKLoopTimeMinutes")
+            SetCueBanner(AntiAFKEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"])
+            AntiAFKDescriptorText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] == 1 ? " minute." : " minutes.")
+            AntiAFKProgress.Opt("Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] * 60))
+        }
+        AntiAFKEdit.Value := AntiAFKEdit.Text := ""
+    }
+    
+    Global ForwardKeyEdit
+    Else If (ThisControl.Hwnd == ForwardKeyEdit.Hwnd) {
+        If (ForwardKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["BaseForwardKey"] := ForwardKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["BaseForwardKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "BaseForwardKey")
+        SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseForwardKey"])
+        ForwardKeyEdit.Value := ForwardKeyEdit.Text := ""
+    }
+    
+    Global LeftKeyEdit
+    Else If (ThisControl.Hwnd == LeftKeyEdit.Hwnd) {
+        If (LeftKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["BaseLeftKey"] := LeftKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["BaseLeftKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "BaseLeftKey")
+        SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseLeftKey"])
+        LeftKeyEdit.Value := LeftKeyEdit.Text := ""
+    }
+    
+    Global BackwardKeyEdit
+    Else If (ThisControl.Hwnd == BackwardKeyEdit.Hwnd) {
+        If (BackwardKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["BaseBackwardKey"] := BackwardKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["BaseBackwardKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "BaseBackwardKey")
+        SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseBackwardKey"])
+        BackwardKeyEdit.Value := BackwardKeyEdit.Text := ""
+    }
+    
+    Global RightKeyEdit
+    Else If (ThisControl.Hwnd == RightKeyEdit.Hwnd) {
+        If (RightKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["BaseRightKey"] := RightKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["BaseRightKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "BaseRightKey")
+        SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseRightKey"])
+        RightKeyEdit.Value := RightKeyEdit.Text := ""
+    }
+    
+    Global CameraRightKeyEdit
+    Else If (ThisControl.Hwnd == CameraRightKeyEdit.Hwnd) {
+        If (CameraRightKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["CameraRightKey"] := CameraRightKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["CameraRightKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraRightKey")
+        SetCueBanner(CameraRightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraRightKey"])
+        CameraRightKeyEdit.Value := CameraRightKeyEdit.Text := ""
+    }
+    
+    Global CameraLeftKeyEdit
+    Else If (ThisControl.Hwnd == CameraLeftKeyEdit.Hwnd) {
+        If (CameraLeftKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["CameraLeftKey"] := CameraLeftKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["CameraLeftKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraLeftKey")
+        SetCueBanner(CameraLeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraLeftKey"])
+        CameraLeftKeyEdit.Value := CameraLeftKeyEdit.Text := ""
+    }
+    
+    Global CameraInKeyEdit
+    Else If (ThisControl.Hwnd == CameraInKeyEdit.Hwnd) {
+        If (CameraInKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["CameraInKey"] := CameraInKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["CameraInKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraInKey")
+        SetCueBanner(CameraInKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraInKey"])
+        CameraInKeyEdit.Value := CameraInKeyEdit.Text := ""
+    }
+    
+    Global CameraOutKeyEdit
+    Else If (ThisControl.Hwnd == CameraOutKeyEdit.Hwnd) {
+        If (CameraOutKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["CameraOutKey"] := CameraOutKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["CameraOutKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraOutKey")
+        SetCueBanner(CameraOutKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraOutKey"])
+        CameraOutKeyEdit.Value := CameraOutKeyEdit.Text := ""
+    }
+    
+    Global ResetKeyEdit
+    Else If (ThisControl.Hwnd == ResetKeyEdit.Hwnd) {
+        If (ResetKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["ResetKey"] := ResetKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["ResetKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "ResetKey")
+        SetCueBanner(ResetKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ResetKey"])
+        ResetKeyEdit.Value := ResetKeyEdit.Text := ""
+    }
+    
+    Global ChatKeyEdit
+    Else If (ThisControl.Hwnd == ChatKeyEdit.Hwnd) {
+        If (ChatKeyEdit.Value == "")
+            Return
+        Globals["Settings"]["Keybinds"]["ChatKey"] := ChatKeyEdit.Value
+        IniWrite(Globals["Settings"]["Keybinds"]["ChatKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "ChatKey")
+        SetCueBanner(ChatKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ChatKey"])
+        ChatKeyEdit.Value := ChatKeyEdit.Text := ""
+    }
+    
+    Global AdditionalKeyDelayEdit
+    Else If (ThisControl.Hwnd == AdditionalKeyDelayEdit.Hwnd) {
+        If (AdditionalKeyDelayEdit.Value == "" && !SubmitButton)
+            Return
+        Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"] := Round(Number((AdditionalKeyDelayEdit.Value ? AdditionalKeyDelayEdit.Value : 0)))
+        IniWrite(Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "AdditionalKeyDelay")
+        SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"])
+        AdditionalKeyDelayEdit.Value := AdditionalKeyDelayEdit.Text := ""
     }
 }

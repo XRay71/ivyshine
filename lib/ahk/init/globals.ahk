@@ -24,6 +24,12 @@ Globals["GUI"]["Settings"] := Map(
 
 Globals["Settings"] := Map()
 
+Globals["Settings"]["AntiAFK"] := Map(
+"RunAntiAFK", "0",
+"AntiAFKLoopTimeMinutes", "10",
+"LastRun", A_NowUTC
+)
+
 Globals["Settings"]["Basic Settings"] := Map(
 "MoveSpeed", "28",
 "MoveMethod", "Default",
@@ -115,7 +121,9 @@ Globals["Field Settings"]["Bamboo"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Blue"
 )
 
 Globals["Field Settings"]["BlueFlower"] := Map(
@@ -145,7 +153,9 @@ Globals["Field Settings"]["BlueFlower"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Blue"
 )
 
 Globals["Field Settings"]["Cactus"] := Map(
@@ -175,7 +185,9 @@ Globals["Field Settings"]["Cactus"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Mixed"
 )
 
 Globals["Field Settings"]["Clover"] := Map(
@@ -205,7 +217,9 @@ Globals["Field Settings"]["Clover"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Right",
 "TurnCameraNum", "4",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Mixed"
 )
 
 Globals["Field Settings"]["Coconut"] := Map(
@@ -235,7 +249,9 @@ Globals["Field Settings"]["Coconut"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Right",
 "TurnCameraNum", "4",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Field Settings"]["Dandelion"] := Map(
@@ -265,7 +281,9 @@ Globals["Field Settings"]["Dandelion"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Field Settings"]["MountainTop"] := Map(
@@ -295,7 +313,9 @@ Globals["Field Settings"]["MountainTop"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Left",
 "TurnCameraNum", "2",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Mixed"
 )
 
 Globals["Field Settings"]["Mushroom"] := Map(
@@ -325,7 +345,9 @@ Globals["Field Settings"]["Mushroom"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Red"
 )
 
 Globals["Field Settings"]["Pepper"] := Map(
@@ -355,7 +377,9 @@ Globals["Field Settings"]["Pepper"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Left",
 "TurnCameraNum", "2",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Red"
 )
 
 Globals["Field Settings"]["PineTree"] := Map(
@@ -385,7 +409,9 @@ Globals["Field Settings"]["PineTree"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Left",
 "TurnCameraNum", "2",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Blue"
 )
 
 Globals["Field Settings"]["Pineapple"] := Map(
@@ -415,7 +441,9 @@ Globals["Field Settings"]["Pineapple"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Field Settings"]["Pumpkin"] := Map(
@@ -445,7 +473,9 @@ Globals["Field Settings"]["Pumpkin"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Field Settings"]["Rose"] := Map(
@@ -475,7 +505,9 @@ Globals["Field Settings"]["Rose"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Red"
 )
 
 Globals["Field Settings"]["Spider"] := Map(
@@ -505,7 +537,9 @@ Globals["Field Settings"]["Spider"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Field Settings"]["Strawberry"] := Map(
@@ -535,7 +569,9 @@ Globals["Field Settings"]["Strawberry"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "None",
 "TurnCameraNum", "0",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Red"
 )
 
 Globals["Field Settings"]["Stump"] := Map(
@@ -565,7 +601,9 @@ Globals["Field Settings"]["Stump"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Right",
 "TurnCameraNum", "2",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Blue"
 )
 
 Globals["Field Settings"]["Sunflower"] := Map(
@@ -595,7 +633,9 @@ Globals["Field Settings"]["Sunflower"] := Map(
 "ReturnMethod", "Reset",
 "TurnCamera", "Left",
 "TurnCameraNum", "2",
-"RepeatTimes", "1"
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "White"
 )
 
 Globals["Boost"] := Map()
