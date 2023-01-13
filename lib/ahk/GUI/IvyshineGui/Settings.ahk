@@ -2,7 +2,7 @@ MainTabs.UseTab(1)
 
 #Include *i Settings\Basic Settings.ahk
 #Include *i Settings\rbxfpsunlocker.ahk
-#Include *i Settings\Bees.ahk
+#Include *i Settings\CollectKill.ahk
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
@@ -131,16 +131,16 @@ SubmitSettings(ThisControl, *) {
         RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
     }
     
-    Global HasBearBeeCheckBox
-    Else If (ThisControl.Hwnd == HasBearBeeCheckBox.Hwnd) {
-        Globals["Settings"]["Bees"]["HasBearBee"] := HasBearBeeCheckBox.Value
-        IniWrite(Globals["Settings"]["Bees"]["HasBearBee"], Globals["Constants"]["ini FilePaths"]["Settings"], "Bees", "HasBearBee")
+    Global AutoEquipList
+    Else If (ThisControl.Hwnd == AutoEquipList.Hwnd) {
+        Globals["Settings"]["Collect/Kill"]["AutoEquip"] := AutoEquipList.Text
+        IniWrite(Globals["Settings"]["Collect/Kill"]["AutoEquip"], Globals["Constants"]["ini FilePaths"]["Settings"], "Collect/Kill", "AutoEquip")
     }
     
     Global HasGiftedViciousCheckBox
     Else If (ThisControl.Hwnd == HasGiftedViciousCheckBox.Hwnd) {
-        Globals["Settings"]["Bees"]["HasGiftedVicious"] := HasGiftedViciousCheckBox.Value
-        IniWrite(Globals["Settings"]["Bees"]["HasGiftedVicious"], Globals["Constants"]["ini FilePaths"]["Settings"], "Bees", "HasGiftedVicious")
+        Globals["Settings"]["Collect/Kill"]["HasGiftedVicious"] := HasGiftedViciousCheckBox.Value
+        IniWrite(Globals["Settings"]["Collect/Kill"]["HasGiftedVicious"], Globals["Constants"]["ini FilePaths"]["Settings"], "Collect/Kill", "HasGiftedVicious")
     }
     
     Global HasRedCannonCheckBox

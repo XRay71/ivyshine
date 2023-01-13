@@ -32,8 +32,8 @@ Globals["Settings"]["Basic Settings"] := Map(
 "PrivateServerLink", ""
 )
 
-Globals["Settings"]["Bees"] := Map(
-"HasBearBee", "1",
+Globals["Settings"]["Collect/Kill"] := Map(
+"AutoEquip", "Default",
 "HasGiftedVicious", "1"
 )
 
