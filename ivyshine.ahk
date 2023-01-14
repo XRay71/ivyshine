@@ -58,6 +58,25 @@ CheckForUpdates() {
                 }
             }
             
+            Try
+            Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
+            Catch Any {
+                MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
+                If (FileExist("AHK-Installer.exe"))
+                    FileDelete("AHK-Installer.exe")
+                Return
+            }
+            
+            While (!FileExist("AHK-Installer.exe"))
+                Sleep(10)
+            
+            RunWait("*RunAs AHK-Installer.exe")
+            
+            While (!WinExist("AutoHotkey Dash"))
+                Sleep(10)
+            
+            WinClose("AutoHotkey Dash")
+            
             Try {
                 Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
             } Catch Any {
@@ -71,9 +90,10 @@ CheckForUpdates() {
             PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
             PowerShell.Namespace(A_WorkingDir).MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
             FileDelete("NewVersion.zip")
+            FileDelete("AHK-Installer.exe")
             DirDelete("ivyshine-main")
             
-            MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
+            Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
             
             Run("ivyshine.ahk")
             ExitApp
@@ -158,15 +178,15 @@ Try {
 
 #Include *i lib\ahk\Main\Functions.ahk
 
-; Try
+Try
 ReleaseAllKeys()
-; Catch Any
-;     MissingFilesError()
+Catch Any
+    MissingFilesError()
 
-Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
-Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
-Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick)
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1")
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1")
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1")
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
 
 StartMacro(*) {
     MsgBox("Start")

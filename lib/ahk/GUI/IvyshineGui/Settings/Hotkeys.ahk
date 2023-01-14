@@ -75,14 +75,10 @@ StartEditHotkeys(ThisControl, *) {
             EditHotkeysGui.Show("AutoSize NoActivate")
         } Else {
             Try {
-                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro)
-                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro)
-                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro)
-                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick)
-                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "On")
-                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "On")
-                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "On")
-                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "On")
+                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1")
+                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1")
+                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1")
+                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
             }
             EditHotkeysGui.Hide()
         }

@@ -35,7 +35,7 @@ AntiAFK() {
     Global Globals
     TimeDifference := TimeSince(Globals["Settings"]["AntiAFK"]["LastRun"])
     
-    If (WinActive("ahk_exe RobloxBetaPlayer.exe")) {
+    If (WinActive("ahk_exe RobloxPlayerBeta.exe")) {
         Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
         TimeDifference := 0
     }
@@ -45,16 +45,16 @@ AntiAFK() {
     
     If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] * 60) {
         Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
-        If (WinExist("ahk_exe RobloxBetaPlayer.exe")) {
+        If (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
             ReleaseAllKeys()
             BlockInput("On")
-            CurrentWindowID := WinGetId()
-            WinActivate("ahk_exe RobloxBetaPlayer.exe")
-            WinWaitActive("ahk_exe RobloxBetaPlayer.exe")
+            CurrentWindowID := WinGetId("A")
+            WinActivate("ahk_exe RobloxPlayerBeta.exe")
+            WinWaitActive("ahk_exe RobloxPlayerBeta.exe")
             Send(">")
-            Sleep(25)
+            HyperSleep(30)
             Send("<")
-            WinMinimize("ahk_exe RobloxBetaPlayer.exe")
+            WinMinimize("ahk_exe RobloxPlayerBeta.exe")
             WinActivate(CurrentWindowID)
             BlockInput("Off")
         }

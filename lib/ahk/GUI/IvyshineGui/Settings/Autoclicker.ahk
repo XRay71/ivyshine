@@ -19,26 +19,23 @@ AutoclickerHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 w92 h20 Center", 
 AutoclickerHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
 AutoclickerRunning := False
-
 Autoclick(*) {
     Global Globals
     Global AutoclickerRunning
     AutoclickerRunning := !AutoclickerRunning
     
+    Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     Global AutoclickerIntervalEdit, AutoclickerAmountEdit, AutoclickerHotkeyButton
-    If (AutoclickerRunning) {
-        AutoclickerIntervalEdit.Enabled := False
-        AutoclickerAmountEdit.Enabled := False
-        AutoclickerHotkeyButton.Enabled := False
-        SetTimer(AutoClickClick, Globals["Settings"]["Autoclicker"]["ClickInterval"], 1)
-    } Else {
-        AutoclickerIntervalEdit.Enabled := True
-        AutoclickerAmountEdit.Enabled := True
-        AutoclickerHotkeyButton.Enabled := True
-        SetTimer(AutoClickClick, 0)
+    AutoclickerIntervalEdit.Enabled := False
+    AutoclickerAmountEdit.Enabled := False
+    AutoclickerHotkeyButton.Enabled := False
+    While (AutoclickerRunning && (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0 || Globals["Settings"]["Autoclicker"]["ClickCounter"] < Globals["Settings"]["Autoclicker"]["ClickAmount"])) {
+        MouseLeftClick()
+        Globals["Settings"]["Autoclicker"]["ClickCounter"]++
+        HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
     }
-}
-
-AutoClickClick() {
-    Click()
+    AutoclickerIntervalEdit.Enabled := True
+    AutoclickerAmountEdit.Enabled := True
+    AutoclickerHotkeyButton.Enabled := True
+    Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
 }
