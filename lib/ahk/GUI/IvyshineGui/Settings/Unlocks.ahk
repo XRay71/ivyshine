@@ -1,5 +1,5 @@
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "x+4 y8 w132 h223 Section", "Unlocks")
+IvyshineGui.Add("GroupBox", "x+4 y28 w132 h223 Section", "Unlocks")
 IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
 IvyshineGui.SetFont()

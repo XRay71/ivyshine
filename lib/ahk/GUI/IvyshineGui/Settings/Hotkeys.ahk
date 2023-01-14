@@ -63,26 +63,27 @@ StartEditHotkeys(ThisControl, *) {
         EditHotkeysText.Text := "Editing the Autoclicker Hotkey (press enter to submit):"
     }
     
-    If (!PreviousEditHotkeysControl || ThisControl.Hwnd == PreviousEditHotkeysControl.Hwnd) {
+    If (!PreviousEditHotkeysControl || ThisControl.Hwnd == PreviousEditHotkeysControl.Hwnd)
         ShowEditHotkeysGui := !ShowEditHotkeysGui
-        If (ShowEditHotkeysGui){
-            Try {
-                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
-                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
-                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
-                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
-            }
-            EditHotkeysGui.Show("AutoSize NoActivate")
-        } Else {
-            Try {
-                Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1")
-                Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1")
-                Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1")
-                Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
-            }
-            EditHotkeysGui.Hide()
+    If (ShowEditHotkeysGui){
+        Try {
+            Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
+            Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
+            Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
+            Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
         }
+        EditHotkeysGui.Show("AutoSize NoActivate")
+        ShowEditHotkeysGui := 1
+        PreviousEditHotkeysControl := ThisControl
+    } Else {
+        Try {
+            Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
+        }
+        EditHotkeysGui.Hide()
+        ShowEditHotkeysGui := 0
+        PreviousEditHotkeysControl := ""
     }
-    
-    PreviousEditHotkeysControl := ThisControl
 }

@@ -29,11 +29,14 @@ Autoclick(*) {
     AutoclickerIntervalEdit.Enabled := False
     AutoclickerAmountEdit.Enabled := False
     AutoclickerHotkeyButton.Enabled := False
+    IntervalTemp := A_HotkeyInterval
+    A_HotkeyInterval := 0
     While (AutoclickerRunning && (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0 || Globals["Settings"]["Autoclicker"]["ClickCounter"] < Globals["Settings"]["Autoclicker"]["ClickAmount"])) {
         MouseLeftClick()
         Globals["Settings"]["Autoclicker"]["ClickCounter"]++
         HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
     }
+    A_HotkeyInterval := IntervalTemp
     AutoclickerIntervalEdit.Enabled := True
     AutoclickerAmountEdit.Enabled := True
     AutoclickerHotkeyButton.Enabled := True

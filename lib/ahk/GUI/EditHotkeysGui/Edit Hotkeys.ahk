@@ -32,10 +32,10 @@ EditHotkeysGuiClose(*) {
     ShowEditHotkeysGui := 0
     EditHotkeysGui.Hide()
     Try {
-        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1")
-        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1")
-        Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1")
-        Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
+        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1 P0")
     }
 }
 
@@ -101,9 +101,9 @@ SubmitEditHotkeys(*) {
     }
     
     Try {
-        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1")
-        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1")
-        Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1")
+        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
         Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
     }
     

@@ -1,4 +1,4 @@
-; #NoTrayIcon
+#NoTrayIcon
 #WinActivateForce
 #UseHook True
 #Warn All, Off
@@ -8,6 +8,7 @@
 #Include *i Settings\Basic Settings.ahk
 #Requires AutoHotkey v2.0 32-bit
 
+SetWinDelay(0)
 Thread("NoTimers", True)
 SetWorkingDir(A_ScriptDir)
 CoordMode("Pixel", "Client")
@@ -183,10 +184,15 @@ ReleaseAllKeys()
 Catch Any
     MissingFilesError()
 
-Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1")
-Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1")
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1")
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0")
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0")
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
 Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
+Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
+HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
+Hotkey("~LButton", StartMoveGui, "T1 P2")
+Hotkey("~LButton Up", StopMoveGui, "T1 P3")
+HotIfWinActive()
 
 StartMacro(*) {
     MsgBox("Start")
@@ -234,3 +240,4 @@ UnableToCreateFileError() {
 }
 
 ]::ReloadMacro()
+Hotkey("]",, "P10")
