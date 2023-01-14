@@ -173,6 +173,22 @@ Try {
 ; Creating GUI
 ;=====================================
 #Include *i lib\ahk\GUI\Gui.ahk
+
+TrayMenu := A_TrayMenu
+TrayMenu.Delete()
+TrayMenu.Add()
+TrayMenu.Add()
+TrayMenu.Add()
+TrayMenu.Add("Restore GUI", IvyshineGuiRestore, "P10")
+TrayMenu.Default := "Restore GUI"
+TrayMenu.Add()
+TrayMenu.Add()
+TrayMenu.Add()
+TrayMenu.AddStandard()
+TrayMenu.ClickCount := 1
+
+A_IconTip := "Ivyshine"
+
 ;=====================================
 ; Main Functions
 ;=====================================
@@ -240,4 +256,4 @@ UnableToCreateFileError() {
 }
 
 ]::ReloadMacro()
-Hotkey("]",, "P10")
+Hotkey("]",, "P20")

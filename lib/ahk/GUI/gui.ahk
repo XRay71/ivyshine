@@ -138,7 +138,7 @@ GuiMinimizeButton := IvyshineGui.Add("Button", "x511 y3 w15 h14 -TabStop -Border
 GuiMinimizeButton.OnEvent("Click", IvyshineGuiMinimize)
 
 IvyshineGuiMinimize(*) {
-    A_IconHIdden := 0
+    A_IconHidden := 0
     IvyshineGui.Hide()
     EditHotkeysGuiClose()
     MacroInfoGuiClose()
@@ -148,6 +148,7 @@ IvyshineGuiMinimize(*) {
 }
 
 IvyshineGuiRestore(*) {
+    A_IconHidden := 1
     IvyshineGui.Show()
     Hotkey("F5", IvyshineGuiMinimize, "T1 P10 On")
 }
