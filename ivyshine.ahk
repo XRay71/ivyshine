@@ -35,7 +35,7 @@ CheckResolution() {
 ; Check for updates
 ;=====================================
 CurrentVersionID := "001"
-; CheckForUpdates()
+CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
     WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
@@ -184,7 +184,12 @@ TrayMenu.Default := "Restore GUI"
 TrayMenu.Add()
 TrayMenu.Add()
 TrayMenu.Add()
+TrayMenu.Add("Open Debug", OpenDebug)
+OpenDebug(*) {
+    ListLines
+} 
 TrayMenu.AddStandard()
+TrayMenu.Delete("&Open")
 TrayMenu.ClickCount := 1
 
 A_IconTip := "Ivyshine"
