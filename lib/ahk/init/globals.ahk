@@ -74,12 +74,14 @@ Globals["Settings"]["Keybinds"] := Map(
 
 Globals["Settings"]["Miscellaneous"] := Map(
 "MoveSpeedCorrection", "1",
+"ShiftLock", "1",
 "ReconnectInterval", "",
 "ReconnectStartHour", "",
 "ReconnectStartMinute", "",
 "ResetMultiplier", "1",
 "BalloonConvert", "Auto",
-"BalloonConvertInterval", "30"
+"BalloonConvertInterval", "30",
+"ShiftlockMoving", "1"
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(

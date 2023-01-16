@@ -164,11 +164,11 @@ Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ""
 For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
     Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := Process.ExecutablePath
 IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory")
-Try {
-    If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"])
-        RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
-} Catch Any
-    MissingFilesError()
+; Try {
+If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"])
+    RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+; } Catch Any
+;     MissingFilesError()
 ;=====================================
 ; Creating GUI
 ;=====================================

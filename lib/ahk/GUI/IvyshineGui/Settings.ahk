@@ -111,20 +111,21 @@ SubmitSettings(ThisControl, *) {
     Global RunrbxfpsunlockerCheckBox
     Global FPSEdit
     Else If (ThisControl.Hwnd == RunrbxfpsunlockerCheckBox.Hwnd) {
-        Global Ranrbxfpsunlocker
+        RunrbxfpsunlockerCheckBox.Enabled := False
+        FPSEdit.Enabled := False
         Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"] := RunrbxfpsunlockerCheckBox.Value
         IniWrite(Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "Runrbxfpsunlocker")
-        FPSEdit.Enabled := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
         If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]) {
             SetCueBanner(FPSEdit.Hwnd, (Globals["Settings"]["rbxfpsunlocker"]["FPS"] == 0 ? "inf" : Globals["Settings"]["rbxfpsunlocker"]["FPS"]))
             RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
         } Else {
             RestoreFPSUnlocker()
         }
+        FPSEdit.Enabled := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
+        RunrbxfpsunlockerCheckBox.Enabled := True
     }
     
     Else If (ThisControl.Hwnd == FPSEdit.Hwnd) {
-        Global Ranrbxfpsunlocker
         If (FPSEdit.Value == "" && !SubmitButton)
             Return
         Globals["Settings"]["rbxfpsunlocker"]["FPS"] := (FPSEdit.Value ? FPSEdit.Value : 0)
@@ -252,6 +253,12 @@ SubmitSettings(ThisControl, *) {
     Else If (ThisControl.Hwnd == MoveSpeedCorrectionCheckBox.Hwnd) {
         Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"] := MoveSpeedCorrectionCheckBox.Value
         IniWrite(Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "MoveSpeedCorrection")
+    }
+    
+    Global ShiftLockWhenPossibleCheckBox
+    Else If (ThisControl.Hwnd == ShiftLockWhenPossibleCheckBox.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["ShiftLock"] := ShiftLockWhenPossibleCheckBox.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["ShiftLock"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ShiftLock")
     }
     
     Global TransparencyList
