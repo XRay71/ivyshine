@@ -7,22 +7,22 @@ IvyshineGui.SetFont("s8", "Calibri")
 
 IvyshineGui.Add("Text", "xs yp+6 h19 -Wrap +BackgroundTrans", "Forward Key:")
 ForwardKeyEdit := IvyshineGui.Add("Edit", "xs+75 yp-2 w15 hp Limit1 Center -Wrap vForwardKeyEdit")
-SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseForwardKey"])
+SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ForwardKey"])
 ForwardKeyEdit.OnEvent("LoseFocus", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+19 h19 -Wrap +BackgroundTrans", "Left Key:")
 LeftKeyEdit := IvyshineGui.Add("Edit", "xs+75 yp-2 w15 hp Limit1 Center -Wrap vLeftKeyEdit")
-SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseLeftKey"])
+SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["LeftKey"])
 LeftKeyEdit.OnEvent("LoseFocus", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+19 h19 -Wrap +BackgroundTrans", "Backward Key:")
 BackwardKeyEdit := IvyshineGui.Add("Edit", "xs+75 yp-2 w15 hp Limit1 Center -Wrap vBackwardKeyEdit")
-SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseBackwardKey"])
+SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BackwardKey"])
 BackwardKeyEdit.OnEvent("LoseFocus", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+19 h19 -Wrap +BackgroundTrans", "Right Key:")
 RightKeyEdit := IvyshineGui.Add("Edit", "xs+75 yp-2 w15 hp Limit1 Center -Wrap vRightKeyEdit")
-SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseRightKey"])
+SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["RightKey"])
 RightKeyEdit.OnEvent("LoseFocus", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+19 h19 -Wrap +BackgroundTrans", "Camera Left:")

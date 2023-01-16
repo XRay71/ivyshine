@@ -21,9 +21,9 @@ NumberOfSprinklersList.Choose(Globals["Settings"]["Basic Settings"]["NumberOfSpr
 NumberOfSprinklersList.OnEvent("Change", SubmitSettings)
 
 IvyshineGui.Add("Text", "x16 yp+24 h20 -Wrap +BackgroundTrans", "Hive Slot")
-HiveSlotList := IvyshineGui.Add("DropDownList", "x65 yp-3 w85 vHiveSlotList", ["1 (Red Cannon)", "2", "3", "4", "5", "6 (Noob Shop)"])
-HiveSlotList.Choose(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"])
-HiveSlotList.OnEvent("Change", SubmitSettings)
+HiveSlotNumberList := IvyshineGui.Add("DropDownList", "x65 yp-3 w85 vHiveSlotNumberList", ["1 (Red Cannon)", "2", "3", "4", "5", "6 (Noob Shop)"])
+HiveSlotNumberList.Choose(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"])
+HiveSlotNumberList.OnEvent("Change", SubmitSettings)
 
 IvyshineGui.Add("Text", "x16 yp+24 h20 -Wrap +BackgroundTrans", "Private Server Link:")
 PrivateServerLinkEdit := IvyshineGui.Add("Edit", "x16 yp+16 w134 vPrivateServerLinkEdit")

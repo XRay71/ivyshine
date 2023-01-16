@@ -35,14 +35,14 @@ IvyshineGui.Opt("+LastFound")
 WinSetStyle(-0xC40000)
 DllCall("SetMenu", "Ptr", WinExist(), "Ptr", 0)
 
-IvyshineGui.Show("x" Globals["GUI"]["Settings"]["GuiX"] " y" Globals["GUI"]["Settings"]["GuiY"] " w550 h370")
+IvyshineGui.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
 
 IvyshineGuiClose(*) {
     Global Globals, IvyshineGui
     RestoreFPSUnlocker()
     WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
-    Globals["GUI"]["Settings"]["GuiX"] := GuiX
-    Globals["GUI"]["Settings"]["GuiY"] := GuiY
+    Globals["GUI"]["Position"]["GUIX"] := GuiX
+    Globals["GUI"]["Position"]["GUIY"] := GuiY
     For ini, Section in Globals
         UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
     HyperSleep(50)
@@ -104,10 +104,10 @@ StopMoveGui(*) {
     GuiMoving := False
     SetTimer(MoveGui, 0)
     WinGetPos(&WinX, &WinY,,, IvyshineGui.Hwnd)
-    Globals["GUI"]["Settings"]["GuiX"] := WinX
-    Globals["GUI"]["Settings"]["GuiY"] := WinY
-    IniWrite(Globals["GUI"]["Settings"]["GuiX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiX")
-    IniWrite(Globals["GUI"]["Settings"]["GuiX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiY")
+    Globals["GUI"]["Position"]["GUIX"] := WinX
+    Globals["GUI"]["Position"]["GUIY"] := WinY
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiX")
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiY")
 }
 
 MoveGui() {

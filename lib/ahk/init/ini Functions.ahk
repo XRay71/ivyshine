@@ -8,7 +8,7 @@ UpdateIni(FilePath, Data) {
         Content .= "`r`n"
     }
     Try {
-        IF (FileExist(FilePath))
+        If (FileExist(FilePath))
             FileDelete(FilePath)
         FileAppend(Content, FilePath)
     } Catch Any

@@ -140,18 +140,18 @@ Catch Any
 EnsureGUIVisibility()
 EnsureGUIVisibility() {
     Global Globals
-    If (!Globals["GUI"]["Settings"]["GuiX"] && !Globals["GUI"]["Settings"]["GuiY"]) {
-        Globals["GUI"]["Settings"]["GuiX"] := 0
-        Globals["GUI"]["Settings"]["GuiY"] := 350
+    If (!Globals["GUI"]["Position"]["GUIX"] && !Globals["GUI"]["Position"]["GUIY"]) {
+        Globals["GUI"]["Position"]["GUIX"] := 0
+        Globals["GUI"]["Position"]["GUIY"] := 350
         Return
     }
     
     Loop(MonitorGetCount()) {
         MonitorGetWorkArea(A_Index, &CurrentMonitorLeft, &CurrentMonitorTop, &CurrentMonitorRight, &CurrentMonitorBottom)
-        If (Globals["GUI"]["Settings"]["GuiX"] < CurrentMonitorLeft || Globals["GUI"]["Settings"]["GuiX"] + 550 > CurrentMonitorRight)
-            Globals["GUI"]["Settings"]["GuiX"] := Globals["GUI"]["Settings"]["GuiX"] < CurrentMonitorLeft ? CurrentMonitorLeft : CurrentMonitorRight - 550
-        If (Globals["GUI"]["Settings"]["GuiY"] < CurrentMonitorTop || Globals["GUI"]["Settings"]["GuiY"] + 350 > CurrentMonitorBottom)
-            Globals["GUI"]["Settings"]["GuiY"] := Globals["GUI"]["Settings"]["GuiY"] < CurrentMonitorTop ? CurrentMonitorTop : CurrentMonitorBottom - 350
+        If (Globals["GUI"]["Position"]["GUIX"] < CurrentMonitorLeft || Globals["GUI"]["Position"]["GUIX"] + 550 > CurrentMonitorRight)
+            Globals["GUI"]["Position"]["GUIX"] := Globals["GUI"]["Position"]["GUIX"] < CurrentMonitorLeft ? CurrentMonitorLeft : CurrentMonitorRight - 550
+        If (Globals["GUI"]["Position"]["GUIY"] < CurrentMonitorTop || Globals["GUI"]["Position"]["GUIY"] + 350 > CurrentMonitorBottom)
+            Globals["GUI"]["Position"]["GUIY"] := Globals["GUI"]["Position"]["GUIY"] < CurrentMonitorTop ? CurrentMonitorTop : CurrentMonitorBottom - 350
     }
 }
 ;=====================================
@@ -235,8 +235,8 @@ ReloadMacro() {
     Global Globals, IvyshineGui
     RestoreFPSUnlocker()
     WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
-    Globals["GUI"]["Settings"]["GuiX"] := GuiX
-    Globals["GUI"]["Settings"]["GuiY"] := GuiY
+    Globals["GUI"]["Position"]["GUIX"] := GuiX
+    Globals["GUI"]["Position"]["GUIY"] := GuiY
     For ini, Section in Globals
     {
         If (ini == "Constants")

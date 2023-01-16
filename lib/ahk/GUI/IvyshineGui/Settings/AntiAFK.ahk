@@ -9,20 +9,20 @@ RunAntiAFKCheckBox := IvyshineGui.Add("CheckBox", "xs yp+6 h20 -Wrap vRunAntiAFK
 RunAntiAFKCheckBox.OnEvent("Click", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+22 h18 -Wrap +BackgroundTrans", "Run every ")
-AntiAFKEdit := IvyshineGui.Add("Edit", "x+2 yp-2 w20 hp -Wrap Center Limit2 Number vAntiAFKEdit Disabled" (Globals["Settings"]["AntiAFK"]["RunAntiAFK"] ? "0" : "1"))
-AntiAFKDescriptorText := IvyshineGui.Add("Text", "x+2 yp+2 hp w100 -Wrap +BackgroundTrans", (Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] == 1 ? " minute." : " minutes."))
-AntiAFKEdit.OnEvent("LoseFocus", SubmitSettings)
-SetCueBanner(AntiAFKEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"])
+AntiAFKIntervalEdit := IvyshineGui.Add("Edit", "x+2 yp-2 w20 hp -Wrap Center Limit2 Number vAntiAFKIntervalEdit Disabled" (Globals["Settings"]["AntiAFK"]["RunAntiAFK"] ? "0" : "1"))
+AntiAFKIntervalText := IvyshineGui.Add("Text", "x+2 yp+2 hp w100 -Wrap +BackgroundTrans vAntiAFKIntervalText", (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] == 1 ? " minute." : " minutes."))
+AntiAFKIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
+SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
 
 If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
     Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
     SetTimer(AntiAFK, 500, -1)
 }
 
-If (!AntiAFKEdit.Enabled)
-    AntiAFKDescriptorText.Text := " minutes."
+If (!AntiAFKIntervalEdit.Enabled)
+    AntiAFKIntervalText.Text := " minutes."
 
-AntiAFKProgress := IvyshineGui.Add("Progress", "xs yp+19 h18 w116 Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] * 60))
+AntiAFKProgress := IvyshineGui.Add("Progress", "xs yp+19 h18 w116 Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60))
 
 AntiAFKInfoButton := IvyshineGui.Add("Button", "xs+52 ys-19 h16 w15", "?")
 AntiAFKInfoButton.OnEvent("Click", ShowAntiAFKInfo)
@@ -43,7 +43,7 @@ AntiAFK() {
     Global AntiAFKProgress
     AntiAFKProgress.Value := TimeDifference
     
-    If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"] * 60) {
+    If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60) {
         Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
         If (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
             ReleaseAllKeys()
@@ -52,7 +52,7 @@ AntiAFK() {
             WinActivate("ahk_exe RobloxPlayerBeta.exe")
             WinWaitActive("ahk_exe RobloxPlayerBeta.exe")
             Send(">")
-            HyperSleep(30)
+            HyperSleep(20)
             Send("<")
             WinMinimize("ahk_exe RobloxPlayerBeta.exe")
             WinActivate(CurrentWindowID)

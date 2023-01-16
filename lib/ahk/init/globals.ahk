@@ -14,9 +14,12 @@ Globals["Constants"]["ini FilePaths"] := Map(
 
 Globals["GUI"] := Map()
 
+Globals["GUI"]["Position"] := Map(
+"GUIX", "0",
+"GUIY", "350"
+)
+
 Globals["GUI"]["Settings"] := Map(
-"GuiX", "0",
-"GuiY", "350",
 "AlwaysOnTop", "0",
 "Transparency", "0",
 "CurrentGUITab", "1"
@@ -26,7 +29,7 @@ Globals["Settings"] := Map()
 
 Globals["Settings"]["AntiAFK"] := Map(
 "RunAntiAFK", "0",
-"AntiAFKLoopTimeMinutes", "10",
+"AntiAFKInterval", "10",
 "LastRun", A_NowUTC
 )
 
@@ -57,10 +60,10 @@ Globals["Settings"]["Hotkeys"] := Map(
 )
 
 Globals["Settings"]["Keybinds"] := Map(
-"BaseForwardKey", "w",
-"BaseBackwardKey", "s",
-"BaseLeftKey", "a",
-"BaseRightKey", "d",
+"ForwardKey", "w",
+"BackwardKey", "s",
+"LeftKey", "a",
+"RightKey", "d",
 "CameraRightKey", ".",
 "CameraLeftKey", ",",
 "CameraInKey", "i",
@@ -74,14 +77,13 @@ Globals["Settings"]["Keybinds"] := Map(
 
 Globals["Settings"]["Miscellaneous"] := Map(
 "MoveSpeedCorrection", "1",
-"ShiftLock", "1",
+"ShiftlockMoving", "1",
+"BalloonConvertSetting", "Auto",
+"BalloonConvertInterval", "30",
+"ResetMultiplier", "1",
 "ReconnectInterval", "",
 "ReconnectStartHour", "",
-"ReconnectStartMinute", "",
-"ResetMultiplier", "1",
-"BalloonConvert", "Auto",
-"BalloonConvertInterval", "30",
-"ShiftlockMoving", "1"
+"ReconnectStartMinute", ""
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
