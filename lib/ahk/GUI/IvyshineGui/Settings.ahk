@@ -241,6 +241,60 @@ SubmitSettings(ThisControl, *) {
         NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
     }
     
+    Global AlwaysOnTopCheckBox
+    Else If (ThisControl.Hwnd == AlwaysOnTopCheckBox.Hwnd) {
+        Globals["GUI"]["Settings"]["AlwaysOnTop"] := AlwaysOnTopCheckBox.Value
+        IniWrite(Globals["GUI"]["Settings"]["AlwaysOnTop"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "AlwaysOnTop")
+        IvyshineGui.Opt((Globals["GUI"]["Settings"]["AlwaysOnTop"] ? "+" : "-") "AlwaysOnTop")
+    }
+    
+    Global MoveSpeedCorrectionCheckBox
+    Else If (ThisControl.Hwnd == MoveSpeedCorrectionCheckBox.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"] := MoveSpeedCorrectionCheckBox.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "MoveSpeedCorrection")
+    }
+    
+    Global TransparencyList
+    Else If (ThisControl.Hwnd == TransparencyList.Hwnd) {
+        Globals["GUI"]["Settings"]["Transparency"] := TransparencyList.Text
+        IniWrite(Globals["GUI"]["Settings"]["Transparency"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "Transparency")
+        IvyshineGui.Opt("+LastFound")
+        WinSetTransparent(255 - Floor(Globals["GUI"]["Settings"]["Transparency"] * 2.55))
+    }
+    
+    Global BalloonConvertList, BalloonConvertEdit, BalloonConvertText
+    Else If (ThisControl.Hwnd == BalloonConvertList.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["BalloonConvert"] := BalloonConvertList.Text
+        IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvert"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvert")
+        BalloonConvertEdit.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvert"] == "Every")
+        BalloonConvertText.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvert"] == "Every")
+    }
+    
+    Global BalloonConvertEdit
+    Else If (ThisControl.Hwnd == BalloonConvertEdit.Hwnd) {
+        If (BalloonConvertEdit.Value == "" && !SubmitButton)
+            Return
+        If ((BalloonConvertEdit.Value == "" && SubmitButton) || BalloonConvertEdit.Value == 0) {
+            Globals["Settings"]["Miscellaneous"]["BalloonConvert"] := "Never"
+            BalloonConvertList.Choose(Globals["Settings"]["Miscellaneous"]["BalloonConvert"])
+            IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvert"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvert")
+            BalloonConvertEdit.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvert"] == "Every")
+            BalloonConvertText.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvert"] == "Every")
+        } Else {
+            Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"] := Integer(BalloonConvertEdit.Value)
+            IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvertInterval")
+        }
+        BalloonConvertEdit.Value := BalloonConvertEdit.Text := ""
+        SetCueBanner(BalloonConvertEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"])
+    }
+    
+    Global ResetMultiplierList
+    Else If (ThisControl.Hwnd == ResetMultiplierList.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["ResetMultiplier"] := ResetMultiplierList.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ResetMultiplier")
+        
+    }
+    
     Global RunAntiAFKCheckBox, AntiAFKEdit, AntiAFKDescriptorText, AntiAFKProgress
     Else If (ThisControl.Hwnd == RunAntiAFKCheckBox.Hwnd) {
         Globals["Settings"]["AntiAFK"]["RunAntiAFK"] := RunAntiAFKCheckBox.Value

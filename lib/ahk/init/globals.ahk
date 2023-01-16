@@ -16,7 +16,7 @@ Globals["GUI"] := Map()
 
 Globals["GUI"]["Settings"] := Map(
 "GuiX", "0",
-"GuiY", "340",
+"GuiY", "350",
 "AlwaysOnTop", "0",
 "Transparency", "0",
 "CurrentGUITab", "1"
@@ -70,6 +70,16 @@ Globals["Settings"]["Keybinds"] := Map(
 "ResetKey", "r",
 "ChatKey", "/",
 "AdditionalKeyDelay", "0"
+)
+
+Globals["Settings"]["Miscellaneous"] := Map(
+"MoveSpeedCorrection", "1",
+"ReconnectInterval", "",
+"ReconnectStartHour", "",
+"ReconnectStartMinute", "",
+"ResetMultiplier", "1",
+"BalloonConvert", "Auto",
+"BalloonConvertInterval", "30"
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(

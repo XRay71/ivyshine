@@ -1,4 +1,6 @@
 IvyshineGui := Gui("-SysMenu -Resize" (Globals["GUI"]["Settings"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop"), "Ivyshine Macro")
+IvyshineGui.Opt("+LastFound")
+WinSetTransparent(255 - Floor(Globals["GUI"]["Settings"]["Transparency"] * 2.55))
 IvyshineGui.OnEvent("Close", IvyshineGuiClose)
 IvyshineGui.OnEvent("Escape", IvyshineGuiClose)
 

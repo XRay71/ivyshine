@@ -35,7 +35,7 @@ CheckResolution() {
 ; Check for updates
 ;=====================================
 CurrentVersionID := "001"
-CheckForUpdates()
+; CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
     WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
@@ -142,7 +142,7 @@ EnsureGUIVisibility() {
     Global Globals
     If (!Globals["GUI"]["Settings"]["GuiX"] && !Globals["GUI"]["Settings"]["GuiY"]) {
         Globals["GUI"]["Settings"]["GuiX"] := 0
-        Globals["GUI"]["Settings"]["GuiY"] := 340
+        Globals["GUI"]["Settings"]["GuiY"] := 350
         Return
     }
     
@@ -187,7 +187,7 @@ TrayMenu.Add()
 TrayMenu.Add("Open Debug", OpenDebug)
 OpenDebug(*) {
     ListLines
-} 
+}
 TrayMenu.AddStandard()
 TrayMenu.Delete("&Open")
 TrayMenu.ClickCount := 1
