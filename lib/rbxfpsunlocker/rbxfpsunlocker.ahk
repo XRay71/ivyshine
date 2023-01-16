@@ -15,7 +15,7 @@ RunFPSUnlocker(FPS := 30) {
         BlockInput("Default")
     }
     DetectHiddenWindows(DetectHiddenWindowsSetting)
-    HyperSleep(200)
+    HyperSleep(50)
     FPSCapSelection := (FPS ? 1 : 0)
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
@@ -33,7 +33,7 @@ RunFPSUnlocker(FPS := 30) {
     )
         , "lib\rbxfpsunlocker\settings")
     Run("lib\rbxfpsunlocker\rbxfpsunlocker.exe", "lib\rbxfpsunlocker", "Hide")
-    HyperSleep(100)
+    HyperSleep(25)
     Ranrbxfpsunlocker := 1
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
@@ -58,8 +58,8 @@ RestoreFPSUnlocker() {
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
-    HyperSleep(100)
+    HyperSleep(25)
     If (Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"])
         Run(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], StrReplace(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], "\rbxfpsunlocker.exe"), "Hide")
-    HyperSleep(200)
+    HyperSleep(25)
 }

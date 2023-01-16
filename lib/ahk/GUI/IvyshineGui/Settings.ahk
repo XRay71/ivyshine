@@ -464,3 +464,288 @@ SubmitSettings(ThisControl, *) {
         Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     }
 }
+
+SetSettingsTabValues(*) {
+    Global Globals
+    Global IvyshineGui
+    
+    Global MoveSpeedEdit
+    MoveSpeedEdit.Value := MoveSpeedEdit.Text := ""
+    SetCueBanner(MoveSpeedEdit.Hwnd, Globals["Settings"]["Basic Settings"]["MoveSpeed"])
+    
+    Global MoveMethodList
+    MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
+    
+    Global NumberOfSprinklersList
+    NumberOfSprinklersList.Choose(Globals["Settings"]["Basic Settings"]["NumberOfSprinklers"])
+    
+    Global HiveSlotList
+    HiveSlotList.Choose(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"])
+    
+    Global PrivateServerLinkEdit
+    PrivateServerLinkEdit.Value := PrivateServerLinkEdit.Text := ""
+    SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
+    
+    Global RunrbxfpsunlockerCheckBox
+    RunrbxfpsunlockerCheckBox.Value := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
+    
+    Global FPSEdit
+    FPSEdit.Value := FPSEdit.Text := ""
+    SetCueBanner(FPSEdit.Hwnd, Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+    
+    Global AutoEquipList
+    AutoEquipList.Choose(Globals["Settings"]["Collect/Kill"]["AutoEquip"])
+    
+    Global HasGiftedViciousCheckBox
+    HasGiftedViciousCheckBox.Value := Globals["Settings"]["Collect/Kill"]["HasGiftedVicious"]
+    
+    Global HasRedCannonCheckBox
+    HasRedCannonCheckBox.Value := Globals["Settings"]["Unlocks"]["HasRedCannon"]
+    
+    Global HasParachuteCheckBox
+    HasParachuteCheckBox.Value := Globals["Settings"]["Unlocks"]["HasParachute"]
+    
+    Global HasGliderCheckBox
+    HasGliderCheckBox.Value := Globals["Settings"]["Unlocks"]["HasGlider"]
+    
+    Global HasGummyMaskCheckBox
+    HasGummyMaskCheckBox.Value := Globals["Settings"]["Unlocks"]["HasGummyMask"]
+    
+    Global HasDiamondMaskCheckBox
+    HasDiamondMaskCheckBox.Value := Globals["Settings"]["Unlocks"]["HasDiamondMask"]
+    
+    Global HasDemonMaskCheckBox
+    HasDemonMaskCheckBox.Value := Globals["Settings"]["Unlocks"]["HasDemonMask"]
+    
+    Global HasPetalWandCheckBox
+    HasPetalWandCheckBox.Value := Globals["Settings"]["Unlocks"]["HasPetalWand"]
+    
+    Global HasTidePopperCheckBox
+    HasTidePopperCheckBox.Value := Globals["Settings"]["Unlocks"]["HasTidePopper"]
+    
+    Global HasDarkScytheCheckBox
+    HasDarkScytheCheckBox.Value := Globals["Settings"]["Unlocks"]["HasDarkScythe"]
+    
+    Global NumberOfBeesEdit
+    NumberOfBeesEdit.Value := NumberOfBeesEdit.Text := ""
+    SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
+    
+    Global StartHotkeyButton
+    StartHotkeyButton.Text := "Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")"
+    
+    Global PauseHotkeyButton
+    PauseHotkeyButton.Text := "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")"
+    
+    Global StopHotkeyButton
+    StopHotkeyButton.Text := "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")"
+    
+    Global AlwaysOnTopCheckBox
+    AlwaysOnTopCheckBox.Value := Globals["GUI"]["Settings"]["AlwaysOnTop"]
+    
+    Global MoveSpeedCorrectionCheckBox
+    MoveSpeedCorrectionCheckBox.Value := Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"]
+    
+    Global ShiftLockWhenPossibleCheckBox
+    ShiftLockWhenPossibleCheckBox.Value := Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"]
+    
+    Global TransparencyList
+    TransparencyList.Choose(Globals["GUI"]["Settings"]["Transparency"])
+    
+    Global BalloonConvertList
+    BalloonConvertList.Choose(Globals["Settings"]["Miscellaneous"]["BalloonConvert"])
+    
+    Global BalloonConvertEdit
+    BalloonConvertEdit.Value := BalloonConvertEdit.Text := ""
+    SetCueBanner(BalloonConvertEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"])
+    
+    Global ResetMultiplierList
+    ResetMultiplierList.Choose(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
+    
+    Global RunAntiAFKCheckBox
+    RunAntiAFKCheckBox.Value := Globals["Settings"]["AntiAFK"]["RunAntiAFK"]
+    
+    Global AntiAFKEdit
+    AntiAFKEdit.Value := AntiAFKEdit.Text := ""
+    SetCueBanner(AntiAFKEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKLoopTimeMinutes"])
+    
+    Global ForwardKeyEdit
+    ForwardKeyEdit.Value := ForwardKeyEdit.Text := ""
+    SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseForwardKey"])
+    
+    Global LeftKeyEdit
+    LeftKeyEdit.Value := LeftKeyEdit.Text := ""
+    SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseLeftKey"])
+    
+    Global BackwardKeyEdit
+    BackwardKeyEdit.Value := BackwardKeyEdit.Text := ""
+    SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseBackwardKey"])
+    
+    Global RightKeyEdit
+    RightKeyEdit.Value := RightKeyEdit.Text := ""
+    SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BaseRightKey"])
+    
+    Global CameraRightKeyEdit
+    CameraRightKeyEdit.Value := CameraRightKeyEdit.Text := ""
+    SetCueBanner(CameraRightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraRightKey"])
+    
+    Global CameraLeftKeyEdit
+    
+    Global CameraInKeyEdit
+    
+    Global CameraOutKeyEdit
+    
+    Global ResetKeyEdit
+    
+    Global ChatKeyEdit
+    
+    Global AdditionalKeyDelayEdit
+}
+
+SettingsTabOn := True
+
+SettingsTabSwitch(*) {
+    SetSettingsTabValues()
+    Global Globals
+    Global IvyshineGui
+    Global SettingsTabOn
+    
+    SettingsTabOn := !SettingsTabOn
+    
+    Global SubmitSettingsButton
+    SubmitSettingsButton.Enabled := SettingsTabOn
+    
+    Global MoveSpeedEdit
+    MoveSpeedEdit.Enabled := SettingsTabOn
+    
+    Global MoveMethodList
+    MoveMethodList.Enabled := SettingsTabOn
+    
+    Global NumberOfSprinklersList
+    NumberOfSprinklersList.Enabled := SettingsTabOn
+    
+    Global HiveSlotList
+    HiveSlotList.Enabled := SettingsTabOn
+    
+    Global PrivateServerLinkEdit
+    PrivateServerLinkEdit.Enabled := SettingsTabOn
+    
+    Global RunrbxfpsunlockerCheckBox
+    RunrbxfpsunlockerCheckBox.Enabled := SettingsTabOn
+    
+    Global FPSEdit
+    FPSEdit.Enabled := (SettingsTabOn ? Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"] : False)
+    
+    Global AutoEquipList
+    AutoEquipList.Enabled := SettingsTabOn
+    
+    Global HasGiftedViciousCheckBox
+    HasGiftedViciousCheckBox.Enabled := SettingsTabOn
+    
+    Global ResetButton
+    ResetButton.Enabled := SettingsTabOn
+    
+    Global HasRedCannonCheckBox
+    HasRedCannonCheckBox.Enabled := SettingsTabOn
+    
+    Global HasParachuteCheckBox
+    HasParachuteCheckBox.Enabled := SettingsTabOn
+    
+    Global HasGliderCheckBox
+    HasGliderCheckBox.Enabled := (SettingsTabOn ? Globals["Settings"]["Unlocks"]["HasParachute"] : False)
+    
+    Global HasGummyMaskCheckBox
+    HasGummyMaskCheckBox.Enabled := SettingsTabOn
+    
+    Global HasDiamondMaskCheckBox
+    HasDiamondMaskCheckBox.Enabled := SettingsTabOn
+    
+    Global HasDemonMaskCheckBox
+    HasDemonMaskCheckBox.Enabled := SettingsTabOn
+    
+    Global HasPetalWandCheckBox
+    HasPetalWandCheckBox.Enabled := SettingsTabOn
+    
+    Global HasTidePopperCheckBox
+    HasTidePopperCheckBox.Enabled := SettingsTabOn
+    
+    Global HasDarkScytheCheckBox
+    HasDarkScytheCheckBox.Enabled := SettingsTabOn
+    
+    Global NumberOfBeesEdit
+    NumberOfBeesEdit.Enabled := SettingsTabOn
+    
+    Global HotkeysInfoButton
+    HotkeysInfoButton.Enabled := SettingsTabOn
+    
+    Global StartHotkeyButton
+    StartHotkeyButton.Enabled := SettingsTabOn
+    
+    Global PauseHotkeyButton
+    PauseHotkeyButton.Enabled := SettingsTabOn
+    
+    Global StopHotkeyButton
+    StopHotkeyButton.Enabled := SettingsTabOn
+    
+    Global AlwaysOnTopCheckBox
+    AlwaysOnTopCheckBox.Enabled := SettingsTabOn
+    
+    Global MoveSpeedCorrectionCheckBox
+    MoveSpeedCorrectionCheckBox.Enabled := SettingsTabOn
+    
+    Global ShiftLockWhenPossibleCheckBox
+    ShiftLockWhenPossibleCheckBox.Enabled := SettingsTabOn
+    
+    Global TransparencyList
+    TransparencyList.Enabled := SettingsTabOn
+    
+    Global BalloonConvertList
+    BalloonConvertList.Enabled := SettingsTabOn
+    
+    Global BalloonConvertEdit
+    BalloonConvertEdit.Enabled := SettingsTabOn
+    
+    Global ResetMultiplierList
+    ResetMultiplierList.Enabled := SettingsTabOn
+    
+    Global AntiAFKInfoButton
+    AntiAFKInfoButton.Enabled := SettingsTabOn
+    
+    Global RunAntiAFKCheckBox
+    RunAntiAFKCheckBox.Enabled := SettingsTabOn
+    
+    Global AntiAFKEdit
+    AntiAFKEdit.Enabled := (SettingsTabOn ? Globals["Settings"]["AntiAFK"]["RunAntiAFK"] : False)
+    
+    Global ForwardKeyEdit
+    ForwardKeyEdit.Enabled := SettingsTabOn
+    
+    Global LeftKeyEdit
+    LeftKeyEdit.Enabled := SettingsTabOn
+    
+    Global BackwardKeyEdit
+    BackwardKeyEdit.Enabled := SettingsTabOn
+    
+    Global RightKeyEdit
+    RightKeyEdit.Enabled := SettingsTabOn
+    
+    Global CameraRightKeyEdit
+    CameraRightKeyEdit.Enabled := SettingsTabOn
+    
+    Global CameraLeftKeyEdit
+    CameraLeftKeyEdit.Enabled := SettingsTabOn
+    
+    Global CameraInKeyEdit
+    CameraInKeyEdit.Enabled := SettingsTabOn
+    
+    Global CameraOutKeyEdit
+    CameraOutKeyEdit.Enabled := SettingsTabOn
+    
+    Global ResetKeyEdit
+    ResetKeyEdit.Enabled := SettingsTabOn
+    
+    Global ChatKeyEdit
+    ChatKeyEdit.Enabled := SettingsTabOn
+    
+    Global AdditionalKeyDelayEdit
+    AdditionalKeyDelayEdit.Enabled := SettingsTabOn
+}

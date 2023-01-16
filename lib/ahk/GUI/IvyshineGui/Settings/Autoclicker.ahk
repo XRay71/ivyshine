@@ -23,6 +23,7 @@ Autoclick(*) {
     Global Globals
     Global AutoclickerRunning
     AutoclickerRunning := !AutoclickerRunning
+    SettingsTabSwitch()
     
     Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     Global AutoclickerIntervalEdit, AutoclickerAmountEdit, AutoclickerHotkeyButton
@@ -41,4 +42,5 @@ Autoclick(*) {
     AutoclickerAmountEdit.Enabled := True
     AutoclickerHotkeyButton.Enabled := True
     Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
+    SetSettingsTabValues()
 }

@@ -45,7 +45,7 @@ IvyshineGuiClose(*) {
     Globals["GUI"]["Settings"]["GuiY"] := GuiY
     For ini, Section in Globals
         UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-    Sleep(100)
+    HyperSleep(50)
     ExitApp
 }
 
@@ -153,4 +153,8 @@ IvyshineGuiRestore(*) {
     A_IconHidden := 1
     IvyshineGui.Show()
     Hotkey("F5", IvyshineGuiMinimize, "T1 P10 On")
+}
+
+DisableGui(*) {
+    Global 
 }
