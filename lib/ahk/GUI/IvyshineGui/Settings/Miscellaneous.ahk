@@ -5,13 +5,13 @@ IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s8", "Calibri")
 
-AlwaysOnTopCheckBox := IvyshineGui.Add("CheckBox", "xs yp+6 h20 -Wrap vAlwaysOnTopCheckBox Checked" Globals["GUI"]["Settings"]["AlwaysOnTop"], "GUI always on top?")
+AlwaysOnTopCheckBox := IvyshineGui.Add("CheckBox", "xs yp+6 h18 -Wrap vAlwaysOnTopCheckBox Checked" Globals["GUI"]["Settings"]["AlwaysOnTop"], "GUI always on top?")
 AlwaysOnTopCheckBox.OnEvent("Click", SubmitSettings)
 
-MoveSpeedCorrectionCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h20 w120 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Adjust for haste buffs?")
+MoveSpeedCorrectionCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h18 w120 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Adjust for haste buffs?")
 MoveSpeedCorrectionCheckBox.OnEvent("Click", SubmitSettings)
 
-ShiftlockMovingCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h20 w120 -Wrap vShiftLockWhenPossibleCheckBox Checked" Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], "Shiftlock moving?")
+ShiftlockMovingCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h18 w120 -Wrap vShiftLockWhenPossibleCheckBox Checked" Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], "Shiftlock moving?")
 ShiftlockMovingCheckBox.OnEvent("Click", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+20 h20 -Wrap +BackgroundTrans", "Transparency: ")
