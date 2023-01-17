@@ -1,5 +1,5 @@
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "xs-8 y+3 w132 h90 Section", "Hotkeys")
+IvyshineGui.Add("GroupBox", "xs-8 ys+205 w132 h90 Section", "Hotkeys")
 IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
 IvyshineGui.SetFont()

@@ -56,6 +56,6 @@ SetCueBanner(ChatKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ChatKey"])
 ChatKeyEdit.OnEvent("LoseFocus", SubmitSettings)
 
 IvyshineGui.Add("Text", "xs yp+22 h19 -Wrap +BackgroundTrans", "Key Delay:")
-AdditionalKeyDelayEdit := IvyshineGui.Add("Edit", "xs+60 yp-3 w30 h21 Right Limit3 Number -Wrap vAdditionalKeyDelayEdit")
+AdditionalKeyDelayEdit := IvyshineGui.Add("Edit", "xs+60 yp-2 w30 h17 Right Limit3 Number -Wrap vAdditionalKeyDelayEdit")
 SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"])
 AdditionalKeyDelayEdit.OnEvent("LoseFocus", SubmitSettings)

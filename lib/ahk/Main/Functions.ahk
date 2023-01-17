@@ -71,6 +71,15 @@ HyperSleep(ms)
     DllCall("Winmm.dll\timeEndPeriod", "UInt", 1)
 }
 
+DefaultErrorBalloonTip(Text, Title, Hwnd) {
+    EBT := Buffer(4 * A_PtrSize)
+    NumPut("UInt", EBT.Size, EBT, 0)
+    NumPut("Ptr", StrPtr(Title), EBT, A_PtrSize)
+    NumPut("Ptr", StrPtr(Text), EBT, A_PtrSize * 2)
+    NumPut("UInt", 3, EBT, A_PtrSize * 3)
+    DllCall("User32.dll\SendMessage", "Ptr", Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", EBT, "Ptr")
+}
+
 ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84750
 CustomToolTip(Content
     , Title := ""

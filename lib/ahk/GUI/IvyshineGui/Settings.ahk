@@ -63,16 +63,10 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["MoveSpeed"] := NewMoveSpeed
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveSpeed"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveSpeed")
             SetCueBanner(MoveSpeedEdit.Hwnd, Globals["Settings"]["Basic Settings"]["MoveSpeed"])
-        } Else If (IsNumber(NewMoveSpeed) && (NewMoveSpeed > 50 || NewMoveSpeed <= 0)) {
-            Text := "Accepted: positive numbers <= 50`r`nMake sure you have no haste."
-            Title := "Invalid Input!"
-            EBT := Buffer(4 * A_PtrSize)
-            NumPut("UInt", EBT.Size, EBT, 0)
-            NumPut("Ptr", StrPtr(Title), EBT, A_PtrSize)
-            NumPut("Ptr", StrPtr(Text), EBT, A_PtrSize * 2)
-            NumPut("UInt", 3, EBT, A_PtrSize * 3)
-            DllCall("User32.dll\SendMessage", "Ptr", MoveSpeedEdit.Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", EBT, "Ptr")
-        }
+        } Else If (IsNumber(NewMoveSpeed) && (NewMoveSpeed > 50 || NewMoveSpeed <= 0))
+            DefaultErrorBalloonTip("Accepted: positive numbers <= 50`r`nMake sure you have no haste.", "Out of range!", MoveSpeedEdit.Hwnd)
+        Else If (!IsNumber(NewMoveSpeed) && NewMoveSpeed != "")
+            DefaultErrorBalloonTip("Accepted: positive numbers <= 50", "Not a number!", MoveSpeedEdit.Hwnd)
         MoveSpeedEdit.Text := MoveSpeedEdit.Value := ""
     }
     
@@ -112,7 +106,7 @@ SubmitSettings(ThisControl, *) {
             IniWrite(Globals["Settings"]["Basic Settings"]["PrivateServerLink"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         } Else {
-            PrivateServerLinkMsgBoxResponded := MsgBox("It appears that the link you provided is invalid!`r`nPlease copy and paste it directly from the private server configuration page.", "Error: invalid link.", "OK Icon! Owner" IvyshineGui.Hwnd)
+            DefaultErrorBalloonTip("Please copy the private server link directly from the configuration page.", "Invalid Link!", PrivateServerLinkEdit.Hwnd)
             SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
         }
     }
@@ -127,9 +121,8 @@ SubmitSettings(ThisControl, *) {
         If (Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]) {
             SetCueBanner(FPSEdit.Hwnd, (Globals["Settings"]["rbxfpsunlocker"]["FPS"] == 0 ? "inf" : Globals["Settings"]["rbxfpsunlocker"]["FPS"]))
             RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
-        } Else {
-            RestoreFPSUnlocker()
-        }
+        } Else
+            CloseFPSUnlocker()
         FPSEdit.Enabled := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
         RunrbxfpsunlockerCheckBox.Enabled := True
     }
@@ -227,6 +220,12 @@ SubmitSettings(ThisControl, *) {
         IniWrite(Globals["Settings"]["Unlocks"]["HasPetalWand"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasPetalWand")
     }
     
+    Global HasGummyballerCheckBox
+    Else If (ThisControl.Hwnd == HasGummyballerCheckBox.Hwnd) {
+        Globals["Settings"]["Unlocks"]["HasGummyballer"] := HasGummyballerCheckBox.Value
+        IniWrite(Globals["Settings"]["Unlocks"]["HasGummyballer"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGummyballer")
+    }
+    
     Global HasTidePopperCheckBox
     Else If (ThisControl.Hwnd == HasTidePopperCheckBox.Hwnd) {
         Globals["Settings"]["Unlocks"]["HasTidePopper"] := HasTidePopperCheckBox.Value
@@ -247,7 +246,8 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["NumberOfBees"] := NewNumberOfBees
             IniWrite(Globals["Settings"]["Basic Settings"]["NumberOfBees"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "NumberOfBees")
             SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Basic Settings"]["NumberOfBees"])
-        }
+        } Else If (IsInteger(NewNumberOfBees) && (NewNumberOfBees > 50 || NewNumberOfBees == 0))
+            DefaultErrorBalloonTip("Accepted: positive integers <= 50", "Out of range!", NumberOfBeesEdit.Hwnd)
         NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
     }
     
@@ -313,8 +313,11 @@ SubmitSettings(ThisControl, *) {
     Else If (ThisControl.Hwnd == ReconnectIntervalEdit.Hwnd) {
         If (ReconnectIntervalEdit.Value == "" && !SubmitButton)
             Return
-        Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
-        IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectInterval")
+        If (!ReconnectIntervalEdit.Value || Mod(24, ReconnectIntervalEdit.Value) == 0) {
+            Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
+            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectInterval")
+        } Else
+            DefaultErrorBalloonTip("Accepted: factors of 24`r`n1, 2, 3, 4, 6, 8, 12, 24", "Value not accepted!", ReconnectIntervalEdit.Hwnd)
         ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
         SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectInterval"])
         Global ReconnectIntervalText
@@ -329,7 +332,8 @@ SubmitSettings(ThisControl, *) {
         If (ReconnectStartHourEdit.Value >= 0 && ReconnectStartHourEdit.Value <= 23) {
             Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"] := ReconnectStartHourEdit.Value
             IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartHour")
-        }
+        } Else
+            DefaultErrorBalloonTip("Accepted: 0 <= n <= 23", "Out of range!", ReconnectStartHourEdit.Hwnd)
         ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
         SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"])
     }
@@ -342,7 +346,8 @@ SubmitSettings(ThisControl, *) {
         If (ReconnectStartMinuteEdit.Value >= 0 && ReconnectStartMinuteEdit.Value <= 59) {
             Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"] := ReconnectStartMinuteEdit.Value
             IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartMinute")
-        }
+        } Else
+            DefaultErrorBalloonTip("Accepted: 0 <= n <= 59", "Out of range!", ReconnectStartMinuteEdit.Hwnd)
         ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
         SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"])
     }
@@ -374,7 +379,8 @@ SubmitSettings(ThisControl, *) {
             SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
             AntiAFKIntervalText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] == 1 ? " minute." : " minutes.")
             AntiAFKProgress.Opt("Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60))
-        }
+        } Else If (IsNumber(AntiAFKIntervalEdit.Value) && (AntiAFKIntervalEdit.Value == 0 || AntiAFKIntervalEdit.Value > 20))
+            DefaultErrorBalloonTip("Accepted: positive Integers <= 20", "Out of range!", AntiAFKIntervalEdit.Hwnd)
         AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
     }
     
@@ -565,6 +571,9 @@ SetSettingsTabValues(*) {
     Global HasPetalWandCheckBox
     HasPetalWandCheckBox.Value := Globals["Settings"]["Unlocks"]["HasPetalWand"]
     
+    Global HasGummyballerCheckBox
+    HasGummyballerCheckBox.Value := Globals["Settings"]["Unlocks"]["HasGummyballer"]
+    
     Global HasTidePopperCheckBox
     HasTidePopperCheckBox.Value := Globals["Settings"]["Unlocks"]["HasTidePopper"]
     
@@ -576,13 +585,13 @@ SetSettingsTabValues(*) {
     SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
     
     Global StartHotkeyButton
-    StartHotkeyButton.Text := "Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")"
+    StartHotkeyButton.Text := " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")"
     
     Global PauseHotkeyButton
-    PauseHotkeyButton.Text := "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")"
+    PauseHotkeyButton.Text := " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")"
     
     Global StopHotkeyButton
-    StopHotkeyButton.Text := "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")"
+    StopHotkeyButton.Text := " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")"
     
     Global AlwaysOnTopCheckBox
     AlwaysOnTopCheckBox.Value := Globals["GUI"]["Settings"]["AlwaysOnTop"]
@@ -746,6 +755,9 @@ SettingsTabSwitch(*) {
     
     Global HasPetalWandCheckBox
     HasPetalWandCheckBox.Enabled := SettingsTabOn
+    
+    Global HasGummyballerCheckBox
+    HasGummyballerCheckBox.Enabled := SettingsTabOn
     
     Global HasTidePopperCheckBox
     HasTidePopperCheckBox.Enabled := SettingsTabOn

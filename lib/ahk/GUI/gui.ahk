@@ -158,3 +158,39 @@ IvyshineGuiRestore(*) {
 DisableGui(*) {
     Global
 }
+
+GuiOn := True
+
+GuiSwitch(*) {
+    Global GuiOn
+    GuiOn := !GuiOn
+    
+    Global StartButton
+    StartButton.Enabled := GuiOn
+    
+    Global PauseButton
+    PauseButton.Enabled := GuiOn
+    
+    Global StopButton
+    StopButton.Enabled := GuiOn
+    
+    Global GuiCloseButton
+    GuiCloseButton.Enabled := GuiOn
+    
+    Global GuiMinimizeButton
+    GuiMinimizeButton.Enabled := GuiOn
+    
+    Global InfoButton
+    InfoButton.Enabled := GuiOn
+}
+
+GuiMasterSwitch(*) {
+    Global MacroInfoGui
+    MacroInfoGui.Hide()
+    
+    SettingsTabSwitch()
+}
+
+SetAllGuiValues(*) {
+    SetSettingsTabValues()
+}

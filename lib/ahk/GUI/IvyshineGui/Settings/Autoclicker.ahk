@@ -1,5 +1,5 @@
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "xs-8 y+6 w106 h90 Section", "Autoclicker")
+IvyshineGui.Add("GroupBox", "xs-8 ys+205 w106 h90 Section", "Autoclicker")
 IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
 IvyshineGui.SetFont()
@@ -26,7 +26,8 @@ Autoclick(*) {
     
     AutoclickerRunning := !AutoclickerRunning
     
-    SettingsTabSwitch()
+    GuiMasterSwitch()
+    GuiSwitch()
     
     Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     
@@ -52,5 +53,5 @@ Autoclick(*) {
     
     Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     
-    SetSettingsTabValues()
+    SetAllGuiValues()
 }

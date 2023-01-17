@@ -102,6 +102,7 @@ Globals["Settings"]["Unlocks"] := Map(
 "HasPetalWand", "1",
 "HasTidePopper", "0",
 "HasDarkScythe", "0",
+"HasGummyballer", "0",
 "NumberOfBees", "50"
 )
 
