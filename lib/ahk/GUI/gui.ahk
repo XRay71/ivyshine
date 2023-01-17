@@ -156,5 +156,5 @@ IvyshineGuiRestore(*) {
 }
 
 DisableGui(*) {
-    Global 
+    Global
 }

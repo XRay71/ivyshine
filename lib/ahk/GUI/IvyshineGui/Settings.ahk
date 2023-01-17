@@ -63,6 +63,15 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["MoveSpeed"] := NewMoveSpeed
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveSpeed"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveSpeed")
             SetCueBanner(MoveSpeedEdit.Hwnd, Globals["Settings"]["Basic Settings"]["MoveSpeed"])
+        } Else If (IsNumber(NewMoveSpeed) && (NewMoveSpeed > 50 || NewMoveSpeed <= 0)) {
+            Text := "Accepted: positive numbers <= 50`r`nMake sure you have no haste."
+            Title := "Invalid Input!"
+            EBT := Buffer(4 * A_PtrSize)
+            NumPut("UInt", EBT.Size, EBT, 0)
+            NumPut("Ptr", StrPtr(Title), EBT, A_PtrSize)
+            NumPut("Ptr", StrPtr(Text), EBT, A_PtrSize * 2)
+            NumPut("UInt", 3, EBT, A_PtrSize * 3)
+            DllCall("User32.dll\SendMessage", "Ptr", MoveSpeedEdit.Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", EBT, "Ptr")
         }
         MoveSpeedEdit.Text := MoveSpeedEdit.Value := ""
     }
@@ -301,8 +310,42 @@ SubmitSettings(ThisControl, *) {
     }
     
     Global ReconnectIntervalEdit
+    Else If (ThisControl.Hwnd == ReconnectIntervalEdit.Hwnd) {
+        If (ReconnectIntervalEdit.Value == "" && !SubmitButton)
+            Return
+        Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
+        IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectInterval")
+        ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
+        SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectInterval"])
+        Global ReconnectIntervalText
+        ReconnectIntervalText.Text := (Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] == 1 ? " hour," : " hours,")
+    }
+    
     Global ReconnectStartHourEdit
+    Else If (ThisControl.Hwnd == ReconnectStartHourEdit.Hwnd) {
+        If (ReconnectStartHourEdit.Value == "" && !SubmitButton)
+            Return
+        ReconnectStartHourEdit.Value := Format("{:02}", Number((ReconnectStartHourEdit.Value ? ReconnectStartHourEdit.Value : 0)))
+        If (ReconnectStartHourEdit.Value >= 0 && ReconnectStartHourEdit.Value <= 23) {
+            Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"] := ReconnectStartHourEdit.Value
+            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartHour")
+        }
+        ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
+        SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"])
+    }
+    
     Global ReconnectStartMinuteEdit
+    Else If (ThisControl.Hwnd == ReconnectStartMinuteEdit.Hwnd) {
+        If (ReconnectStartMinuteEdit.Value == "" && !SubmitButton)
+            Return
+        ReconnectStartMinuteEdit.Value := Format("{:02}", Number((ReconnectStartMinuteEdit.Value ? ReconnectStartMinuteEdit.Value : 0)))
+        If (ReconnectStartMinuteEdit.Value >= 0 && ReconnectStartMinuteEdit.Value <= 59) {
+            Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"] := ReconnectStartMinuteEdit.Value
+            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartMinute")
+        }
+        ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
+        SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"])
+    }
     
     Global RunAntiAFKCheckBox, AntiAFKIntervalEdit, AntiAFKIntervalText, AntiAFKProgress
     Else If (ThisControl.Hwnd == RunAntiAFKCheckBox.Hwnd) {
@@ -564,8 +607,16 @@ SetSettingsTabValues(*) {
     ResetMultiplierList.Choose(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
     
     Global ReconnectIntervalEdit
+    ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
+    SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectInterval"])
+    
     Global ReconnectStartHourEdit
+    ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
+    SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"])
+    
     Global ReconnectStartMinuteEdit
+    ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
+    SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"])
     
     Global RunAntiAFKCheckBox
     RunAntiAFKCheckBox.Value := Globals["Settings"]["AntiAFK"]["RunAntiAFK"]
@@ -739,8 +790,13 @@ SettingsTabSwitch(*) {
     ResetMultiplierList.Enabled := SettingsTabOn
     
     Global ReconnectIntervalEdit
+    ReconnectIntervalEdit.Enabled := SettingsTabOn
+    
     Global ReconnectStartHourEdit
+    ReconnectStartHourEdit.Enabled := SettingsTabOn
+    
     Global ReconnectStartMinuteEdit
+    ReconnectStartMinuteEdit.Enabled := SettingsTabOn
     
     Global AntiAFKInfoButton
     AntiAFKInfoButton.Enabled := SettingsTabOn
