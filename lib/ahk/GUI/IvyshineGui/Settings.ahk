@@ -17,7 +17,7 @@ ResetButton.OnEvent("Click", ResetAll)
 #Include *i Settings\Keybinds.ahk
 #Include *i Settings\Autoclicker.ahk
 
-#Include *i ..\EditHotkeysGui\Edit Hotkeys.ahk
+#Include *i Settings\EditHotkeysGui\Edit Hotkeys.ahk
 ShowEditHotkeysGui := False
 
 Try
@@ -76,7 +76,7 @@ SubmitSettings(ThisControl, *) {
         IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
         
         For Field in Globals["Field Settings"] {
-            If (!Globals["Field Settings"][Field]["SettingsModified"]) {
+            If (!InStr(Globals["Field Settings"][Field]["SettingsModified"], "MoveMethod")) {
                 Globals["Field Settings"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Settings"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
                 IniWrite(Globals["Field Settings"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Settings"], Field, "MoveMethod")
             }
@@ -104,11 +104,9 @@ SubmitSettings(ThisControl, *) {
         Else If ((!NewPrivateServerLink && SubmitButton)|| RegExMatch(NewPrivateServerLink, "i)^((http(s)?):\/\/)?((www|web)\.)?roblox\.com\/games\/(1537690962|4189852503)\/?([^\/]*)\?privateServerLinkCode=.{32}(\&[^\/]*)*$")) {
             Globals["Settings"]["Basic Settings"]["PrivateServerLink"] := NewPrivateServerLink
             IniWrite(Globals["Settings"]["Basic Settings"]["PrivateServerLink"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
-            SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
-        } Else {
+        } Else
             DefaultErrorBalloonTip("Please copy the private server link directly from the configuration page.", "Invalid Link!", PrivateServerLinkEdit.Hwnd)
-            SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
-        }
+        SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
     }
     
     Global RunrbxfpsunlockerCheckBox
