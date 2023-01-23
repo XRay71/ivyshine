@@ -49,7 +49,7 @@ CloseFPSUnlocker() {
         BlockInput("Send")
         PostMessage(0x8000 + 1,, 0x0204,, "ahk_exe rbxfpsunlocker.exe")
         HyperSleep(20)
-        SendInput("{Up}{Enter}")
+        Send("{" Globals["Constants"]["Scan Codes"]["Up"] "}{" Globals["Constants"]["Scan Codes"]["Enter"] "}")
         BlockInput("Default")
     }
     DetectHiddenWindows(DetectHiddenWindowsSetting)

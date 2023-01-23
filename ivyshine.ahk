@@ -9,6 +9,7 @@
 #Requires AutoHotkey v2.0 32-bit
 
 SetWinDelay(0)
+SendMode("Input")
 Thread("NoTimers", True)
 SetWorkingDir(A_ScriptDir)
 CoordMode("Pixel", "Client")
