@@ -35,7 +35,7 @@ HasTidePopperCheckBox.OnEvent("Click", SubmitSettings)
 HasDarkScytheCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h18 -Wrap vHasDarkScytheCheckBox Checked" Globals["Settings"]["Unlocks"]["HasDarkScythe"], "Have Dark Scythe?")
 HasDarkScytheCheckBox.OnEvent("Click", SubmitSettings)
 
-IvyshineGui.Add("Text", "xs yp+20 h20 -Wrap +BackgroundTrans", "My hive has ")
+IvyshineGui.Add("Text", "xs yp+24 h20 -Wrap +BackgroundTrans", "My hive has ")
 NumberOfBeesEdit := IvyshineGui.Add("Edit", "x+5 yp-2 w25 h16 Limit2 Center Number -Wrap vNumberOfBeesEdit")
 IvyshineGui.Add("Text", "x+3 yp+2 h20 -Wrap +BackgroundTrans", " Bees.")
 NumberOfBeesEdit.OnEvent("LoseFocus", SubmitSettings)

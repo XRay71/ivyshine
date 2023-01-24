@@ -1,6 +1,6 @@
-IvyshineGui := Gui("-SysMenu -Resize +OwnDialogs" (Globals["GUI"]["Settings"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop"), "Ivyshine Macro")
+IvyshineGui := Gui("-SysMenu -Resize +OwnDialogs" (Globals["Settings"]["GUI"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop"), "Ivyshine Macro")
 IvyshineGui.Opt("+LastFound")
-WinSetTransparent(255 - Floor(Globals["GUI"]["Settings"]["Transparency"] * 2.55))
+WinSetTransparent(255 - Floor(Globals["Settings"]["GUI"]["Transparency"] * 2.55))
 IvyshineGui.OnEvent("Close", IvyshineGuiClose)
 IvyshineGui.OnEvent("Escape", IvyshineGuiClose)
 
@@ -36,6 +36,7 @@ WinSetStyle(-0xC40000)
 DllCall("SetMenu", "Ptr", WinExist(), "Ptr", 0)
 
 IvyshineGui.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
+WinActivate(IvyshineGui.Hwnd)
 
 IvyshineGuiClose(*) {
     Global Globals, IvyshineGui
@@ -106,8 +107,8 @@ StopMoveGui(*) {
     WinGetPos(&WinX, &WinY,,, IvyshineGui.Hwnd)
     Globals["GUI"]["Position"]["GUIX"] := WinX
     Globals["GUI"]["Position"]["GUIY"] := WinY
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiX")
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "GuiY")
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GuiX")
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GuiY")
 }
 
 MoveGui() {

@@ -1,4 +1,4 @@
-EditHotkeysGui := Gui("+Border -SysMenu -Resize" (Globals["GUI"]["Settings"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop") " +Owner" IvyshineGui.Hwnd, "Edit Hotkeys")
+EditHotkeysGui := Gui("+Border -SysMenu -Resize" (Globals["Settings"]["GUI"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop") " +Owner" IvyshineGui.Hwnd, "Edit Hotkeys")
 EditHotkeysGui.OnEvent("Close", EditHotkeysGuiClose)
 EditHotkeysGui.OnEvent("Escape", EditHotkeysGuiClose)
 

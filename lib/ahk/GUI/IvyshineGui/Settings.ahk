@@ -12,9 +12,11 @@ ResetButton.OnEvent("Click", ResetAll)
 
 #Include *i Settings\Unlocks.ahk
 #Include *i Settings\Hotkeys.ahk
-#Include *i Settings\Miscellaneous.ahk
+#Include *i Settings\GUI.ahk
+#Include *i Settings\Convert Settings.ahk
+#Include *i Settings\Reconnect.ahk
 #Include *i Settings\AntiAFK.ahk
-#Include *i Settings\Keybinds.ahk
+#Include *i Settings\Miscellaneous.ahk
 #Include *i Settings\Autoclicker.ahk
 
 #Include *i Settings\EditHotkeysGui\Edit Hotkeys.ahk
@@ -241,9 +243,9 @@ SubmitSettings(ThisControl, *) {
         NewNumberOfBees := Trim(NumberOfBeesEdit.Value)
         If (IsInteger(NewNumberOfBees) && NewNumberOfBees <= 50 && NewNumberOfBees > 0) {
             NewNumberOfBees := Round(Integer(NewNumberOfBees))
-            Globals["Settings"]["Basic Settings"]["NumberOfBees"] := NewNumberOfBees
-            IniWrite(Globals["Settings"]["Basic Settings"]["NumberOfBees"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "NumberOfBees")
-            SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Basic Settings"]["NumberOfBees"])
+            Globals["Settings"]["Unlocks"]["NumberOfBees"] := NewNumberOfBees
+            IniWrite(Globals["Settings"]["Unlocks"]["NumberOfBees"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "NumberOfBees")
+            SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
         } Else If (IsInteger(NewNumberOfBees) && (NewNumberOfBees > 50 || NewNumberOfBees == 0))
             DefaultErrorBalloonTip("Accepted: positive integers <= 50", "Out of range!", NumberOfBeesEdit.Hwnd)
         NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
@@ -251,60 +253,55 @@ SubmitSettings(ThisControl, *) {
     
     Global AlwaysOnTopCheckBox
     Else If (ThisControl.Hwnd == AlwaysOnTopCheckBox.Hwnd) {
-        Globals["GUI"]["Settings"]["AlwaysOnTop"] := AlwaysOnTopCheckBox.Value
-        IniWrite(Globals["GUI"]["Settings"]["AlwaysOnTop"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "AlwaysOnTop")
-        IvyshineGui.Opt((Globals["GUI"]["Settings"]["AlwaysOnTop"] ? "+" : "-") "AlwaysOnTop")
-    }
-    
-    Global MoveSpeedCorrectionCheckBox
-    Else If (ThisControl.Hwnd == MoveSpeedCorrectionCheckBox.Hwnd) {
-        Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"] := MoveSpeedCorrectionCheckBox.Value
-        IniWrite(Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "MoveSpeedCorrection")
-    }
-    
-    Global ShiftlockMovingCheckBox
-    Else If (ThisControl.Hwnd == ShiftlockMovingCheckBox.Hwnd) {
-        Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"] := ShiftlockMovingCheckBox.Value
-        IniWrite(Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ShiftlockMoving")
+        Globals["Settings"]["GUI"]["AlwaysOnTop"] := AlwaysOnTopCheckBox.Value
+        IniWrite(Globals["Settings"]["GUI"]["AlwaysOnTop"], Globals["Constants"]["ini FilePaths"]["Settings"], "GUI", "AlwaysOnTop")
+        IvyshineGui.Opt((Globals["Settings"]["GUI"]["AlwaysOnTop"] ? "+" : "-") "AlwaysOnTop")
     }
     
     Global TransparencyList
     Else If (ThisControl.Hwnd == TransparencyList.Hwnd) {
-        Globals["GUI"]["Settings"]["Transparency"] := TransparencyList.Text
-        IniWrite(Globals["GUI"]["Settings"]["Transparency"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "Transparency")
+        Globals["Settings"]["GUI"]["Transparency"] := TransparencyList.Text
+        IniWrite(Globals["Settings"]["GUI"]["Transparency"], Globals["Constants"]["ini FilePaths"]["Settings"], "GUI", "Transparency")
         IvyshineGui.Opt("+LastFound")
-        WinSetTransparent(255 - Floor(Globals["GUI"]["Settings"]["Transparency"] * 2.55))
+        WinSetTransparent(255 - Floor(Globals["Settings"]["GUI"]["Transparency"] * 2.55))
+    }
+    
+    Global ConvertDelayEdit
+    Else If (ThisControl.Hwnd == ConvertDelayEdit.Hwnd) {
+        NewConvertDelay := Trim(ConvertDelayEdit.Value)
+        If (IsInteger(NewConvertDelay) && NewConvertDelay <= 20 && NewConvertDelay >= 0) {
+            NewConvertDelay := Round(Integer(NewConvertDelay))
+            Globals["Settings"]["Convert Settings"]["ConvertDelay"] := NewConvertDelay
+            IniWrite(Globals["Settings"]["Convert Settings"]["ConvertDelay"], Globals["Constants"]["ini FilePaths"]["Settings"], "Convert Settings", "ConvertDelay")
+            SetCueBanner(ConvertDelayEdit.Hwnd, Globals["Settings"]["Convert Settings"]["ConvertDelay"])
+        } Else If (IsInteger(NewConvertDelay) && NewConvertDelay > 20)
+            DefaultErrorBalloonTip("Accepted: non-negative integers <= 20", "Out of range!", ConvertDelayEdit.Hwnd)
+        ConvertDelayEdit.Text := ConvertDelayEdit.Value := ""
     }
     
     Global BalloonConvertSettingList, BalloonConvertIntervalEdit, BalloonConvertIntervalText
     Else If (ThisControl.Hwnd == BalloonConvertSettingList.Hwnd) {
-        Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] := BalloonConvertSettingList.Text
-        IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvertSetting")
-        BalloonConvertIntervalEdit.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] == "Every")
-        BalloonConvertIntervalText.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] == "Every")
+        Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] := BalloonConvertSettingList.Text
+        IniWrite(Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"], Globals["Constants"]["ini FilePaths"]["Settings"], "Convert Settings", "BalloonConvertSetting")
+        BalloonConvertIntervalEdit.Visible := (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every")
+        BalloonConvertIntervalText.Visible := (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every")
     }
     
     Else If (ThisControl.Hwnd == BalloonConvertIntervalEdit.Hwnd) {
         If (BalloonConvertIntervalEdit.Value == "" && !SubmitButton)
             Return
         If ((BalloonConvertIntervalEdit.Value == "" && SubmitButton) || BalloonConvertIntervalEdit.Value == 0) {
-            Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] := "Never"
-            BalloonConvertSettingList.Choose(Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"])
-            IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvertSetting")
-            BalloonConvertIntervalEdit.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] == "Every")
-            BalloonConvertIntervalText.Visible := (Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"] == "Every")
+            Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] := "Never"
+            BalloonConvertSettingList.Choose(Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"])
+            IniWrite(Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"], Globals["Constants"]["ini FilePaths"]["Settings"], "Convert Settings", "BalloonConvertSetting")
+            BalloonConvertIntervalEdit.Visible := (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every")
+            BalloonConvertIntervalText.Visible := (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every")
         } Else {
-            Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"] := Integer(BalloonConvertIntervalEdit.Value)
-            IniWrite(Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "BalloonConvertInterval")
+            Globals["Settings"]["Convert Settings"]["BalloonConvertInterval"] := Integer(BalloonConvertIntervalEdit.Value)
+            IniWrite(Globals["Settings"]["Convert Settings"]["BalloonConvertInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Convert Settings", "BalloonConvertInterval")
         }
         BalloonConvertIntervalEdit.Value := BalloonConvertIntervalEdit.Text := ""
-        SetCueBanner(BalloonConvertIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"])
-    }
-    
-    Global ResetMultiplierList
-    Else If (ThisControl.Hwnd == ResetMultiplierList.Hwnd) {
-        Globals["Settings"]["Miscellaneous"]["ResetMultiplier"] := ResetMultiplierList.Value
-        IniWrite(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ResetMultiplier")
+        SetCueBanner(BalloonConvertIntervalEdit.Hwnd, Globals["Settings"]["Convert Settings"]["BalloonConvertInterval"])
     }
     
     Global ReconnectIntervalEdit
@@ -312,14 +309,14 @@ SubmitSettings(ThisControl, *) {
         If (ReconnectIntervalEdit.Value == "" && !SubmitButton)
             Return
         If (!ReconnectIntervalEdit.Value || Mod(24, ReconnectIntervalEdit.Value) == 0) {
-            Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
-            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectInterval")
+            Globals["Settings"]["Reconnect"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
+            IniWrite(Globals["Settings"]["Reconnect"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectInterval")
         } Else
             DefaultErrorBalloonTip("Accepted: factors of 24`r`n1, 2, 3, 4, 6, 8, 12, 24", "Value not accepted!", ReconnectIntervalEdit.Hwnd)
         ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
-        SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectInterval"])
+        SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectInterval"])
         Global ReconnectIntervalText
-        ReconnectIntervalText.Text := (Globals["Settings"]["Miscellaneous"]["ReconnectInterval"] == 1 ? " hour," : " hours,")
+        ReconnectIntervalText.Text := (Globals["Settings"]["Reconnect"]["ReconnectInterval"] == 1 ? " hour," : " hours,")
     }
     
     Global ReconnectStartHourEdit
@@ -328,12 +325,12 @@ SubmitSettings(ThisControl, *) {
             Return
         ReconnectStartHourEdit.Value := Format("{:02}", Number((ReconnectStartHourEdit.Value ? ReconnectStartHourEdit.Value : 0)))
         If (ReconnectStartHourEdit.Value >= 0 && ReconnectStartHourEdit.Value <= 23) {
-            Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"] := ReconnectStartHourEdit.Value
-            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartHour")
+            Globals["Settings"]["Reconnect"]["ReconnectStartHour"] := ReconnectStartHourEdit.Value
+            IniWrite(Globals["Settings"]["Reconnect"]["ReconnectStartHour"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectStartHour")
         } Else
             DefaultErrorBalloonTip("Accepted: 0 <= n <= 23", "Out of range!", ReconnectStartHourEdit.Hwnd)
         ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
-        SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"])
+        SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartHour"])
     }
     
     Global ReconnectStartMinuteEdit
@@ -342,12 +339,18 @@ SubmitSettings(ThisControl, *) {
             Return
         ReconnectStartMinuteEdit.Value := Format("{:02}", Number((ReconnectStartMinuteEdit.Value ? ReconnectStartMinuteEdit.Value : 0)))
         If (ReconnectStartMinuteEdit.Value >= 0 && ReconnectStartMinuteEdit.Value <= 59) {
-            Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"] := ReconnectStartMinuteEdit.Value
-            IniWrite(Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ReconnectStartMinute")
+            Globals["Settings"]["Reconnect"]["ReconnectStartMinute"] := ReconnectStartMinuteEdit.Value
+            IniWrite(Globals["Settings"]["Reconnect"]["ReconnectStartMinute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectStartMinute")
         } Else
             DefaultErrorBalloonTip("Accepted: 0 <= n <= 59", "Out of range!", ReconnectStartMinuteEdit.Hwnd)
         ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
-        SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"])
+        SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartMinute"])
+    }
+    
+    Global MoveSpeedCorrectionCheckBox
+    Else If (ThisControl.Hwnd == MoveSpeedCorrectionCheckBox.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"] := MoveSpeedCorrectionCheckBox.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "MoveSpeedCorrection")
     }
     
     Global RunAntiAFKCheckBox, AntiAFKIntervalEdit, AntiAFKIntervalText, AntiAFKProgress
@@ -382,114 +385,26 @@ SubmitSettings(ThisControl, *) {
         AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
     }
     
-    Global ForwardKeyEdit
-    Else If (ThisControl.Hwnd == ForwardKeyEdit.Hwnd) {
-        If (ForwardKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["ForwardKey"] := ForwardKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["ForwardKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "ForwardKey")
-        SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ForwardKey"])
-        ForwardKeyEdit.Value := ForwardKeyEdit.Text := ""
-    }
-    
-    Global LeftKeyEdit
-    Else If (ThisControl.Hwnd == LeftKeyEdit.Hwnd) {
-        If (LeftKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["LeftKey"] := LeftKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["LeftKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "LeftKey")
-        SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["LeftKey"])
-        LeftKeyEdit.Value := LeftKeyEdit.Text := ""
-    }
-    
-    Global BackwardKeyEdit
-    Else If (ThisControl.Hwnd == BackwardKeyEdit.Hwnd) {
-        If (BackwardKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["BackwardKey"] := BackwardKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["BackwardKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "BackwardKey")
-        SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BackwardKey"])
-        BackwardKeyEdit.Value := BackwardKeyEdit.Text := ""
-    }
-    
-    Global RightKeyEdit
-    Else If (ThisControl.Hwnd == RightKeyEdit.Hwnd) {
-        If (RightKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["RightKey"] := RightKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["RightKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "RightKey")
-        SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["RightKey"])
-        RightKeyEdit.Value := RightKeyEdit.Text := ""
-    }
-    
-    Global CameraRightKeyEdit
-    Else If (ThisControl.Hwnd == CameraRightKeyEdit.Hwnd) {
-        If (CameraRightKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["CameraRightKey"] := CameraRightKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["CameraRightKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraRightKey")
-        SetCueBanner(CameraRightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraRightKey"])
-        CameraRightKeyEdit.Value := CameraRightKeyEdit.Text := ""
-    }
-    
-    Global CameraLeftKeyEdit
-    Else If (ThisControl.Hwnd == CameraLeftKeyEdit.Hwnd) {
-        If (CameraLeftKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["CameraLeftKey"] := CameraLeftKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["CameraLeftKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraLeftKey")
-        SetCueBanner(CameraLeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraLeftKey"])
-        CameraLeftKeyEdit.Value := CameraLeftKeyEdit.Text := ""
-    }
-    
-    Global CameraInKeyEdit
-    Else If (ThisControl.Hwnd == CameraInKeyEdit.Hwnd) {
-        If (CameraInKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["CameraInKey"] := CameraInKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["CameraInKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraInKey")
-        SetCueBanner(CameraInKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraInKey"])
-        CameraInKeyEdit.Value := CameraInKeyEdit.Text := ""
-    }
-    
-    Global CameraOutKeyEdit
-    Else If (ThisControl.Hwnd == CameraOutKeyEdit.Hwnd) {
-        If (CameraOutKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["CameraOutKey"] := CameraOutKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["CameraOutKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "CameraOutKey")
-        SetCueBanner(CameraOutKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraOutKey"])
-        CameraOutKeyEdit.Value := CameraOutKeyEdit.Text := ""
-    }
-    
-    Global ResetKeyEdit
-    Else If (ThisControl.Hwnd == ResetKeyEdit.Hwnd) {
-        If (ResetKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["ResetKey"] := ResetKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["ResetKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "ResetKey")
-        SetCueBanner(ResetKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ResetKey"])
-        ResetKeyEdit.Value := ResetKeyEdit.Text := ""
-    }
-    
-    Global ChatKeyEdit
-    Else If (ThisControl.Hwnd == ChatKeyEdit.Hwnd) {
-        If (ChatKeyEdit.Value == "")
-            Return
-        Globals["Settings"]["Keybinds"]["ChatKey"] := ChatKeyEdit.Value
-        IniWrite(Globals["Settings"]["Keybinds"]["ChatKey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "ChatKey")
-        SetCueBanner(ChatKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ChatKey"])
-        ChatKeyEdit.Value := ChatKeyEdit.Text := ""
+    Global ShiftlockMovingCheckBox
+    Else If (ThisControl.Hwnd == ShiftlockMovingCheckBox.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"] := ShiftlockMovingCheckBox.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ShiftlockMoving")
     }
     
     Global AdditionalKeyDelayEdit
     Else If (ThisControl.Hwnd == AdditionalKeyDelayEdit.Hwnd) {
         If (AdditionalKeyDelayEdit.Value == "" && !SubmitButton)
             Return
-        Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"] := Round(Number((AdditionalKeyDelayEdit.Value ? AdditionalKeyDelayEdit.Value : 0)))
-        IniWrite(Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"], Globals["Constants"]["ini FilePaths"]["Settings"], "Keybinds", "AdditionalKeyDelay")
-        SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"])
+        Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"] := Round(Number((AdditionalKeyDelayEdit.Value ? AdditionalKeyDelayEdit.Value : 0)))
+        IniWrite(Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "AdditionalKeyDelay")
+        SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"])
         AdditionalKeyDelayEdit.Value := AdditionalKeyDelayEdit.Text := ""
+    }
+    
+    Global ResetMultiplierSlider
+    Else If (ThisControl.Hwnd == ResetMultiplierSlider.Hwnd) {
+        Globals["Settings"]["Miscellaneous"]["ResetMultiplier"] := ResetMultiplierSlider.Value
+        IniWrite(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"], Globals["Constants"]["ini FilePaths"]["Settings"], "Miscellaneous", "ResetMultiplier")
     }
     
     Global ClickIntervalEdit
@@ -592,39 +507,33 @@ SetSettingsTabValues(*) {
     StopHotkeyButton.Text := " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")"
     
     Global AlwaysOnTopCheckBox
-    AlwaysOnTopCheckBox.Value := Globals["GUI"]["Settings"]["AlwaysOnTop"]
-    
-    Global MoveSpeedCorrectionCheckBox
-    MoveSpeedCorrectionCheckBox.Value := Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"]
-    
-    Global ShiftlockMovingCheckBox
-    ShiftlockMovingCheckBox.Value := Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"]
+    AlwaysOnTopCheckBox.Value := Globals["Settings"]["GUI"]["AlwaysOnTop"]
     
     Global TransparencyList
-    TransparencyList.Choose(Globals["GUI"]["Settings"]["Transparency"])
+    TransparencyList.Choose(Globals["Settings"]["GUI"]["Transparency"])
+    
+    Global ConvertDelayEdit
+    ConvertDelayEdit.Value := ConvertDelayEdit.Text := ""
+    SetCueBanner(ConvertDelayEdit.Hwnd, Globals["Settings"]["Convert Settings"]["ConvertDelay"])
     
     Global BalloonConvertSettingList
-    BalloonConvertSettingList.Choose(Globals["Settings"]["Miscellaneous"]["BalloonConvertSetting"])
+    BalloonConvertSettingList.Choose(Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"])
     
     Global BalloonConvertIntervalEdit
     BalloonConvertIntervalEdit.Value := BalloonConvertIntervalEdit.Text := ""
-    SetCueBanner(BalloonConvertIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["BalloonConvertInterval"])
-    
-    Global ResetMultiplierList
-    ResetMultiplierList.Choose(Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
+    SetCueBanner(BalloonConvertIntervalEdit.Hwnd, Globals["Settings"]["Convert Settings"]["BalloonConvertInterval"])
     
     Global ReconnectIntervalEdit
     ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
-    SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectInterval"])
+    SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectInterval"])
     
     Global ReconnectStartHourEdit
     ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
-    SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartHour"])
+    SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartHour"])
     
     Global ReconnectStartMinuteEdit
     ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
-    SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["ReconnectStartMinute"])
-    
+    SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartMinute"])
     Global RunAntiAFKCheckBox
     RunAntiAFKCheckBox.Value := Globals["Settings"]["AntiAFK"]["RunAntiAFK"]
     
@@ -632,49 +541,18 @@ SetSettingsTabValues(*) {
     AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
     SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
     
-    Global ForwardKeyEdit
-    ForwardKeyEdit.Value := ForwardKeyEdit.Text := ""
-    SetCueBanner(ForwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ForwardKey"])
+    Global MoveSpeedCorrectionCheckBox
+    MoveSpeedCorrectionCheckBox.Value := Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"]
     
-    Global LeftKeyEdit
-    LeftKeyEdit.Value := LeftKeyEdit.Text := ""
-    SetCueBanner(LeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["LeftKey"])
-    
-    Global BackwardKeyEdit
-    BackwardKeyEdit.Value := BackwardKeyEdit.Text := ""
-    SetCueBanner(BackwardKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["BackwardKey"])
-    
-    Global RightKeyEdit
-    RightKeyEdit.Value := RightKeyEdit.Text := ""
-    SetCueBanner(RightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["RightKey"])
-    
-    Global CameraRightKeyEdit
-    CameraRightKeyEdit.Value := CameraRightKeyEdit.Text := ""
-    SetCueBanner(CameraRightKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraRightKey"])
-    
-    Global CameraLeftKeyEdit
-    CameraLeftKeyEdit.Value := CameraLeftKeyEdit.Text := ""
-    SetCueBanner(CameraLeftKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraLeftKey"])
-    
-    Global CameraInKeyEdit
-    CameraInKeyEdit.Value := CameraInKeyEdit.Text := ""
-    SetCueBanner(CameraInKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraInKey"])
-    
-    Global CameraOutKeyEdit
-    CameraOutKeyEdit.Value := CameraOutKeyEdit.Text := ""
-    SetCueBanner(CameraOutKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["CameraOutKey"])
-    
-    Global ResetKeyEdit
-    ResetKeyEdit.Value := ResetKeyEdit.Text := ""
-    SetCueBanner(ResetKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ResetKey"])
-    
-    Global ChatKeyEdit
-    ChatKeyEdit.Value := ChatKeyEdit.Text := ""
-    SetCueBanner(ChatKeyEdit.Hwnd, Globals["Settings"]["Keybinds"]["ChatKey"])
+    Global ShiftlockMovingCheckBox
+    ShiftlockMovingCheckBox.Value := Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"]
     
     Global AdditionalKeyDelayEdit
     AdditionalKeyDelayEdit.Value := AdditionalKeyDelayEdit.Text := ""
-    SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Keybinds"]["AdditionalKeyDelay"])
+    SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"])
+    
+    Global ResetMultiplierSlider
+    ResetMultiplierSlider.Value := Globals["Settings"]["Miscellaneous"]["ResetMultiplier"]
     
     Global ClickIntervalEdit
     ClickIntervalEdit.Value := ClickIntervalEdit.Text := ""
@@ -781,24 +659,17 @@ SettingsTabSwitch(*) {
     Global AlwaysOnTopCheckBox
     AlwaysOnTopCheckBox.Enabled := SettingsTabOn
     
-    Global MoveSpeedCorrectionCheckBox
-    MoveSpeedCorrectionCheckBox.Enabled := SettingsTabOn
-    
-    Global ShiftlockMovingCheckBox
-    ShiftlockMovingCheckBox.Enabled := SettingsTabOn
-    
     Global TransparencyList
     TransparencyList.Enabled := SettingsTabOn
+    
+    Global ConvertDelayEdit
+    ConvertDelayEdit.Enabled := SettingsTabOn
     
     Global BalloonConvertSettingList
     BalloonConvertSettingList.Enabled := SettingsTabOn
     
     Global BalloonConvertIntervalEdit
     BalloonConvertIntervalEdit.Enabled := SettingsTabOn
-    
-    Global ResetMultiplierList
-    ResetMultiplierList.Enabled := SettingsTabOn
-    
     Global ReconnectIntervalEdit
     ReconnectIntervalEdit.Enabled := SettingsTabOn
     
@@ -817,38 +688,20 @@ SettingsTabSwitch(*) {
     Global AntiAFKIntervalEdit
     AntiAFKIntervalEdit.Enabled := (SettingsTabOn ? Globals["Settings"]["AntiAFK"]["RunAntiAFK"] : False)
     
-    Global ForwardKeyEdit
-    ForwardKeyEdit.Enabled := SettingsTabOn
+    Global MoveSpeedCorrectionCheckBox
+    MoveSpeedCorrectionCheckBox.Enabled := SettingsTabOn
     
-    Global LeftKeyEdit
-    LeftKeyEdit.Enabled := SettingsTabOn
-    
-    Global BackwardKeyEdit
-    BackwardKeyEdit.Enabled := SettingsTabOn
-    
-    Global RightKeyEdit
-    RightKeyEdit.Enabled := SettingsTabOn
-    
-    Global CameraRightKeyEdit
-    CameraRightKeyEdit.Enabled := SettingsTabOn
-    
-    Global CameraLeftKeyEdit
-    CameraLeftKeyEdit.Enabled := SettingsTabOn
-    
-    Global CameraInKeyEdit
-    CameraInKeyEdit.Enabled := SettingsTabOn
-    
-    Global CameraOutKeyEdit
-    CameraOutKeyEdit.Enabled := SettingsTabOn
-    
-    Global ResetKeyEdit
-    ResetKeyEdit.Enabled := SettingsTabOn
-    
-    Global ChatKeyEdit
-    ChatKeyEdit.Enabled := SettingsTabOn
+    Global ShiftlockMovingCheckBox
+    ShiftlockMovingCheckBox.Enabled := SettingsTabOn
     
     Global AdditionalKeyDelayEdit
     AdditionalKeyDelayEdit.Enabled := SettingsTabOn
+    
+    Global ResetMultiplierSlider
+    ResetMultiplierSlider.Enabled := SettingsTabOn
+    
+    Globals ImportSettingsButton
+    ImportSettingsButton.Enabled := SettingsTabOn
     
     Global ClickIntervalEdit
     ClickIntervalEdit.Enabled := SettingsTabOn

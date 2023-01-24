@@ -119,10 +119,7 @@ Globals["GUI"]["Position"] := Map(
 "GUIX", "0",
 "GUIY", "350"
 )
-
 Globals["GUI"]["Settings"] := Map(
-"AlwaysOnTop", "0",
-"Transparency", "0",
 "CurrentGUITab", "1"
 )
 
@@ -160,37 +157,34 @@ Globals["Settings"]["Hotkeys"] := Map(
 "AutoclickerHotkey", "F4"
 )
 
-Globals["Settings"]["Keybinds"] := Map(
-"ForwardKey", "w",
-"BackwardKey", "s",
-"LeftKey", "a",
-"RightKey", "d",
-"CameraRightKey", ".",
-"CameraLeftKey", ",",
-"CameraInKey", "i",
-"CameraOutKey", "o",
-"CameraUpKey", "PgDn",
-"CameraDownKey", "PgUp",
-"ResetKey", "r",
-"ChatKey", "/",
-"AdditionalKeyDelay", "0"
+Globals["Settings"]["GUI"] := Map(
+"AlwaysOnTop", "0",
+"Transparency", "0",
+)
+
+Globals["Settings"]["Convert Settings"] := Map(
+"ConvertDelay", "8",
+"BalloonConvertSetting", "Auto",
+"BalloonConvertInterval", "30",
 )
 
 Globals["Settings"]["Miscellaneous"] := Map(
 "MoveSpeedCorrection", "1",
 "ShiftlockMoving", "1",
-"BalloonConvertSetting", "Auto",
-"BalloonConvertInterval", "30",
 "ResetMultiplier", "1",
-"ReconnectInterval", "",
-"ReconnectStartHour", "",
-"ReconnectStartMinute", ""
+"AdditionalKeyDelay", "0"
 )
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
 "Runrbxfpsunlocker", "0",
 "rbxfpsunlockerDirectory", "",
 "FPS", "30"
+)
+
+Globals["Settings"]["Reconnect"] := Map(
+"ReconnectInterval", "",
+"ReconnectStartHour", "",
+"ReconnectStartMinute", ""
 )
 
 Globals["Settings"]["Unlocks"] := Map(

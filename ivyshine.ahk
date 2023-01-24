@@ -1,5 +1,4 @@
 #NoTrayIcon
-#WinActivateForce
 #UseHook True
 #Warn All, Off
 #MaxThreads 255
@@ -195,6 +194,8 @@ OpenDebug(*) {
 }
 TrayMenu.AddStandard()
 TrayMenu.Delete("&Open")
+TrayMenu.Delete("&Pause Script")
+TrayMenu.Delete("E&xit")
 TrayMenu.ClickCount := 1
 
 A_IconTip := "Ivyshine"
@@ -239,14 +240,16 @@ StopMacro(*) {
 ReloadMacro() {
     Global Globals, IvyshineGui
     RestoreFPSUnlocker()
-    WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
-    Globals["GUI"]["Position"]["GUIX"] := GuiX
-    Globals["GUI"]["Position"]["GUIY"] := GuiY
-    For ini, Section in Globals
-    {
-        If (ini == "Constants")
-            Continue
-        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+    If (DirExist("lib\init")) {
+        WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+        Globals["GUI"]["Position"]["GUIX"] := GuiX
+        Globals["GUI"]["Position"]["GUIY"] := GuiY
+        For ini, Section in Globals
+        {
+            If (ini == "Constants")
+                Continue
+            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+        }
     }
     Sleep(100)
     Reload

@@ -1,4 +1,4 @@
-MacroInfoGui := Gui("+Border -SysMenu -Resize" (Globals["GUI"]["Settings"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop") " +Owner" IvyshineGui.Hwnd, "Ivyshine Info")
+MacroInfoGui := Gui("+Border -SysMenu -Resize" (Globals["Settings"]["GUI"]["AlwaysOnTop"] ? " +AlwaysOnTop" : " -AlwaysOnTop") " +Owner" IvyshineGui.Hwnd, "Ivyshine Info")
 MacroInfoGui.OnEvent("Close", MacroInfoGuiClose)
 MacroInfoGui.OnEvent("Escape", MacroInfoGuiClose)
 
