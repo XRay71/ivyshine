@@ -41,6 +41,10 @@ ImportSettings(*) {
                 ReadIni(ini, Globals["Boost Settings"])
             Else If (InStr(ini, "\boost.ini"))
                 ReadIni(ini, Globals["Boost"])
+            Else If (InStr(ini, "\stats.ini"))
+                Responded := MsgBox("You are not allowed to import stats!", "Error: invalid ini!", "OK Iconx")
+            Else
+                Responded := MsgBox("That ini file does not correspond with any known settings in the macro!", "Error: invalid ini!", "OK Icon!")
         }
         
         For ini, Section in Globals
