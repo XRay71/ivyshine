@@ -15,7 +15,7 @@ AntiAFKIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
 
 If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
-    Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
+    Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
     SetTimer(AntiAFK, 500, -1)
 }
 
@@ -32,19 +32,17 @@ ShowAntiAFKInfo(*) {
 }
 
 AntiAFK() {
-    Global Globals
-    TimeDifference := TimeSince(Globals["Settings"]["AntiAFK"]["LastRun"])
+    TimeDifference := CurrentUnixTime() - Globals["Settings"]["AntiAFK"]["LastRun"]
     
     If (WinActive("ahk_exe RobloxPlayerBeta.exe")) {
-        Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
+        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
         TimeDifference := 0
     }
     
-    Global AntiAFKProgress
     AntiAFKProgress.Value := TimeDifference
     
     If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60) {
-        Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
+        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
         If (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
             ReleaseAllKeys()
             BlockInput("On")

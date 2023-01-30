@@ -1,10 +1,16 @@
 RunFPSUnlocker(FPS := 30) {
-    Global Globals
     CloseFPSUnlocker()
-    HyperSleep(50)
+    
     FPSCapSelection := (FPS ? 1 : 0)
+    
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
+    
+    Loop
+        HyperSleep(5)
+    Until (!FileExist("lib\rbxfpsunlocker\settings"))
+    HyperSleep(5)
+    
     FileAppend(
     (
         "UnlockClient=true`r`n"
@@ -18,39 +24,73 @@ RunFPSUnlocker(FPS := 30) {
         "QuickStart=true"
     )
         , "lib\rbxfpsunlocker\settings")
+    
+    Loop
+        HyperSleep(5)
+    Until (FileExist("lib\rbxfpsunlocker\settings"))
+    HyperSleep(5)
+    
     Run("lib\rbxfpsunlocker\rbxfpsunlocker.exe", "lib\rbxfpsunlocker", "Hide")
-    HyperSleep(25)
-    Ranrbxfpsunlocker := 1
+    
+    Loop
+        HyperSleep(5)
+    Until (ProcessExist("rbxfpsunlocker.exe"))
+    
+    HyperSleep(20)
+    
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
 }
 
 RestoreFPSUnlocker() {
-    Global Globals
     CloseFPSUnlocker()
+    
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
-    HyperSleep(25)
-    If (Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"])
+    
+    Loop
+        HyperSleep(5)
+    Until (!FileExist("lib\rbxfpsunlocker\settings"))
+    HyperSleep(5)
+    
+    If (Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] && !InStr(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], "\lib\rbxfpsunlocker\rbxfpsunlocker.exe")) {
         Run(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], StrReplace(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], "\rbxfpsunlocker.exe"), "Hide")
-    HyperSleep(25)
+        
+        Loop
+            HyperSleep(5)
+        Until (ProcessExist("rbxfpsunlocker.exe"))
+        HyperSleep(5)
+    }
+    
+    HyperSleep(5)
 }
 
 CloseFPSUnlocker() {
-    Global Globals
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     DetectHiddenWindows(1)
-    CurrentExecPath := ""
-    For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
-        CurrentExecPath := Process.ExecutablePath
-    If (CurrentExecPath && CurrentExecPath == (A_ScriptDir "\lib\rbxfpsunlocker\rbxfpsunlocker.exe"))
-        PostMessage(0x0010, 0xF060,,, "ahk_exe rbxfpsunlocker.exe")
-    Else If (CurrentExecPath && CurrentExecPath == Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"]) {
-        BlockInput("Send")
-        PostMessage(0x8000 + 1,, 0x0204,, "ahk_exe rbxfpsunlocker.exe")
+    
+    While (rbxfpsunlockerPID := ProcessExist("rbxfpsunlocker.exe")) {
+        rbxfpsunlockerPID := ProcessExist("rbxfpsunlocker.exe")
+        If (ProcessExist(rbxfpsunlockerPID)) {
+            Try {
+                CurrentExecPath := ProcessGetPath(rbxfpsunlockerPID)
+                
+                If (CurrentExecPath && InStr(CurrentExecPath, "\lib\rbxfpsunlocker\rbxfpsunlocker.exe"))
+                    PostMessage(0x0010, 0xF060,,, "ahk_pid " rbxfpsunlockerPID)
+                Else If (CurrentExecPath && CurrentExecPath == Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"]) {
+                    BlockInput("Send")
+                    PostMessage(0x8000 + 1,, 0x0204,, "ahk_pid " rbxfpsunlockerPID)
+                    HyperSleep(20)
+                    Send("{" Globals["Constants"]["Scan Codes"]["Up"] "}{" Globals["Constants"]["Scan Codes"]["Enter"] "}")
+                    BlockInput("Default")
+                }
+            }
+            Catch Any
+                Break
+        }
         HyperSleep(20)
-        Send("{" Globals["Constants"]["Scan Codes"]["Up"] "}{" Globals["Constants"]["Scan Codes"]["Enter"] "}")
-        BlockInput("Default")
     }
+    HyperSleep(10)
+    
     DetectHiddenWindows(DetectHiddenWindowsSetting)
 }

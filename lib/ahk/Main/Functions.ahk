@@ -1,5 +1,4 @@
-ReleaseAllKeys()
-{
+ReleaseAllKeys() {
     Loop(26)
         Send("{" Chr(96 + A_Index) " Up}")
     Loop(10)
@@ -12,9 +11,8 @@ ReleaseAllKeys()
     Click("Up")
 }
 
-TimeSince(OriginalTime)
-{
-    Return DateDiff(A_NowUTC, OriginalTime, "Seconds")
+CurrentUnixTime() {
+    Return DateDiff(A_NowUTC, 19700101000000, "Seconds")
 }
 
 MouseLeftClick() {

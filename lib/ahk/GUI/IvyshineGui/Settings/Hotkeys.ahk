@@ -24,10 +24,7 @@ ShowHotkeysInfo(*) {
 PreviousEditHotkeysControl := ""
 
 StartEditHotkeys(ThisControl, *) {
-    Global Globals
-    Global ShowEditHotkeysGui, PreviousEditHotkeysControl
-    Global StartHotkeyButton, PauseHotkeyButton, StopHotkeyButton, AutoclickerHotkeyButton
-    Global StartHotkeyHotkey, PauseHotkeyHotkey, StopHotkeyHotkey, AutoclickerHotkeyHotkey, EditHotkeysText
+    Global PreviousEditHotkeysControl, ShowEditHotkeysGui
     
     If (ThisControl.Hwnd == StartHotkeyButton.Hwnd) {
         StartHotkeyHotkey.Visible := 1

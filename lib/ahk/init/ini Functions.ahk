@@ -24,6 +24,10 @@ ReadIni(FilePath, Data) {
         {
         Case "[":
             SectionName := Substr(A_LoopField, 2, StrLen(A_LoopField) - 2)
+            Try
+            Data[SectionName]
+            Catch Any
+                Data[SectionName] := Map()
         
         Default:
             If (EqualsIndex := InStr(A_LoopField, "="))

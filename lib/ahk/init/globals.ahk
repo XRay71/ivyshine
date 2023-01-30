@@ -7,7 +7,8 @@ Globals["Constants"]["ini FilePaths"] := Map(
 "GUI", "lib\init\gui.ini",
 "Settings", "lib\init\settings.ini",
 "Fields", "lib\init\fields.ini",
-"Field Settings", "lib\init\fieldsettings.ini",
+"Field Defaults", "lib\init\fielddefaults.ini",
+"Field Rotation", "lib\init\fieldrotation.ini",
 "Boost", "lib\init\boost.ini",
 "Boost Settings", "lib\init\boostsettings.ini"
 )
@@ -128,7 +129,7 @@ Globals["Settings"] := Map()
 Globals["Settings"]["AntiAFK"] := Map(
 "RunAntiAFK", "0",
 "AntiAFKInterval", "10",
-"LastRun", A_NowUTC
+"LastRun", CurrentUnixTime()
 )
 
 Globals["Settings"]["Autoclicker"] := Map(
@@ -203,16 +204,48 @@ Globals["Settings"]["Unlocks"] := Map(
 
 Globals["Fields"] := Map()
 
-Globals["Fields"]["Field Rotation"] := Map(
-"FieldRotationList", "Pine Tree|",
-"CurrentlySelectedField", "Pine Tree",
-"NonFieldRotationList", "Bamboo|Blue Flower|Cactus|Clover|Coconut|Dandelion|Mountain Top|Mushroom|Pepper|Pineapple|Pumpkin|Rose|Spider|Strawberry|Stump|Sunflower|"
+Globals["Fields"]["Settings"] := Map(
+"CurrentlySelectedField", "1",
 )
 
-Globals["Field Settings"] := Map()
+Globals["Field Rotation"] := Map()
 
-Globals["Field Settings"]["Bamboo"] := Map(
-"SettingsModified", "",
+Globals["Field Rotation"]["1"] := Map(
+"FieldName", "Pine Tree",
+"FlowerLength", "31",
+"FlowerWidth", "23",
+"NorthWall", "1",
+"EastWall", "0",
+"SouthWall", "0",
+"WestWall", "1",
+"NorthWallDistance", "1",
+"EastWallDistance", "0",
+"SouthWallDistance", "0",
+"WestWallDistance", "0",
+"GatherPattern", "",
+"PatternLength", "3",
+"PatternWidth", "3",
+"GatherWithShiftLock", "0",
+"InvertFB", "0",
+"InvertRL", "0",
+"GatherTime", "10",
+"BagPercent", "95",
+"StartPositionLength", "17",
+"StartPositionWidth", "10",
+"MoveMethod", "Glider",
+"DefaultMoveMethod", "Glider",
+"ReturnMethod", "Reset",
+"TurnCamera", "Left",
+"TurnCameraNum", "2",
+"RepeatTimes", "1",
+"AutoEquip", "1",
+"Type", "Blue"
+
+)
+
+Globals["Field Defaults"] := Map()
+
+Globals["Field Defaults"]["Bamboo"] := Map(
 "FlowerLength", "18",
 "FlowerWidth", "39",
 "NorthWall", "1",
@@ -243,8 +276,7 @@ Globals["Field Settings"]["Bamboo"] := Map(
 "Type", "Blue"
 )
 
-Globals["Field Settings"]["BlueFlower"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Blue Flower"] := Map(
 "FlowerLength", "17",
 "FlowerWidth", "43",
 "NorthWall", "1",
@@ -275,8 +307,7 @@ Globals["Field Settings"]["BlueFlower"] := Map(
 "Type", "Blue"
 )
 
-Globals["Field Settings"]["Cactus"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Cactus"] := Map(
 "FlowerLength", "18",
 "FlowerWidth", "33",
 "NorthWall", "0",
@@ -307,8 +338,7 @@ Globals["Field Settings"]["Cactus"] := Map(
 "Type", "Mixed"
 )
 
-Globals["Field Settings"]["Clover"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Clover"] := Map(
 "FlowerLength", "27",
 "FlowerWidth", "39",
 "NorthWall", "0",
@@ -339,8 +369,7 @@ Globals["Field Settings"]["Clover"] := Map(
 "Type", "Mixed"
 )
 
-Globals["Field Settings"]["Coconut"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Coconut"] := Map(
 "FlowerLength", "21",
 "FlowerWidth", "30",
 "NorthWall", "0",
@@ -371,8 +400,7 @@ Globals["Field Settings"]["Coconut"] := Map(
 "Type", "White"
 )
 
-Globals["Field Settings"]["Dandelion"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Dandelion"] := Map(
 "FlowerLength", "18",
 "FlowerWidth", "36",
 "NorthWall", "0",
@@ -403,8 +431,7 @@ Globals["Field Settings"]["Dandelion"] := Map(
 "Type", "White"
 )
 
-Globals["Field Settings"]["MountainTop"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Mountain Top"] := Map(
 "FlowerLength", "28",
 "FlowerWidth", "24",
 "NorthWall", "1",
@@ -435,8 +462,7 @@ Globals["Field Settings"]["MountainTop"] := Map(
 "Type", "Mixed"
 )
 
-Globals["Field Settings"]["Mushroom"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Mushroom"] := Map(
 "FlowerLength", "23",
 "FlowerWidth", "32",
 "NorthWall", "1",
@@ -467,8 +493,7 @@ Globals["Field Settings"]["Mushroom"] := Map(
 "Type", "Red"
 )
 
-Globals["Field Settings"]["Pepper"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Pepper"] := Map(
 "FlowerLength", "27",
 "FlowerWidth", "21",
 "NorthWall", "1",
@@ -499,8 +524,7 @@ Globals["Field Settings"]["Pepper"] := Map(
 "Type", "Red"
 )
 
-Globals["Field Settings"]["PineTree"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Pine Tree"] := Map(
 "FlowerLength", "31",
 "FlowerWidth", "23",
 "NorthWall", "1",
@@ -531,8 +555,7 @@ Globals["Field Settings"]["PineTree"] := Map(
 "Type", "Blue"
 )
 
-Globals["Field Settings"]["Pineapple"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Pineapple"] := Map(
 "FlowerLength", "23",
 "FlowerWidth", "35",
 "NorthWall", "1",
@@ -563,8 +586,7 @@ Globals["Field Settings"]["Pineapple"] := Map(
 "Type", "White"
 )
 
-Globals["Field Settings"]["Pumpkin"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Pumpkin"] := Map(
 "FlowerLength", "17",
 "FlowerWidth", "33",
 "NorthWall", "1",
@@ -595,8 +617,7 @@ Globals["Field Settings"]["Pumpkin"] := Map(
 "Type", "White"
 )
 
-Globals["Field Settings"]["Rose"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Rose"] := Map(
 "FlowerLength", "20",
 "FlowerWidth", "31",
 "NorthWall", "1",
@@ -627,8 +648,7 @@ Globals["Field Settings"]["Rose"] := Map(
 "Type", "Red"
 )
 
-Globals["Field Settings"]["Spider"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Spider"] := Map(
 "FlowerLength", "25",
 "FlowerWidth", "28",
 "NorthWall", "1",
@@ -659,8 +679,7 @@ Globals["Field Settings"]["Spider"] := Map(
 "Type", "White"
 )
 
-Globals["Field Settings"]["Strawberry"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Strawberry"] := Map(
 "FlowerLength", "26",
 "FlowerWidth", "22",
 "NorthWall", "1",
@@ -691,8 +710,7 @@ Globals["Field Settings"]["Strawberry"] := Map(
 "Type", "Red"
 )
 
-Globals["Field Settings"]["Stump"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Stump"] := Map(
 "FlowerLength", "27",
 "FlowerWidth", "25",
 "NorthWall", "0",
@@ -723,8 +741,7 @@ Globals["Field Settings"]["Stump"] := Map(
 "Type", "Blue"
 )
 
-Globals["Field Settings"]["Sunflower"] := Map(
-"SettingsModified", "",
+Globals["Field Defaults"]["Sunflower"] := Map(
 "FlowerLength", "33",
 "FlowerWidth", "20",
 "NorthWall", "0",

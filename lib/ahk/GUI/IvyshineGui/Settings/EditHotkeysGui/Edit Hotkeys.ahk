@@ -27,7 +27,6 @@ WinSetStyle(-0xC40000)
 DllCall("SetMenu", "Ptr", WinExist(), "Ptr", 0)
 
 EditHotkeysGuiClose(*) {
-    Global Globals
     Global ShowEditHotkeysGui
     ShowEditHotkeysGui := 0
     EditHotkeysGui.Hide()
@@ -36,14 +35,13 @@ EditHotkeysGuiClose(*) {
         Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
         Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
         Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1 P0")
+        TrayMenu.Enable("12&")
+        TrayMenu.Enable("13&")
+        TrayMenu.Enable("14&")
     }
 }
 
 SubmitEditHotkeys(*) {
-    Global Globals
-    Global EditHotkeysGui, IvyshineGui
-    Global StartHotkeyHotkey, PauseHotkeyHotkey, StopHotkeyHotkey, AutoclickerHotkeyHotkey
-    
     ThisControl := EditHotkeysGui.FocusedCtrl
     
     Try {
@@ -51,27 +49,28 @@ SubmitEditHotkeys(*) {
         Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
         Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
         Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
+        TrayMenu.Disable("12&")
+        TrayMenu.Disable("13&")
+        TrayMenu.Disable("14&")
     }
     
     If (ThisControl.Hwnd == StartHotkeyHotkey.Hwnd) {
         If (StartHotkeyHotkey.Value == "" || StartHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["PauseHotkey"] || StartHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["StopHotkey"] || StartHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"])
             Return
-        
         Globals["Settings"]["Hotkeys"]["StartHotkey"] := StartHotkeyHotkey.Value
+        TrayMenu.Rename("12&", "Start Macro (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")")
         IniWrite(Globals["Settings"]["Hotkeys"]["StartHotkey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Hotkeys", "StartHotkey")
-        Global StartButton, StartHotkeyButton, IvyshineGui
         
         IvyshineGui.SetFont()
         IvyshineGui.SetFont("s8", "Calibri")
         StartButton.Text := Globals["Settings"]["Hotkeys"]["StartHotkey"]
         StartHotkeyButton.Text := " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")"
-        
     } Else If (ThisControl.Hwnd == PauseHotkeyHotkey.Hwnd) {
         If (PauseHotkeyHotkey.Value == "" || PauseHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["StartHotkey"] || PauseHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["StopHotkey"] || PauseHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"])
             Return
         Globals["Settings"]["Hotkeys"]["PauseHotkey"] := PauseHotkeyHotkey.Value
+        TrayMenu.Rename("13&", "Pause Macro (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")")
         IniWrite(Globals["Settings"]["Hotkeys"]["PauseHotkey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Hotkeys", "PauseHotkey")
-        Global PauseButton, PauseHotkeyButton, IvyshineGui
         
         IvyshineGui.SetFont()
         IvyshineGui.SetFont("s8", "Calibri")
@@ -81,8 +80,8 @@ SubmitEditHotkeys(*) {
         If (StopHotkeyHotkey.Value == "" || StopHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["PauseHotkey"] || StopHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["StartHotkey"] || StopHotkeyHotkey.Value == Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"])
             Return
         Globals["Settings"]["Hotkeys"]["StopHotkey"] := StopHotkeyHotkey.Value
+        TrayMenu.Rename("14&", "Stop Macro (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")")
         IniWrite(Globals["Settings"]["Hotkeys"]["StopHotkey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Hotkeys", "StopHotkey")
-        Global StopButton, StopHotkeyButton, IvyshineGui
         
         IvyshineGui.SetFont()
         IvyshineGui.SetFont("s8", "Calibri")
@@ -93,7 +92,6 @@ SubmitEditHotkeys(*) {
             Return
         Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"] := AutoclickerHotkeyHotkey.Value
         IniWrite(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Globals["Constants"]["ini FilePaths"]["Settings"], "Hotkeys", "AutoclickerHotkey")
-        Global AutoclickerHotkeyButton, IvyshineGui
         
         IvyshineGui.SetFont()
         IvyshineGui.SetFont("s8", "Calibri")
@@ -105,6 +103,9 @@ SubmitEditHotkeys(*) {
         Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
         Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
         Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
+        TrayMenu.Enable("12&")
+        TrayMenu.Enable("13&")
+        TrayMenu.Enable("14&")
     }
     
     EditHotkeysGuiClose()

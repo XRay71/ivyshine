@@ -34,7 +34,7 @@ ImportSettings(*) {
             Else If (InStr(ini, "\gui.ini"))
                 ReadIni(ini, Globals["GUI"])
             Else If (InStr(ini, "\fieldsettings.ini"))
-                ReadIni(ini, Globals["Field Settings"])
+                ReadIni(ini, Globals["Field Defaults"])
             Else If (InStr(ini, "\fields.ini"))
                 ReadIni(ini, Globals["Fields"])
             Else If (InStr(ini, "\boostsettings.ini"))

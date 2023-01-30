@@ -21,7 +21,6 @@ AutoclickerHotkeyButton.OnEvent("Click", StartEditHotkeys)
 AutoclickerRunning := False
 
 Autoclick(*) {
-    Global Globals
     Global AutoclickerRunning
     
     AutoclickerRunning := !AutoclickerRunning
@@ -31,7 +30,6 @@ Autoclick(*) {
     
     Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
     
-    Global ClickIntervalEdit, ClickAmountEdit, AutoclickerHotkeyButton
     ClickIntervalEdit.Enabled := False
     ClickAmountEdit.Enabled := False
     AutoclickerHotkeyButton.Enabled := False

@@ -17,23 +17,32 @@ CoordMode("Mouse", "Client")
 ;=====================================
 ; Check Resolution
 ;=====================================
+
 ; CheckResolution()
 CheckResolution() {
     If (A_ScreenDPI != 96 || A_ScreenWidth != 1280 || A_ScreenHeight != 720) {
-        CurrentScaling := Floor(A_ScreenDPI / 96 * 100)
-        MsgBox("The images taken for this macro were created for 1280x720p resolution on 100`% scaling.`r`nYou are currently on " A_ScreenWidth "x" A_ScreenHeight "p with " CurrentScaling "`% scaling.`r`nThe Windows display settings tab will now be opened.`r`nPlease change the resolution to be correct.", "Warning!", "OK Iconx")
+        MsgBox("The images taken for this macro were created for 1280x720p resolution on 100`% scaling.`r`nYou are currently on " A_ScreenWidth "x" A_ScreenHeight "p with " Floor(A_ScreenDPI / 96 * 100) "`% scaling.`r`nThe Windows display settings tab will now be opened.`r`nPlease change the resolution to be correct."
+            , "Warning: incorrect resolution!"
+            , "OK Iconx")
+        
         Run("ms-settings:display")
-        DoReload := MsgBox("Press `"OK`" when you have changed your resolution to 1280x720p with 100`% scaling. Press `"Cancel`" to continue regardless.",, "OKCancel Iconx")
+        
+        DoReload := MsgBox("Press `"OK`" when you have changed your resolution to 1280x720p with 100`% scaling. Press `"Cancel`" to continue regardless."
+            ,
+            , "OKCancel Iconx")
+        
         If (DoReload == "OK")
             Reload
     }
+    
     If (WinExist("Settings"))
-        WinClose("Settings")
+        WinClose()
 }
 
 ;=====================================
 ; Check for updates
 ;=====================================
+
 CurrentVersionID := "001"
 ; CheckForUpdates()
 CheckForUpdates() {
@@ -43,13 +52,13 @@ CheckForUpdates() {
     WinHttpRequest.WaitForResponse()
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
-    If (IsNumber(NewVersionID) && CurrentVersionID != NewVersionID) {
+    If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) {
         If (!A_IsAdmin)
             Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
                 , "New version found!"
                 , "YesNo Icon!")
         Else
-            Update := True
+            Update := "Yes"
         
         If (Update != "No") {
             If (!A_IsAdmin) {
@@ -68,35 +77,43 @@ CheckForUpdates() {
                 Return
             }
             
-            While (!FileExist("AHK-Installer.exe"))
+            Loop
                 Sleep(10)
+            Until (FileExist("AHK-Installer.exe"))
             
             RunWait("*RunAs AHK-Installer.exe")
             
-            While (!WinExist("AutoHotkey Dash"))
+            Loop
                 Sleep(10)
+            Until (WinExist("AutoHotkey Dash"))
             
-            WinClose("AutoHotkey Dash")
+            WinClose()
             
-            Try {
-                Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
-            } Catch Any {
+            Try
+            Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
+            Catch Any {
                 MsgBox("Something went wrong while downloading the update!`r`nNothing has been changed.", "Error!", "OK Iconx")
                 If (FileExist("NewVersion.zip"))
                     FileDelete("NewVersion.zip")
+                If (FileExist("AHK-Installer.exe"))
+                    FileDelete("AHK-Installer.exe")
                 Return
             }
             
             PowerShell := ComObject("Shell.Application")
             PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
             PowerShell.Namespace(A_WorkingDir).MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
+            
             FileDelete("NewVersion.zip")
             FileDelete("AHK-Installer.exe")
             DirDelete("ivyshine-main")
             
-            Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!", "Update success!")
+            Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!"
+                , "Update success!"
+                , "OK Icon!")
             
             Run("ivyshine.ahk")
+            
             ExitApp
         }
     }
@@ -104,7 +121,8 @@ CheckForUpdates() {
 
 ;=====================================
 ; Initialising
-;=====================================x
+;=====================================
+
 #Include *i lib\ahk\init\Globals.ahk
 #Include *i lib\ahk\init\ini Functions.ahk
 
@@ -120,7 +138,7 @@ Catch Any
 Try
 {
     DirCreate("lib\init")
-    For ini, Section in Globals
+    For ini in Globals
     {
         If (FileExist(Globals["Constants"]["ini FilePaths"][ini])) {
             ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
@@ -134,12 +152,13 @@ Try
 }
 Catch Any
     UnableToCreateFileError()
+
 ;=====================================
 ; Check Monitor
 ;=====================================
+
 EnsureGUIVisibility()
 EnsureGUIVisibility() {
-    Global Globals
     If (!Globals["GUI"]["Position"]["GUIX"] && !Globals["GUI"]["Position"]["GUIY"]) {
         Globals["GUI"]["Position"]["GUIX"] := 0
         Globals["GUI"]["Position"]["GUIY"] := 350
@@ -154,15 +173,17 @@ EnsureGUIVisibility() {
             Globals["GUI"]["Position"]["GUIY"] := Globals["GUI"]["Position"]["GUIY"] < CurrentMonitorTop ? CurrentMonitorTop : CurrentMonitorBottom - 350
     }
 }
+
 ;=====================================
 ; Run rbxfpsunlocker (modified)
 ; https://github.com/axstin/rbxfpsunlocker
 ;=====================================
+
 #Include *i lib\rbxfpsunlocker\rbxfpsunlocker.ahk
 
 Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ""
-For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process WHERE name like 'rbxfpsunlocker.exe%' ")
-    Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := Process.ExecutablePath
+If (rbxfpsunlockerPID := ProcessExist("rbxfpsunlocker.exe"))
+    Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ProcessGetPath(rbxfpsunlockerPID)
 IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory")
 Try {
     CloseFPSUnlocker()
@@ -174,31 +195,58 @@ Try {
 ;=====================================
 ; Creating GUI
 ;=====================================
+
 #Include *i lib\ahk\GUI\Gui.ahk
 
 WinActivate(IvyshineGui.Hwnd)
 
+;=====================================
+; Tray Menu
+;=====================================
+
 TrayMenu := A_TrayMenu
 TrayMenu.Delete()
-TrayMenu.Add()
-TrayMenu.Add()
-TrayMenu.Add()
-TrayMenu.Add("Restore GUI", IvyshineGuiRestore, "P10")
-TrayMenu.Default := "Restore GUI"
-TrayMenu.Add()
-TrayMenu.Add()
-TrayMenu.Add()
-TrayMenu.Add("Open Debug", OpenDebug)
+Loop(3)
+    TrayMenu.Add()
+TrayMenu.Add("Restore GUI (F5)", IvyshineGuiRestore, "P10")
+TrayMenu.Default := "Restore GUI (F5)"
+Loop(3)
+    TrayMenu.Add()
+TrayMenu.Add("Open Logs", OpenDebug)
 OpenDebug(*) {
     ListLines
 }
-TrayMenu.AddStandard()
-TrayMenu.Delete("&Open")
-TrayMenu.Delete("&Pause Script")
-TrayMenu.Delete("E&xit")
+TrayMenu.Add()
+TrayMenu.Add("Suspend Hotkeys", SuspendHotkeys)
+SuspendHotkeys(*){
+    Suspend(-1)
+    TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys" : "Suspend Hotkeys"))
+}
+TrayMenu.Add()
+TrayMenu.Add("Start Macro (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", StartMacro)
+TrayMenu.Add("Pause Macro (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", PauseMacro)
+TrayMenu.Add("Stop Macro (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", StopMacro)
+TrayMenu.Add()
 TrayMenu.ClickCount := 1
 
 A_IconTip := "Ivyshine"
+
+;=====================================
+; Hotkeys
+;=====================================
+
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0")
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0")
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
+
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
+
+Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
+
+HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
+Hotkey("~LButton", StartMoveGui, "T1 P2")
+Hotkey("~LButton Up", StopMoveGui, "T1 P3")
+HotIfWinActive()
 
 ;=====================================
 ; Main Functions
@@ -211,19 +259,10 @@ ReleaseAllKeys()
 Catch Any
     MissingFilesError()
 
-Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0")
-Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0")
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
-Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
-Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
-HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
-Hotkey("~LButton", StartMoveGui, "T1 P2")
-Hotkey("~LButton Up", StopMoveGui, "T1 P3")
-HotIfWinActive()
-
 StartMacro(*) {
-    MsgBox("Start")
     ReleaseAllKeys()
+    MacroInfoGuiClose()
+    MsgBox("Start")
     Return
 }
 
@@ -234,37 +273,40 @@ PauseMacro(*) {
 
 StopMacro(*) {
     MsgBox("Stop")
-    Return
+    ReloadMacro()
 }
 
 ReloadMacro() {
-    Global Globals, IvyshineGui
     RestoreFPSUnlocker()
+    If (!A_IconHidden)
+        IvyshineGuiRestore()
+    
     If (DirExist("lib\init")) {
         WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
         Globals["GUI"]["Position"]["GUIX"] := GuiX
         Globals["GUI"]["Position"]["GUIY"] := GuiY
         For ini, Section in Globals
-        {
-            If (ini == "Constants")
-                Continue
             UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-        }
     }
-    Sleep(100)
+    HyperSleep(25)
     Reload
 }
 
 ;=====================================
 ; Errors
 ;=====================================
+
 MissingFilesError() {
-    MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit.", "Error: file not found!", "OK Icon!")
+    MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit."
+        , "Error: file not found!"
+        , "OK Icon!")
     ExitApp
 }
 
 UnableToCreateFileError() {
-    MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit.", "Error: file not found!", "OK Icon!")
+    MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit."
+        , "Error: file not found!"
+        , "OK Icon!")
     ExitApp
 }
 
