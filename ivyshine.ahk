@@ -53,12 +53,9 @@ CheckForUpdates() {
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) {
-        If (!A_IsAdmin)
-            Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
-                , "New version found!"
-                , "YesNo Icon!")
-        Else
-            Update := "Yes"
+        Update := (A_IsAdmin ? "Yes" : MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
+            , "New version found!"
+            , "YesNo Icon!"))
         
         If (Update != "No") {
             If (!A_IsAdmin) {
@@ -72,8 +69,8 @@ CheckForUpdates() {
             Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
             Catch Any {
                 MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
-                If (FileExist("AHK-Installer.exe"))
-                    FileDelete("AHK-Installer.exe")
+                Try
+                FileDelete("AHK-Installer.exe")
                 Return
             }
             
@@ -93,10 +90,10 @@ CheckForUpdates() {
             Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
             Catch Any {
                 MsgBox("Something went wrong while downloading the update!`r`nNothing has been changed.", "Error!", "OK Iconx")
-                If (FileExist("NewVersion.zip"))
+                Try {
                     FileDelete("NewVersion.zip")
-                If (FileExist("AHK-Installer.exe"))
                     FileDelete("AHK-Installer.exe")
+                }
                 Return
             }
             
@@ -104,9 +101,11 @@ CheckForUpdates() {
             PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
             PowerShell.Namespace(A_WorkingDir).MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
             
-            FileDelete("NewVersion.zip")
-            FileDelete("AHK-Installer.exe")
-            DirDelete("ivyshine-main")
+            Try {
+                FileDelete("NewVersion.zip")
+                FileDelete("AHK-Installer.exe")
+                DirDelete("ivyshine-main")
+            }
             
             Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!"
                 , "Update success!"
@@ -241,12 +240,15 @@ Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
 
 Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
 
+#SuspendExempt
+
 Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
 
 HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
 Hotkey("~LButton", StartMoveGui, "T1 P2")
 Hotkey("~LButton Up", StopMoveGui, "T1 P3")
 HotIfWinActive()
+#SuspendExempt False
 
 ;=====================================
 ; Main Functions

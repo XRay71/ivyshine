@@ -96,7 +96,7 @@ StartMoveGui(*) {
         MouseGetPos(&MouseX, &MouseY)
         CoordMode("Mouse", "Client")
         GuiMoving := True
-        SetTimer(MoveGui, 15, 3)
+        SetTimer(MoveGui, 1, 3)
     }
 }
 

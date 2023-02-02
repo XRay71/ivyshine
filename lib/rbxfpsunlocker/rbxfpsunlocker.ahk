@@ -1,4 +1,5 @@
 RunFPSUnlocker(FPS := 30) {
+    Critical
     CloseFPSUnlocker()
     
     FPSCapSelection := (FPS ? 1 : 0)
@@ -43,6 +44,7 @@ RunFPSUnlocker(FPS := 30) {
 }
 
 RestoreFPSUnlocker() {
+    Critical
     CloseFPSUnlocker()
     
     If (FileExist("lib\rbxfpsunlocker\settings"))
@@ -66,6 +68,7 @@ RestoreFPSUnlocker() {
 }
 
 CloseFPSUnlocker() {
+    Critical
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     DetectHiddenWindows(1)
     
@@ -80,8 +83,9 @@ CloseFPSUnlocker() {
                 Else If (CurrentExecPath && CurrentExecPath == Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"]) {
                     BlockInput("Send")
                     PostMessage(0x8000 + 1,, 0x0204,, "ahk_pid " rbxfpsunlockerPID)
-                    HyperSleep(20)
+                    HyperSleep(35)
                     Send("{" Globals["Constants"]["Scan Codes"]["Up"] "}{" Globals["Constants"]["Scan Codes"]["Enter"] "}")
+                    WinActivate("ahk_pid " rbxfpsunlockerPID)
                     BlockInput("Default")
                 }
             }

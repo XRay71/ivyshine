@@ -324,7 +324,7 @@ SubmitSettings(ThisControl, *) {
             AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
             SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
             AntiAFKIntervalText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] == 1 ? " minute." : " minutes.")
-            Globals["Settings"]["AntiAFK"]["LastRun"] := A_NowUTC
+            Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
             SetTimer(AntiAFK, 500, -1)
             AntiAFKProgress.Value := 0
         } Else {

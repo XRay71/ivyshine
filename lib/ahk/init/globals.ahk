@@ -240,7 +240,6 @@ Globals["Field Rotation"]["1"] := Map(
 "RepeatTimes", "1",
 "AutoEquip", "1",
 "Type", "Blue"
-
 )
 
 Globals["Field Defaults"] := Map()

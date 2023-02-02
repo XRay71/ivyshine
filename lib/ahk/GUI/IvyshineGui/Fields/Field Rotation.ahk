@@ -24,4 +24,3 @@ FieldRotationListBox.OnEvent("Change", SubmitFields)
 AddFieldRotationListBox := IvyshineGui.Add("ListBox", "xs+106 ys+20 h268 w80 0x100 Sort", ["Bamboo", "Blue Flower", "Cactus", "Clover", "Coconut", "Dandelion", "Mountain Top", "Mushroom", "Pepper", "Pine Tree", "Pineapple", "Pumpkin", "Rose", "Spider", "Strawberry", "Stump", "Sunflower"])
 AddFieldRotationListBox.OnEvent("Change", SubmitFields)
 IvyshineGui.Add("Text", "xp ys+6 h20 w80 Center +BackgroundTrans", "Add Fields")
-

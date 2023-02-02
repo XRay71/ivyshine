@@ -47,6 +47,10 @@ AntiAFK() {
             ReleaseAllKeys()
             BlockInput("On")
             CurrentWindowID := WinGetId("A")
+            Loop {
+                WinActivate("ahk_exe RobloxPlayerBeta.exe")
+                WinWaitActive("ahk_exe RobloxPlayerBeta.exe",,0.1)
+            } Until WinActive("ahk_exe RobloxPlayerBeta.exe")
             WinActivate("ahk_exe RobloxPlayerBeta.exe")
             WinWaitActive("ahk_exe RobloxPlayerBeta.exe")
             Send(">")
