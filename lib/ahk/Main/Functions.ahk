@@ -1,13 +1,6 @@
 ReleaseAllKeys() {
-    Loop(26)
-        Send("{" Chr(96 + A_Index) " Up}")
-    Loop(10)
-        Send("{" (A_Index - 1) " Up}")
-    Send("{Alt Up}")
-    Send("{Space Up}")
-    Send("{Shift Up}")
-    Send("{Escape Up}")
-    Send("{Control Up}")
+    For Key, Code in Globals["Constants"]["Scan Codes"]
+        SendInput("{" Code " Up}")
     Click("Up")
 }
 
@@ -92,7 +85,7 @@ CustomToolTip(Content
     , FontOptions := "" ; like in GUI
     , IsBalloon := False
     , Timeout := ""
-    , MaxWidth := 600 )
+    , MaxWidth := 600)
 {
     Static ttStyles := (TTS_NOPREFIX := 2) | (TTS_ALWAYSTIP := 1)
         , TTS_BALLOON := 0x40
@@ -116,19 +109,19 @@ CustomToolTip(Content
     DetectHiddenWindows(1)
     lastFoundPrev := WinExist()
     hWnd := DllCall("CreateWindowEx"
-    , "UInt", exStyles
-    , "Str", "tooltips_class32"
-    , "Str", ""
-    , "UInt", ttStyles | TTS_CLOSE * !!CloseButton | TTS_BALLOON * !!IsBalloon
-    , "Int", 0
-    , "Int", 0
-    , "Int", 0
-    , "Int", 0
-    , "Ptr", 0
-    , "Ptr", 0
-    , "Ptr", 0
-    , "Ptr", 0
-    , "Ptr")
+                    , "UInt", exStyles
+                    , "Str", "tooltips_class32"
+                    , "Str", ""
+                    , "UInt", ttStyles | TTS_CLOSE * !!CloseButton | TTS_BALLOON * !!IsBalloon
+                    , "Int", 0
+                    , "Int", 0
+                    , "Int", 0
+                    , "Int", 0
+                    , "Ptr", 0
+                    , "Ptr", 0
+                    , "Ptr", 0
+                    , "Ptr", 0
+                    , "Ptr")
     
     WinExist("ahk_id" hWnd)
     If (TextColor != 0 || BackColor != "") {

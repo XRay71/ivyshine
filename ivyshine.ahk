@@ -139,14 +139,12 @@ Try
     DirCreate("lib\init")
     For ini in Globals
     {
-        If (FileExist(Globals["Constants"]["ini FilePaths"][ini])) {
+        If (FileExist(Globals["Constants"]["ini FilePaths"][ini]))
             ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-        } Else
+        Else
             UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         
         ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
     }
 }
 Catch Any
@@ -240,13 +238,14 @@ Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
 
 Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
 
-#SuspendExempt
-
 Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
 
+#SuspendExempt
 HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
+
 Hotkey("~LButton", StartMoveGui, "T1 P2")
 Hotkey("~LButton Up", StopMoveGui, "T1 P3")
+
 HotIfWinActive()
 #SuspendExempt False
 

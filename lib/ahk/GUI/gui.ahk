@@ -20,12 +20,12 @@ PauseButton.OnEvent("Click", PauseMacro)
 StopButton := IvyshineGui.Add("Button", "xp+40 yp wp hp Center vStopButton", Globals["Settings"]["Hotkeys"]["StopHotkey"])
 StopButton.OnEvent("Click", StopMacro)
 
-InfoButton := IvyshineGui.Add("Button", "x510 yp wp hp Center vInfoButton", "v" CurrentVersionID)
+InfoButton := IvyshineGui.Add("Button", "xp+40 yp wp hp Center vInfoButton", "v" CurrentVersionID)
 InfoButton.OnEvent("Click", ShowMacroInfo)
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-MainTabs := IvyshineGui.Add("Tab3", "x0 y20 w550 h350 vMainTabs -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status"])
+MainTabs := IvyshineGui.Add("Tab3", "x0 y20 w550 h350 vMainTabs Section -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status"])
 MainTabs.Choose(Integer(Globals["GUI"]["Settings"]["CurrentGUITab"]))
 MainTabs.OnEvent("Change", MainTabChanged)
 

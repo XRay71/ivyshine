@@ -147,8 +147,8 @@ Globals["Settings"]["Basic Settings"] := Map(
 )
 
 Globals["Settings"]["Collect/Kill"] := Map(
-"AutoEquip", "Default",
-"HasGiftedVicious", "1"
+"HasGiftedVicious", "1",
+"AutoEquip", "Default"
 )
 
 Globals["Settings"]["Hotkeys"] := Map(
@@ -178,8 +178,8 @@ Globals["Settings"]["Miscellaneous"] := Map(
 
 Globals["Settings"]["rbxfpsunlocker"] := Map(
 "Runrbxfpsunlocker", "0",
-"rbxfpsunlockerDirectory", "",
-"FPS", "30"
+"FPS", "30",
+"rbxfpsunlockerDirectory", ""
 )
 
 Globals["Settings"]["Reconnect"] := Map(

@@ -1,11 +1,11 @@
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "x434 y28 w106 h223 Section", "Miscellaneous")
+IvyshineGui.Add("GroupBox", "xs+129 y28 w106 h223 Section", "Miscellaneous")
 IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s8", "Calibri")
 
-MoveSpeedCorrectionCheckBox := IvyshineGui.Add("CheckBox", "xs yp+6 h18 w90 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Correct speed?")
+MoveSpeedCorrectionCheckBox := IvyshineGui.Add("CheckBox", "xs ys+4 h18 w90 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Correct speed?")
 MoveSpeedCorrectionCheckBox.OnEvent("Click", SubmitSettings)
 
 ShiftlockMovingCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h18 w90 -Wrap vShiftLockWhenPossibleCheckBox Checked" Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], "Shiftlock move?")
@@ -20,7 +20,7 @@ IvyshineGui.Add("Text", "xs yp+20 h20 -Wrap +BackgroundTrans", "Reset Multiplier
 ResetMultiplierSlider := IvyshineGui.Add("Slider", "xs yp+18 h20 w90 Page1 Range1-5 TickInterval1 ToolTip vResetMultiplierSlider", Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
 ResetMultiplierSlider.OnEvent("Change", SubmitSettings)
 
-ImportSettingsButton := IvyshineGui.Add("Button", "xs yp+26 h20 w90 -Wrap Center", "Import Settings")
+ImportSettingsButton := IvyshineGui.Add("Button", "xs yp+26 h20 w90 -Wrap Center vImportSettingsButton", "Import Settings")
 ImportSettingsButton.OnEvent("Click", ImportSettings)
 
 ImportSettings(*) {

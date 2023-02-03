@@ -5,20 +5,22 @@ IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s8", "Calibri")
 
-StartHotkeyButton := IvyshineGui.Add("Button", "xs ys+6 wp-3 h20 Left -Wrap vStartHotkeyButton", " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")")
+StartHotkeyButton := IvyshineGui.Add("Button", "xs ys+4 wp-3 h20 Left -Wrap vStartHotkeyButton", " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")")
 StartHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
-PauseHotkeyButton := IvyshineGui.Add("Button", "xs yp+20 wp h20 Left -Wrap vPauseHotkeyButton", " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")")
+PauseHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 wp h20 Left -Wrap vPauseHotkeyButton", " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")")
 PauseHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
-StopHotkeyButton := IvyshineGui.Add("Button", "xs yp+20 wp h20 Left -Wrap vStopHotkeyButton", " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")")
+StopHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 wp h20 Left -Wrap vStopHotkeyButton", " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")")
 StopHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
-HotkeysInfoButton := IvyshineGui.Add("Button", "xs+49 ys-19 h16 w15", "?")
+HotkeysInfoButton := IvyshineGui.Add("Button", "xs+49 ys-19 h16 w15 vHotkeysInfoButton", "?")
 HotkeysInfoButton.OnEvent("Click", ShowHotkeysInfo)
 
 ShowHotkeysInfo(*) {
-    MsgBox("^: Ctrl`r`n+: Shift`r`n!: Alt`r`n#: Windows Key", "Hotkey Symbol Information", "Icon? Owner" IvyshineGui.Hwnd)
+    MsgBox("^: Ctrl`r`n+: Shift`r`n!: Alt`r`n#: Windows Key"
+        , "Hotkey Symbol Information"
+        , "Icon? Owner" IvyshineGui.Hwnd)
 }
 
 PreviousEditHotkeysControl := ""

@@ -7,7 +7,7 @@ MainTabs.UseTab(1)
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
 
-ResetButton := IvyshineGui.Add("Button", "x7 ys+50 w151 h20 vResetButton", "Restore Defaults")
+ResetButton := IvyshineGui.Add("Button", "xs-9 ys+50 w151 h20 vResetButton", "Restore Defaults")
 ResetButton.OnEvent("Click", ResetAll)
 
 #Include *i Settings\Unlocks.ahk
@@ -47,11 +47,8 @@ SubmitSettingsButton.OnEvent("Click", SubmitSettings)
 
 SubmitSettings(ThisControl, *) {
     
-    SubmitButton := False
-    If (ThisControl.Hwnd == SubmitSettingsButton.Hwnd) {
-        ThisControl := IvyshineGui.FocusedCtrl
-        SubmitButton := True
-    }
+    SubmitButton := (ThisControl.Hwnd == SubmitSettingsButton.Hwnd)
+    ThisControl := (ThisControl.Hwnd == SubmitSettingsButton.Hwnd ? IvyshineGui.FocusedCtrl : ThisControl)
     
     If (ThisControl.Hwnd == MoveSpeedEdit.Hwnd) {
         NewMoveSpeed := Trim(MoveSpeedEdit.Value)
@@ -61,9 +58,13 @@ SubmitSettings(ThisControl, *) {
             IniWrite(Globals["Settings"]["Basic Settings"]["MoveSpeed"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveSpeed")
             SetCueBanner(MoveSpeedEdit.Hwnd, Globals["Settings"]["Basic Settings"]["MoveSpeed"])
         } Else If (IsNumber(NewMoveSpeed) && (NewMoveSpeed > 50 || NewMoveSpeed <= 0))
-            DefaultErrorBalloonTip("Accepted: positive numbers <= 50`r`nMake sure you have no haste.", "Out of range!", MoveSpeedEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: positive numbers <= 50`r`nMake sure you have no haste."
+                , "Out of range!"
+                , MoveSpeedEdit.Hwnd)
         Else If (!IsNumber(NewMoveSpeed) && NewMoveSpeed != "")
-            DefaultErrorBalloonTip("Accepted: positive numbers <= 50", "Not a number!", MoveSpeedEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: positive numbers <= 50"
+                , "Not a number!"
+                , MoveSpeedEdit.Hwnd)
         MoveSpeedEdit.Text := MoveSpeedEdit.Value := ""
     }
     
@@ -96,7 +97,9 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Basic Settings"]["PrivateServerLink"] := NewPrivateServerLink
             IniWrite(Globals["Settings"]["Basic Settings"]["PrivateServerLink"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "PrivateServerLink")
         } Else
-            DefaultErrorBalloonTip("Please copy the private server link directly from the configuration page.", "Invalid Link!", PrivateServerLinkEdit.Hwnd)
+            DefaultErrorBalloonTip("Please copy the private server link directly from the configuration page."
+                , "Invalid Link!"
+                , PrivateServerLinkEdit.Hwnd)
         SetCueBanner(PrivateServerLinkEdit.Hwnd, Globals["Settings"]["Basic Settings"]["PrivateServerLink"])
     }
     
@@ -117,16 +120,25 @@ SubmitSettings(ThisControl, *) {
     Else If (ThisControl.Hwnd == FPSEdit.Hwnd) {
         If (FPSEdit.Value == "" && !SubmitButton)
             Return
+        RunrbxfpsunlockerCheckBox.Enabled := False
+        FPSEdit.Enabled := False
         Globals["Settings"]["rbxfpsunlocker"]["FPS"] := (FPSEdit.Value ? FPSEdit.Value : 0)
         IniWrite(Globals["Settings"]["rbxfpsunlocker"]["FPS"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "FPS")
         SetCueBanner(FPSEdit.Hwnd, (Globals["Settings"]["rbxfpsunlocker"]["FPS"] == 0 ? "inf" : Globals["Settings"]["rbxfpsunlocker"]["FPS"]))
         FPSEdit.Value := FPSEdit.Text := ""
         RunFPSUnlocker(Globals["Settings"]["rbxfpsunlocker"]["FPS"])
+        FPSEdit.Enabled := Globals["Settings"]["rbxfpsunlocker"]["Runrbxfpsunlocker"]
+        RunrbxfpsunlockerCheckBox.Enabled := True
     }
     
     Else If (ThisControl.Hwnd == AutoEquipList.Hwnd) {
         Globals["Settings"]["Collect/Kill"]["AutoEquip"] := AutoEquipList.Text
         IniWrite(Globals["Settings"]["Collect/Kill"]["AutoEquip"], Globals["Constants"]["ini FilePaths"]["Settings"], "Collect/Kill", "AutoEquip")
+        
+        For Field in Globals["Field Defaults"] {
+            Globals["Field Defaults"][Field]["AutoEquip"] := InStr("DefaultAllGather Only", Globals["Settings"]["Collect/Kill"]["AutoEquip"])
+            IniWrite(Globals["Field Defaults"][Field]["AutoEquip"], Globals["Constants"]["ini FilePaths"]["Field Defaults"], Field, "AutoEquip")
+        }
     }
     
     Else If (ThisControl.Hwnd == HasGiftedViciousCheckBox.Hwnd) {
@@ -148,26 +160,22 @@ SubmitSettings(ThisControl, *) {
             MoveMethodList.Add(["Default", "Walk", "Glider", "Cannon"])
             MoveMethodList.Choose(Globals["Settings"]["Basic Settings"]["MoveMethod"])
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
-            IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
             HasGliderCheckBox.Enabled := True
-            For Field in Globals["Field Defaults"] {
-                Globals["Field Defaults"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Defaults"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
-                IniWrite(Globals["Field Defaults"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Defaults"], Field, "MoveMethod")
-            }
         } Else {
             MoveMethodList.Delete()
             MoveMethodList.Add(["Walk"])
             MoveMethodList.Choose("Walk")
             Globals["Settings"]["Basic Settings"]["MoveMethod"] := MoveMethodList.Text
-            IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
             HasGliderCheckBox.Enabled := False
             HasGliderCheckBox.Value := False
             Globals["Settings"]["Unlocks"]["HasGlider"] := HasGliderCheckBox.Value
             IniWrite(Globals["Settings"]["Unlocks"]["HasGlider"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "HasGlider")
-            For Field in Globals["Field Defaults"] {
-                Globals["Field Defaults"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Defaults"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
-                IniWrite(Globals["Field Defaults"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Defaults"], Field, "MoveMethod")
-            }
+        }
+        
+        IniWrite(Globals["Settings"]["Basic Settings"]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Settings"], "Basic Settings", "MoveMethod")
+        For Field in Globals["Field Defaults"] {
+            Globals["Field Defaults"][Field]["MoveMethod"] := (Globals["Settings"]["Basic Settings"]["MoveMethod"] == "Default" ? Globals["Field Defaults"][Field]["DefaultMoveMethod"] : Globals["Settings"]["Basic Settings"]["MoveMethod"])
+            IniWrite(Globals["Field Defaults"][Field]["MoveMethod"], Globals["Constants"]["ini FilePaths"]["Field Defaults"], Field, "MoveMethod")
         }
     }
     
@@ -219,7 +227,9 @@ SubmitSettings(ThisControl, *) {
             IniWrite(Globals["Settings"]["Unlocks"]["NumberOfBees"], Globals["Constants"]["ini FilePaths"]["Settings"], "Unlocks", "NumberOfBees")
             SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
         } Else If (IsInteger(NewNumberOfBees) && (NewNumberOfBees > 50 || NewNumberOfBees == 0))
-            DefaultErrorBalloonTip("Accepted: positive integers <= 50", "Out of range!", NumberOfBeesEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: positive integers <= 50"
+                , "Out of range!"
+                , NumberOfBeesEdit.Hwnd)
         NumberOfBeesEdit.Text := NumberOfBeesEdit.Value := ""
     }
     
@@ -244,7 +254,9 @@ SubmitSettings(ThisControl, *) {
             IniWrite(Globals["Settings"]["Convert Settings"]["ConvertDelay"], Globals["Constants"]["ini FilePaths"]["Settings"], "Convert Settings", "ConvertDelay")
             SetCueBanner(ConvertDelayEdit.Hwnd, Globals["Settings"]["Convert Settings"]["ConvertDelay"])
         } Else If (IsInteger(NewConvertDelay) && NewConvertDelay > 20)
-            DefaultErrorBalloonTip("Accepted: non-negative integers <= 20", "Out of range!", ConvertDelayEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: non-negative integers <= 20"
+                , "Out of range!"
+                , ConvertDelayEdit.Hwnd)
         ConvertDelayEdit.Text := ConvertDelayEdit.Value := ""
     }
     
@@ -279,7 +291,9 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Reconnect"]["ReconnectInterval"] := (ReconnectIntervalEdit.Value ? ReconnectIntervalEdit.Value : "")
             IniWrite(Globals["Settings"]["Reconnect"]["ReconnectInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectInterval")
         } Else
-            DefaultErrorBalloonTip("Accepted: factors of 24`r`n1, 2, 3, 4, 6, 8, 12, 24", "Value not accepted!", ReconnectIntervalEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: factors of 24:`r`n1, 2, 3, 4, 6, 8, 12, 24"
+                , "Value not accepted!"
+                , ReconnectIntervalEdit.Hwnd)
         ReconnectIntervalEdit.Value := ReconnectIntervalEdit.Text := ""
         SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectInterval"])
         ReconnectIntervalText.Text := (Globals["Settings"]["Reconnect"]["ReconnectInterval"] == 1 ? " hour," : " hours,")
@@ -293,7 +307,9 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Reconnect"]["ReconnectStartHour"] := ReconnectStartHourEdit.Value
             IniWrite(Globals["Settings"]["Reconnect"]["ReconnectStartHour"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectStartHour")
         } Else
-            DefaultErrorBalloonTip("Accepted: 0 <= n <= 23", "Out of range!", ReconnectStartHourEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: 0 <= n <= 23"
+                , "Out of range!"
+                , ReconnectStartHourEdit.Hwnd)
         ReconnectStartHourEdit.Value := ReconnectStartHourEdit.Text := ""
         SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartHour"])
     }
@@ -306,7 +322,9 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Reconnect"]["ReconnectStartMinute"] := ReconnectStartMinuteEdit.Value
             IniWrite(Globals["Settings"]["Reconnect"]["ReconnectStartMinute"], Globals["Constants"]["ini FilePaths"]["Settings"], "Reconnect", "ReconnectStartMinute")
         } Else
-            DefaultErrorBalloonTip("Accepted: 0 <= n <= 59", "Out of range!", ReconnectStartMinuteEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: 0 <= n <= 59"
+                , "Out of range!"
+                , ReconnectStartMinuteEdit.Hwnd)
         ReconnectStartMinuteEdit.Value := ReconnectStartMinuteEdit.Text := ""
         SetCueBanner(ReconnectStartMinuteEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartMinute"])
     }
@@ -343,7 +361,9 @@ SubmitSettings(ThisControl, *) {
             AntiAFKIntervalText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] == 1 ? " minute." : " minutes.")
             AntiAFKProgress.Opt("Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60))
         } Else If (IsNumber(AntiAFKIntervalEdit.Value) && (AntiAFKIntervalEdit.Value == 0 || AntiAFKIntervalEdit.Value > 20))
-            DefaultErrorBalloonTip("Accepted: positive Integers <= 20", "Out of range!", AntiAFKIntervalEdit.Hwnd)
+            DefaultErrorBalloonTip("Accepted: positive Integers <= 20"
+                , "Out of range!"
+                , AntiAFKIntervalEdit.Hwnd)
         AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
     }
     

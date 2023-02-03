@@ -34,4 +34,6 @@ ReadIni(FilePath, Data) {
                 Data[SectionName][SubStr(A_LoopField, 1, EqualsIndex - 1)] := SubStr(A_LoopField, EqualsIndex + 1)
         }
     }
+    
+    UpdateIni(FilePath, Data)
 }

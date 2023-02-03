@@ -1,5 +1,5 @@
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "xs-8 ys+66 w132 h63 Section", "Reconnect Settings")
+IvyshineGui.Add("GroupBox", "xs-8 ys+67 w132 h62 Section", "Reconnect Settings")
 IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
 IvyshineGui.SetFont()
@@ -12,7 +12,7 @@ ReconnectIntervalText := IvyshineGui.Add("Text", "x+2 yp+2 h20 -Wrap +Background
 SetCueBanner(ReconnectIntervalEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectInterval"])
 ReconnectIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
 
-IvyshineGui.Add("Text", "xs yp+17 h20 -Wrap +BackgroundTrans", "starting at ")
+IvyshineGui.Add("Text", "xs yp+16 h20 -Wrap +BackgroundTrans", "starting at ")
 ReconnectStartHourEdit := IvyshineGui.Add("Edit", "x+1 yp-2 h16 w18 Center Limit2 Number vReconnectStartHourEdit")
 SetCueBanner(ReconnectStartHourEdit.Hwnd, Globals["Settings"]["Reconnect"]["ReconnectStartHour"])
 ReconnectStartHourEdit.OnEvent("LoseFocus", SubmitSettings)
