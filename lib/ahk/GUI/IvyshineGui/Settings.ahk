@@ -42,7 +42,7 @@ ResetAll(*) {
     }
 }
 
-SubmitSettingsButton := IvyshineGui.Add("Button", "x0 y0 w1 h1 Hidden +Default vSubmitSettingsButton")
+SubmitSettingsButton := IvyshineGui.Add("Button", "x0 y0 w1 h1 Hidden vSubmitSettingsButton")
 SubmitSettingsButton.OnEvent("Click", SubmitSettings)
 
 SubmitSettings(ThisControl, *) {

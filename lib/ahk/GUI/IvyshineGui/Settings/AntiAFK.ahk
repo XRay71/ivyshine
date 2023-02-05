@@ -33,31 +33,43 @@ ShowAntiAFKInfo(*) {
 AntiAFK() {
     TimeDifference := CurrentUnixTime() - Globals["Settings"]["AntiAFK"]["LastRun"]
     
-    If (WinActive("ahk_exe RobloxPlayerBeta.exe")) {
+    DetectHiddenWindowsSetting := A_DetectHiddenWindows
+    DetectHiddenWindows(1)
+    If (!ProcessExist("RobloxPlayerBeta.exe") || WinActive("ahk_exe RobloxPlayerBeta.exe")) {
         Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
         TimeDifference := 0
     }
+    DetectHiddenWindows(DetectHiddenWindowsSetting)
     
     AntiAFKProgress.Value := TimeDifference
     
     If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60) {
         Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
-        If (WinExist("ahk_exe RobloxPlayerBeta.exe")) {
-            ReleaseAllKeys()
-            BlockInput("On")
-            CurrentWindowID := WinGetId("A")
-            Loop {
-                WinActivate("ahk_exe RobloxPlayerBeta.exe")
-                WinWaitActive("ahk_exe RobloxPlayerBeta.exe",,0.1)
-            } Until WinActive("ahk_exe RobloxPlayerBeta.exe")
-            WinActivate("ahk_exe RobloxPlayerBeta.exe")
-            WinWaitActive("ahk_exe RobloxPlayerBeta.exe")
-            Send(">")
-            HyperSleep(20)
-            Send("<")
-            WinMinimize("ahk_exe RobloxPlayerBeta.exe")
-            WinActivate(CurrentWindowID)
-            BlockInput("Off")
+        Try {
+            CurrentWindowName := WinGetTitle("A")
+            CurrentWindowProcessName := WinGetProcessName("A")
         }
+        ReleaseAllKeys()
+        BlockInput("On")
+        If (A_IconHidden)
+            WinHide(IvyshineGui.Hwnd)
+        If (RobloxWindow := ActivateWindowWithCheck("Roblox", "RobloxPlayerBeta.exe")) {
+            Send("{" Globals["Constants"]["Scan Codes"]["LControl"] "}" "{" Globals["Constants"]["Scan Codes"]["F7"] "}")
+            HyperSleep(15)
+            Send("{" Globals["Constants"]["Scan Codes"]["LControl"] "}" "{" Globals["Constants"]["Scan Codes"]["F7"] "}")
+            If (RobloxWindow[3] == -1)
+                WinMinimize("ahk_exe RobloxPlayerBeta.exe")
+            If (A_IconHidden) {
+                WinShow(IvyshineGui.Hwnd)
+                WinActivate(IvyshineGui.Hwnd)
+            }
+        }
+        If (A_IconHidden)
+            WinHide(IvyshineGui.Hwnd)
+        If (CurrentWindowName && CurrentWindowProcessName)
+            ActivateWindowWithCheck(CurrentWindowName, CurrentWindowProcessName)
+        If (A_IconHidden)
+            WinShow(IvyshineGui.Hwnd)
+        BlockInput("Off")
     }
 }

@@ -25,31 +25,45 @@ Autoclick(*) {
     
     AutoclickerRunning := !AutoclickerRunning
     
-    GuiMasterSwitch()
-    GuiSwitch()
-    
-    Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
-    
-    ClickIntervalEdit.Enabled := False
-    ClickAmountEdit.Enabled := False
-    AutoclickerHotkeyButton.Enabled := False
-    
-    IntervalTemp := A_HotkeyInterval
-    A_HotkeyInterval := 0
-    
-    While (AutoclickerRunning && (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0 || Globals["Settings"]["Autoclicker"]["ClickCounter"] < Globals["Settings"]["Autoclicker"]["ClickAmount"])) {
-        MouseLeftClick()
-        Globals["Settings"]["Autoclicker"]["ClickCounter"]++
-        HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
+    If (AutoclickerRunning) {
+        GuiMasterSwitch()
+        GuiSwitch()
+        
+        Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
+        
+        ClickIntervalEdit.Enabled := False
+        ClickAmountEdit.Enabled := False
+        AutoclickerHotkeyButton.Enabled := False
+        
+        IntervalTemp := A_HotkeyInterval
+        A_HotkeyInterval := 0
+        
+        If (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0) {
+            While (AutoclickerRunning) {
+                MouseLeftClick()
+                HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
+            }
+        }
+        Else {
+            While (AutoclickerRunning && (Globals["Settings"]["Autoclicker"]["ClickCounter"] < Globals["Settings"]["Autoclicker"]["ClickAmount"])) {
+                MouseLeftClick()
+                Globals["Settings"]["Autoclicker"]["ClickCounter"]++
+                HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
+            }
+        }
+        
+        A_HotkeyInterval := IntervalTemp
+        
+        ClickIntervalEdit.Enabled := True
+        ClickAmountEdit.Enabled := True
+        AutoclickerHotkeyButton.Enabled := True
+        
+        Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
+        
+        AutoclickerRunning := False
+        
+        SetAllGuiValues()
+        GuiMasterSwitch()
+        GuiSwitch()
     }
-    
-    A_HotkeyInterval := IntervalTemp
-    
-    ClickIntervalEdit.Enabled := True
-    ClickAmountEdit.Enabled := True
-    AutoclickerHotkeyButton.Enabled := True
-    
-    Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
-    
-    SetAllGuiValues()
 }

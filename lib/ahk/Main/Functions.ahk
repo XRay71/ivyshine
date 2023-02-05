@@ -1,11 +1,54 @@
 ReleaseAllKeys() {
     For Key, Code in Globals["Constants"]["Scan Codes"]
-        SendInput("{" Code " Up}")
+        If (GetKeyState(Format("vk{:X}", GetKeyVK(Code))))
+            SendInput("{" Code " Up}")
     Click("Up")
 }
 
 CurrentUnixTime() {
     Return DateDiff(A_NowUTC, 19700101000000, "Seconds")
+}
+
+ActivateWindowWithCheck(WindowName, ProcessName) {
+    DetectHiddenWindowsSetting := A_DetectHiddenWindows
+    DetectHiddenWindows(1)
+    SetTitleMatchModeSetting := A_TitleMatchMode
+    SetTitleMatchMode(3)
+    
+    WinValues := Array()
+    PIDs := Array()
+    For Process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process where Name='" ProcessName "'")
+        PIDs.Push(Process.ProcessId)
+    
+    If (WIDs := WinGetList(WindowName))
+        For WID in WIDS
+            For PID in PIDS
+                If (WinGetPID(WID) == PID) {
+                    WinValues.Push(PID)
+                    WinValues.Push(WID)
+                    WinValues.Push(WinGetMinMax(WID))
+                    WinGetPos(&X, &Y, &W, &H, WID)
+                    WinValues.Push(X)
+                    WinValues.Push(Y)
+                    WinValues.Push(W)
+                    WinValues.Push(H)
+                    
+                    While (!WinActive(WID)) {
+                        WinActivate(WID)
+                        WinWaitActive(WID,, 0.1)
+                    }
+                    WinActivate(WID)
+                    WinWaitActive(WID)
+                    
+                    SetTitleMatchMode(SetTitleMatchModeSetting)
+                    DetectHiddenWindows(DetectHiddenWindowsSetting)
+                    Return WinValues
+                }
+    
+    SetTitleMatchMode(SetTitleMatchModeSetting)
+    DetectHiddenWindows(DetectHiddenWindowsSetting)
+    
+    Return 0
 }
 
 MouseLeftClick() {
@@ -53,13 +96,36 @@ MouseWheel(w) {
     DllCall("mouse_event", "UInt", 0x800, "UInt", 0, "UInt", 0, "UInt", w, "UInt", 0, "UInt", 0)
 }
 
-; Modified Hypersleep by the Natro dev team :D
+; Accurate sleep
+; Credits to the Natro dev team & the link below for base function
+; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=88693
 HyperSleep(ms)
 {
-    DllCall("Winmm.dll\timeBeginPeriod", "UInt", 1)
-    Loop(ms)
-        DllCall("Sleep", "UInt", 1)
-    DllCall("Winmm.dll\timeEndPeriod", "UInt", 1)
+    SysBeginTime := SystemTime()
+    Static SysTimeFreq := 0, SysTimeTick := 0
+    DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
+    SysEndTime := (SysBeginTime + ms) * SysTimeFreq / 1000
+    Current := 0
+    While (Current < SysEndTime) {
+        If (SysEndTime - Current) > 10000 {
+            DllCall("Winmm.dll\timeBeginPeriod", "UInt", 1)
+            DllCall("Sleep", "UInt", 1)
+            DllCall("Winmm.dll\timeEndPeriod", "UInt", 1)
+            DllCall("QueryPerformanceCounter", "Int64*", &Current)
+        }
+        Else
+            DllCall("QueryPerformanceCounter", "Int64*", &Current)
+    }
+    
+    Return (Current - SysEndTime) / SysTimeFreq * 1000 + ms
+}
+
+SystemTime() {
+    Static SysTimeFreq := 0, SysTimeTick := 0
+    If (!SysTimeFreq)
+        DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
+    DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)
+    Return SysTimeTick / SysTimeFreq * 1000
 }
 
 DefaultErrorBalloonTip(Text, Title, Hwnd) {

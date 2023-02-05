@@ -26,7 +26,7 @@ InfoButton.OnEvent("Click", ShowMacroInfo)
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
 MainTabs := IvyshineGui.Add("Tab3", "x0 y20 w550 h350 vMainTabs Section -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status"])
-MainTabs.Choose(Integer(Globals["GUI"]["Settings"]["CurrentGUITab"]))
+MainTabs.Choose(Globals["GUI"]["Settings"]["CurrentGUITab"])
 MainTabs.OnEvent("Change", MainTabChanged)
 
 #Include *i IvyshineGui\Settings.ahk
@@ -37,6 +37,7 @@ IvyshineGui.Show("Hide Center AutoSize")
 IvyshineGui.Opt("+LastFound")
 WinSetStyle(-0xC40000)
 DllCall("SetMenu", "Ptr", IvyshineGui.Hwnd, "Ptr", 0)
+MainTabChanged(MainTabs)
 
 IvyshineGui.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
 WinActivate(IvyshineGui.Hwnd)
@@ -70,11 +71,13 @@ ShowMacroinfo(*) {
 }
 
 MainTabChanged(MainTab, *) {
-    Globals["GUI"]["Settings"]["CurrentGUITab"] := MainTab.Value
+    Globals["GUI"]["Settings"]["CurrentGUITab"] := MainTab.Text
     IniWrite(Globals["GUI"]["Settings"]["CurrentGUITab"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "CurrentGUITab")
     
     If (Globals["GUI"]["Settings"]["CurrentGUITab"] == "Settings")
         SubmitSettingsButton.Opt("+Default")
+    Else If (Globals["GUI"]["Settings"]["CurrentGUITab"] == "Fields")
+        SubmitFieldsButton.Opt("+Default")
 }
 
 SetCueBanner(HWND, Text, Show := True)
@@ -171,7 +174,9 @@ GuiSwitch(*) {
 
 GuiMasterSwitch(*) {
     MacroInfoGuiClose()
+    EditHotkeysGuiClose()
     SettingsTabSwitch()
+    FieldsTabSwitch()
 }
 
 SetAllGuiValues(*) {

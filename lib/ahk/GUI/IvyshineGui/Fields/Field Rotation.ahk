@@ -38,6 +38,8 @@ AddToFieldRotation(*) {
         AddToFieldRotationListBox.Focus()
         FieldRotationListBox.Add([Field])
         FieldRotationListBox.Choose(Number(NewIndex))
+        Globals["Fields"]["Settings"]["CurrentlySelectedField"] := FieldRotationListBox.Value
+        IniWrite(FieldRotationListBox.Value, Globals["Constants"]["ini FilePaths"]["Fields"], "Settings", "CurrentlySelectedFields")
     }
 }
 
@@ -56,6 +58,8 @@ RemoveFromFieldRotation(*) {
         FieldRotationListBox.Delete(Index)
         FieldRotationListBox.Choose(Min(Index, Globals["Field Rotation"].Count))
         UpdateIni(Globals["Constants"]["ini FilePaths"]["Field Rotation"], Globals["Field Rotation"])
+        Globals["Fields"]["Settings"]["CurrentlySelectedField"] := FieldRotationListBox.Value
+        IniWrite(FieldRotationListBox.Value, Globals["Constants"]["ini FilePaths"]["Fields"], "Settings", "CurrentlySelectedFields")
     }
 }
 
@@ -84,6 +88,8 @@ MoveFieldRotation(ThisControl, *) {
         FieldRotationListBox.Delete()
         FieldRotationListBox.Add(FieldRotationArray)
         FieldRotationListBox.Choose(NewIndex)
+        Globals["Fields"]["Settings"]["CurrentlySelectedField"] := FieldRotationListBox.Value
+        IniWrite(FieldRotationListBox.Value, Globals["Constants"]["ini FilePaths"]["Fields"], "Settings", "CurrentlySelectedFields")
     }
 }
 

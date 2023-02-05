@@ -121,7 +121,7 @@ Globals["GUI"]["Position"] := Map(
 "GUIY", "350"
 )
 Globals["GUI"]["Settings"] := Map(
-"CurrentGUITab", "1"
+"CurrentGUITab", "Settings"
 )
 
 Globals["Settings"] := Map()
@@ -205,7 +205,7 @@ Globals["Settings"]["Unlocks"] := Map(
 Globals["Fields"] := Map()
 
 Globals["Fields"]["Settings"] := Map(
-"CurrentlySelectedField", "1",
+"CurrentlySelectedField",1
 )
 
 Globals["Field Rotation"] := Map()

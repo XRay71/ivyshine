@@ -4,11 +4,12 @@
 #MaxThreads 255
 #SingleInstance Ignore
 #Include %A_ScriptDir%
-#Include *i Settings\Basic Settings.ahk
 #Requires AutoHotkey v2.0 32-bit
 
 SetWinDelay(0)
 SendMode("Input")
+SetTitleMatchMode(2)
+ProcessSetPriority("A")
 Thread("NoTimers", True)
 SetWorkingDir(A_ScriptDir)
 CoordMode("Pixel", "Client")
@@ -209,15 +210,15 @@ TrayMenu.Add("Restore GUI (F5)", IvyshineGuiRestore, "P10")
 TrayMenu.Default := "Restore GUI (F5)"
 Loop(3)
     TrayMenu.Add()
-TrayMenu.Add("Open Logs", OpenDebug)
+TrayMenu.Add("Open Logs (^F2)", OpenDebug)
 OpenDebug(*) {
     ListLines
 }
 TrayMenu.Add()
-TrayMenu.Add("Suspend Hotkeys", SuspendHotkeys)
+TrayMenu.Add("Suspend Hotkeys (^F3)", SuspendHotkeys)
 SuspendHotkeys(*){
     Suspend(-1)
-    TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys" : "Suspend Hotkeys"))
+    TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)"))
 }
 TrayMenu.Add()
 TrayMenu.Add("Start Macro (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", StartMacro)
@@ -232,32 +233,35 @@ A_IconTip := "Ivyshine"
 ; Hotkeys
 ;=====================================
 
-Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0")
-Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0")
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P0")
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0 S0")
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0 S0")
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P20 S0")
 
-Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1")
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0")
 
-Hotkey("F5", IvyshineGuiMinimize, "T1 P10")
+Hotkey("F5", IvyshineGuiMinimize, "T1 P10 S")
 
-#SuspendExempt
 HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
 
-Hotkey("~LButton", StartMoveGui, "T1 P2")
-Hotkey("~LButton Up", StopMoveGui, "T1 P3")
+Hotkey("~LButton", StartMoveGui, "T1 P2 S")
+Hotkey("~LButton Up", StopMoveGui, "T1 P3 S")
 
 HotIfWinActive()
-#SuspendExempt False
+
+Hotkey("^F2", OpenDebug, "T1 P10 S")
+Hotkey("^F3", SuspendHotkeys, "T1 P10 S")
 
 ;=====================================
 ; Main Functions
 ;=====================================
 
 #Include *i lib\ahk\Main\Functions.ahk
+#Include *i lib\ahk\Libraries\Gdip_All.ahk
 
-Try
-ReleaseAllKeys()
-Catch Any
+Try {
+    ReleaseAllKeys()
+    pToken := Gdip_Startup()
+} Catch Any
     MissingFilesError()
 
 StartMacro(*) {
@@ -313,3 +317,5 @@ UnableToCreateFileError() {
 
 ]::ReloadMacro()
 Hotkey("]",, "P20")
+
+\::MsgBox(IvyshineGui.Hwnd)
