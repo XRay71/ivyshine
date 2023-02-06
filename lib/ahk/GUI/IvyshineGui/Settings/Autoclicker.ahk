@@ -22,6 +22,8 @@ AutoclickerRunning := False
 
 Autoclick(*) {
     Global AutoclickerRunning
+    CriticalSetting := A_IsCritical
+    Critical "Off"
     
     AutoclickerRunning := !AutoclickerRunning
     
@@ -66,4 +68,6 @@ Autoclick(*) {
         GuiMasterSwitch()
         GuiSwitch()
     }
+    
+    Critical CriticalSetting
 }
