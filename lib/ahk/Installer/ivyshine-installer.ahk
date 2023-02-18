@@ -46,9 +46,11 @@ Catch Any {
 
 PowerShell := ComObject("Shell.Application")
 PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
+DirCreate("ivyshine")
+PowerShell.Namespace(A_WorkingDir "\ivyshine").MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
 FileDelete("NewVersion.zip")
 FileDelete("AHK-Installer.exe")
-DirMove("ivyshine-main", "ivyshine", "2")
+DirDelete("ivyshine-main")
 
 Run("ivyshine\ivyshine.ahk")
 FileAppend(

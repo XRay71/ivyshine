@@ -67,17 +67,20 @@ CheckForUpdates() {
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) {
-        Update := (A_IsAdmin ? "Yes" : MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
+        Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
             , "New version found!"
-            , "YesNo Icon!"))
+            , "YesNo Icon!")
         
-        If (Update != "No") {
+        If (Update != "No" || FileExist(A_Temp "\update-ivyshine.txt")) {
+            FileAppend("boo", A_Temp "\update-ivyshine.txt")
             If (!A_IsAdmin) {
                 Try {
                     Run("*RunAs " A_AhkPath " /restart " A_ScriptFullPath)
                     ExitApp
                 }
             }
+            If (FileExist(A_Temp "\update-ivyshine.txt"))
+                FileDelete(A_Temp "\update-ivyshine.txt")
             
             If (FileExist((A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe")))
                 FileMove(A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe", "..\ivyshine-installer.exe", 1)
