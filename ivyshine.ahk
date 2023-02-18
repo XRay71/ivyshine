@@ -59,7 +59,7 @@ CheckResolution() {
 ; Check for updates
 ;=====================================
 
-CurrentVersionID := "000"
+CurrentVersionID := "001"
 CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")

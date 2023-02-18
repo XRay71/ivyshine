@@ -48,7 +48,7 @@ PowerShell := ComObject("Shell.Application")
 PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
 FileDelete("NewVersion.zip")
 FileDelete("AHK-Installer.exe")
-DirMove("ivyshine-main", "ivyshine", "R")
+DirMove("ivyshine-main", "ivyshine", "2")
 
 Run("ivyshine\ivyshine.ahk")
 FileAppend(
