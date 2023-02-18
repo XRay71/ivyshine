@@ -85,55 +85,55 @@ CheckForUpdates() {
                 FileMove(A_ScriptFullPath "\lib\ahk\Installer\ivyshine-installer.exe", "ivyshine-installer.exe", 1)
             Else {
                 Try
-                Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
+                Download("https://github.com/XRay71/ivyshine/blob/8712eded3d4e82880efb91c8d69a20c10ee7136f/lib/ahk/Installer/ivyshine-installer.exe", "ivyshine-installer.exe")
                 Catch Any {
                     MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
                     Try
-                    FileDelete("AHK-Installer.exe")
+                    FileDelete("ivyshine-installer.exe")
                     Return
                 }
             }
             
-            Loop
-                Sleep(10)
-            Until (FileExist("AHK-Installer.exe"))
+            ; Loop
+            ;     Sleep(10)
+            ; Until (FileExist("AHK-Installer.exe"))
             
-            RunWait("*RunAs AHK-Installer.exe")
+            ; RunWait("*RunAs AHK-Installer.exe")
             
-            Loop
-                Sleep(10)
-            Until (WinExist("AutoHotkey Dash"))
+            ; Loop
+            ;     Sleep(10)
+            ; Until (WinExist("AutoHotkey Dash"))
             
-            WinClose()
+            ; WinClose()
             
-            Try
-            Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
-            Catch Any {
-                MsgBox("Something went wrong while downloading the update!`r`nNothing has been changed.", "Error!", "OK Iconx")
-                Try {
-                    FileDelete("NewVersion.zip")
-                    FileDelete("AHK-Installer.exe")
-                }
-                Return
-            }
+            ; Try
+            ; Download("https://github.com/XRay71/ivyshine/archive/main.zip", "NewVersion.zip")
+            ; Catch Any {
+            ;     MsgBox("Something went wrong while downloading the update!`r`nNothing has been changed.", "Error!", "OK Iconx")
+            ;     Try {
+            ;         FileDelete("NewVersion.zip")
+            ;         FileDelete("AHK-Installer.exe")
+            ;     }
+            ;     Return
+            ; }
             
-            PowerShell := ComObject("Shell.Application")
-            PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
-            PowerShell.Namespace(A_WorkingDir).MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
+            ; PowerShell := ComObject("Shell.Application")
+            ; PowerShell.Namespace(A_WorkingDir).CopyHere(PowerShell.Namespace(A_WorkingDir "\NewVersion.zip").items, 4|16)
+            ; PowerShell.Namespace(A_WorkingDir).MoveHere(PowerShell.Namespace(A_WorkingDir "\ivyshine-main").items, 4|16)
             
-            Try {
-                FileDelete("NewVersion.zip")
-                FileDelete("AHK-Installer.exe")
-                DirDelete("ivyshine-main")
-            }
+            ; Try {
+            ;     FileDelete("NewVersion.zip")
+            ;     FileDelete("AHK-Installer.exe")
+            ;     DirDelete("ivyshine-main")
+            ; }
             
-            Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!"
-                , "Update success!"
-                , "OK Icon!")
+            ; Response := MsgBox("You have successfully been updated to the newest version: v" CurrentVersionID "!"
+            ;     , "Update success!"
+            ;     , "OK Icon!")
             
-            Run("ivyshine.ahk")
+            ; Run("ivyshine.ahk")
             
-            ExitApp
+            ; ExitApp
         }
     }
 }
