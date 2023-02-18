@@ -67,9 +67,10 @@ CheckForUpdates() {
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) {
-        Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
-            , "New version found!"
-            , "YesNo Icon!")
+        If (!FileExist(A_Temp "\update-ivyshine.txt"))
+            Update := MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
+                , "New version found!"
+                , "YesNo Icon!")
         
         If (Update != "No" || FileExist(A_Temp "\update-ivyshine.txt")) {
             FileAppend("boo", A_Temp "\update-ivyshine.txt")
