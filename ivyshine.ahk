@@ -253,9 +253,11 @@ OnExit(ExitMacro)
 
 #Include *i lib\ahk\Main\Functions.ahk
 #Include *i lib\ahk\Libraries\Gdip_All.ahk
+#Include *i lib\ahk\Libraries\ImagePut.ahk
 
 Try {
     ReleaseAllKeys()
+    pToken := Gdip_Startup()
 } Catch Any
     MissingFilesError()
 
