@@ -774,13 +774,10 @@ Globals["Field Defaults"]["Sunflower"] := Map(
 Globals["Boost"] := Map()
 
 Globals["Boost"]["Boost Rotation"] := Map(
-"BoostRotationList", "Sprinkler|",
-"CurrentlySelectedBoost", "Sprinkler",
-"NonBoostRotationList", "Gumdrops|Coconut|Stinger|Microconvertor|Honeysuckle|Whirligig|Field Dice|Jellybeans|Red Extract|Blue Extract|Glitter|Glue|Oil|Enzymes|Tropical Drink|"
+"CurrentlySelectedBoost", "Sprinkler"
 )
 
 Globals["Boost"]["Hotbar"] := Map(
-"HotbarList", "None|",
 "HotbarSlot1", "Sprinkler",
 "HotbarSlot2", "",
 "HotbarSlot3", "",
@@ -798,4 +795,15 @@ Globals["Boost"]["Hotbar"] := Map(
 )
 
 Globals["Boost Settings"] := Map()
+
+Globals["Boost Settings"]["Sprinkler"] := Map(
+"Sprinkler1X","",
+"Sprinkler1Y","",
+"Sprinkler2X","",
+"Sprinkler2Y","",
+"Sprinkler3X","",
+"Sprinkler3Y","",
+"Sprinkler4X","",
+"Sprinkler4Y",""
+)
 

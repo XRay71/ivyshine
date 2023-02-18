@@ -70,16 +70,22 @@ StartEditHotkeys(ThisControl, *) {
             Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
             Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
             Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
+            StartButton.Enabled := 0
+            PauseButton.Enabled := 0
+            StopButton.Enabled := 0
         }
         EditHotkeysGui.Show("AutoSize NoActivate")
         ShowEditHotkeysGui := 1
         PreviousEditHotkeysControl := ThisControl
     } Else {
         Try {
-            Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0")
-            Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0")
-            Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0")
-            Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1")
+            Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0 S0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0 S0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P0 S0")
+            Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1 S0")
+            StartButton.Enabled := 1
+            PauseButton.Enabled := 1
+            StopButton.Enabled := 1
         }
         EditHotkeysGui.Hide()
         ShowEditHotkeysGui := 0

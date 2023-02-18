@@ -49,7 +49,7 @@ IvyshineGuiClose(*) {
     Globals["GUI"]["Position"]["GUIY"] := GuiY
     For ini, Section in Globals
         UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-    HyperSleep(50)
+    HyperSleep(25)
     ExitApp
 }
 

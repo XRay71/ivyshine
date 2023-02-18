@@ -391,6 +391,10 @@ SubmitSettings(ThisControl, *) {
             Globals["Settings"]["Autoclicker"]["ClickInterval"] := ClickIntervalEdit.Value
             IniWrite(Globals["Settings"]["Autoclicker"]["ClickInterval"], Globals["Constants"]["ini FilePaths"]["Settings"], "Autoclicker", "ClickInterval")
             SetCueBanner(ClickIntervalEdit.Hwnd, Globals["Settings"]["Autoclicker"]["ClickInterval"])
+        } Else If (IsNumber(ClickIntervalEdit.Value) && ClickIntervalEdit.Value == 0) {
+            DefaultErrorBalloonTip("Accepted: positive integers"
+                , "0 ms will break your computer"
+                , ClickIntervalEdit.Hwnd)
         }
         ClickIntervalEdit.Value := ClickIntervalEdit.Text := ""
     }

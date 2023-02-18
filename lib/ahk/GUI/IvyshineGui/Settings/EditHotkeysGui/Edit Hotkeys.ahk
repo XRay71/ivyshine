@@ -38,6 +38,9 @@ EditHotkeysGuiClose(*) {
         TrayMenu.Enable("12&")
         TrayMenu.Enable("13&")
         TrayMenu.Enable("14&")
+        StartButton.Enabled := 1
+        PauseButton.Enabled := 1
+        StopButton.Enabled := 1
     }
 }
 
@@ -52,6 +55,9 @@ SubmitEditHotkeys(*) {
         TrayMenu.Disable("12&")
         TrayMenu.Disable("13&")
         TrayMenu.Disable("14&")
+        StartButton.Enabled := 0
+        PauseButton.Enabled := 0
+        StopButton.Enabled := 0
     }
     
     If (ThisControl.Hwnd == StartHotkeyHotkey.Hwnd) {
@@ -106,6 +112,9 @@ SubmitEditHotkeys(*) {
         TrayMenu.Enable("12&")
         TrayMenu.Enable("13&")
         TrayMenu.Enable("14&")
+        StartButton.Enabled := 1
+        PauseButton.Enabled := 1
+        StopButton.Enabled := 1
     }
     
     EditHotkeysGuiClose()

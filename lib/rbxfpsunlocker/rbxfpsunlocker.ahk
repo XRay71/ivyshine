@@ -29,7 +29,7 @@ RunFPSUnlocker(FPS := 30) {
     Loop
         HyperSleep(5)
     Until (FileExist("lib\rbxfpsunlocker\settings"))
-    HyperSleep(5)
+    HyperSleep(20)
     
     Run("lib\rbxfpsunlocker\rbxfpsunlocker.exe", "lib\rbxfpsunlocker", "Hide")
     

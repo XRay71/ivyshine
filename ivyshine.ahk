@@ -6,14 +6,29 @@
 #Include %A_ScriptDir%
 #Requires AutoHotkey v2.0 32-bit
 
+Critical("Off")
+
+SetRegView(32)
 SetWinDelay(0)
-SendMode("Input")
-SetTitleMatchMode(2)
-ProcessSetPriority("A")
-Thread("NoTimers", True)
+SetMouseDelay(0)
+SetKeyDelay(0, -1)
+SetControlDelay(0)
+SetDefaultMouseSpeed(0)
 SetWorkingDir(A_ScriptDir)
+SetTitleMatchMode(3)
+SetTitleMatchMode("Fast")
+
+ProcessSetPriority("A")
+DetectHiddenText(0)
+DetectHiddenWindows(0)
+Thread("Priority", 0)
+Thread("NoTimers", True)
+
+SendMode("Input")
 CoordMode("Pixel", "Client")
 CoordMode("Mouse", "Client")
+
+OnExit(ExitMacro)
 
 ;=====================================
 ; Check Resolution
@@ -65,6 +80,10 @@ CheckForUpdates() {
                     ExitApp
                 }
             }
+            
+            TrayTip("Attempting to download the AHK installer...",
+                ,
+                , "Iconi Mute")
             
             Try
             Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
@@ -281,20 +300,40 @@ StopMacro(*) {
     ReloadMacro()
 }
 
-ReloadMacro() {
+ReloadMacro(*) {
     RestoreFPSUnlocker()
-    If (!A_IconHidden)
-        IvyshineGuiRestore()
-    
-    If (DirExist("lib\init")) {
-        WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
-        Globals["GUI"]["Position"]["GUIX"] := GuiX
-        Globals["GUI"]["Position"]["GUIY"] := GuiY
-        For ini, Section in Globals
-            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+    If (IvyshineGui) {
+        If (!A_IconHidden)
+            IvyshineGuiRestore()
+        
+        If (DirExist("lib\init")) {
+            WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+            Globals["GUI"]["Position"]["GUIX"] := GuiX
+            Globals["GUI"]["Position"]["GUIY"] := GuiY
+            For ini, Section in Globals
+                UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+        }
     }
     HyperSleep(25)
     Reload
+}
+
+ExitMacro(*) {
+    RestoreFPSUnlocker()
+    If (IvyshineGui) {
+        If (!A_IconHidden)
+            IvyshineGuiRestore()
+        
+        If (DirExist("lib\init")) {
+            WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+            Globals["GUI"]["Position"]["GUIX"] := GuiX
+            Globals["GUI"]["Position"]["GUIY"] := GuiY
+            For ini, Section in Globals
+                UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+        }
+    }
+    HyperSleep(25)
+    ExitApp
 }
 
 ;=====================================

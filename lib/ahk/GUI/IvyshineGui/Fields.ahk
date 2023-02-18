@@ -1,6 +1,7 @@
 MainTabs.UseTab(2)
 
 #Include *i Fields\Field Rotation.ahk
+#Include *i Fields\Field View.ahk
 
 SubmitFieldsButton := IvyshineGui.Add("Button", "x0 y0 w1 h1 Hidden vSubmitFieldsButton")
 SubmitFieldsButton.OnEvent("Click", SubmitFields)
