@@ -28,7 +28,6 @@ SendMode("Input")
 CoordMode("Pixel", "Client")
 CoordMode("Mouse", "Client")
 
-
 ;=====================================
 ; Check Resolution
 ;=====================================
@@ -96,9 +95,9 @@ CheckForUpdates() {
             Loop
                 Sleep(10)
             Until (FileExist("..\ivyshine-installer.exe"))
-
+            
             Run("*RunAs ..\ivyshine-installer.exe")
-
+            
             ExitApp
             ; RunWait("*RunAs AHK-Installer.exe")
             
