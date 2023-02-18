@@ -28,7 +28,6 @@ SendMode("Input")
 CoordMode("Pixel", "Client")
 CoordMode("Mouse", "Client")
 
-OnExit(ExitMacro)
 
 ;=====================================
 ; Check Resolution
@@ -276,6 +275,8 @@ Hotkey("^F3", SuspendHotkeys, "T1 P10 S")
 ;=====================================
 ; Main Functions
 ;=====================================
+
+OnExit(ExitMacro)
 
 #Include *i lib\ahk\Main\Functions.ahk
 #Include *i lib\ahk\Libraries\Gdip_All.ahk
