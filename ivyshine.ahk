@@ -81,23 +81,26 @@ CheckForUpdates() {
                 }
             }
             
-            If (FileExist((A_ScriptFullPath "\lib\ahk\Installer\ivyshine-installer.exe"))
-                FileMove(A_ScriptFullPath "\lib\ahk\Installer\ivyshine-installer.exe", "ivyshine-installer.exe", 1)
+            If (FileExist((A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe")))
+                FileMove(A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe", "..\ivyshine-installer.exe", 1)
             Else {
                 Try
-                Download("https://github.com/XRay71/ivyshine/blob/8712eded3d4e82880efb91c8d69a20c10ee7136f/lib/ahk/Installer/ivyshine-installer.exe", "ivyshine-installer.exe")
+                Download("https://github.com/XRay71/ivyshine/raw/main/lib/ahk/Installer/ivyshine-installer.exe", "..\ivyshine-installer.exe")
                 Catch Any {
                     MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
                     Try
-                    FileDelete("ivyshine-installer.exe")
+                    FileDelete("..\ivyshine-installer.exe")
                     Return
                 }
             }
             
-            ; Loop
-            ;     Sleep(10)
-            ; Until (FileExist("AHK-Installer.exe"))
-            
+            Loop
+                Sleep(10)
+            Until (FileExist("..\ivyshine-installer.exe"))
+
+            Run("*RunAs ..\ivyshine-installer.exe")
+
+            ExitApp
             ; RunWait("*RunAs AHK-Installer.exe")
             
             ; Loop
@@ -356,5 +359,3 @@ UnableToCreateFileError() {
 
 ]::ReloadMacro()
 Hotkey("]",, "P20")
-
-\::MsgBox(IvyshineGui.Hwnd)
