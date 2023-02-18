@@ -59,8 +59,8 @@ CheckResolution() {
 ; Check for updates
 ;=====================================
 
-CurrentVersionID := "001"
-; CheckForUpdates()
+CurrentVersionID := "000"
+CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
     WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
@@ -81,17 +81,17 @@ CheckForUpdates() {
                 }
             }
             
-            TrayTip("Attempting to download the AHK installer...",
-                ,
-                , "Iconi Mute")
-            
-            Try
-            Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
-            Catch Any {
-                MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
+            If (FileExist((A_ScriptFullPath "\lib\ahk\Installer\ivyshine-installer.exe"))
+                FileMove(A_ScriptFullPath "\lib\ahk\Installer\ivyshine-installer.exe", "ivyshine-installer.exe", 1)
+            Else {
                 Try
-                FileDelete("AHK-Installer.exe")
-                Return
+                Download("https://www.autohotkey.com/download/ahk-v2.exe", "AHK-Installer.exe")
+                Catch Any {
+                    MsgBox("Something went wrong while installing!`r`nNothing has been changed.", "Error!", "OK Iconx")
+                    Try
+                    FileDelete("AHK-Installer.exe")
+                    Return
+                }
             }
             
             Loop
