@@ -37,7 +37,7 @@ RunFPSUnlocker(FPS := 30) {
         HyperSleep(5)
     Until (ProcessExist("rbxfpsunlocker.exe"))
     
-    HyperSleep(50)
+    HyperSleep(100)
     
     If (FileExist("lib\rbxfpsunlocker\settings"))
         FileDelete("lib\rbxfpsunlocker\settings")
@@ -64,7 +64,7 @@ RestoreFPSUnlocker() {
         HyperSleep(5)
     }
     
-    HyperSleep(5)
+    HyperSleep(50)
 }
 
 CloseFPSUnlocker() {
@@ -95,7 +95,7 @@ CloseFPSUnlocker() {
         }
         HyperSleep(20)
     }
-    HyperSleep(10)
+    HyperSleep(50)
     
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     Critical CriticalSetting

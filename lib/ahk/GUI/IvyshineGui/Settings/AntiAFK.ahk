@@ -52,24 +52,24 @@ AntiAFK() {
         ReleaseAllKeys()
         BlockInput("On")
         If (A_IconHidden)
-            WinHide(IvyshineGui.Hwnd)
+            WinHide(IvyshineGui)
         If (RobloxWindow := ActivateWindowWithCheck("Roblox", "RobloxPlayerBeta.exe")) {
             Send("{" Globals["Constants"]["Scan Codes"]["LControl"] "}" "{" Globals["Constants"]["Scan Codes"]["F7"] "}")
             HyperSleep(15)
             Send("{" Globals["Constants"]["Scan Codes"]["LControl"] "}" "{" Globals["Constants"]["Scan Codes"]["F7"] "}")
             If (RobloxWindow[3] == -1)
-                WinMinimize("ahk_exe RobloxPlayerBeta.exe")
+                WinMinimize(RobloxWindow[2])
             If (A_IconHidden) {
-                WinShow(IvyshineGui.Hwnd)
-                WinActivate(IvyshineGui.Hwnd)
+                WinShow(IvyshineGui)
+                WinActivate(IvyshineGui)
             }
         }
         If (A_IconHidden)
-            WinHide(IvyshineGui.Hwnd)
+            WinHide(IvyshineGui)
         If (CurrentWindowName && CurrentWindowProcessName)
             ActivateWindowWithCheck(CurrentWindowName, CurrentWindowProcessName)
         If (A_IconHidden)
-            WinShow(IvyshineGui.Hwnd)
+            WinShow(IvyshineGui)
         BlockInput("Off")
     }
 }

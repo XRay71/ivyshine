@@ -58,7 +58,7 @@ CheckResolution() {
 ;=====================================
 
 CurrentVersionID := "001"
-CheckForUpdates()
+; CheckForUpdates()
 CheckForUpdates() {
     WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1")
     WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true)
@@ -67,7 +67,7 @@ CheckForUpdates() {
     NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+")
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) {
-        Update := (FileExist(A_Temp "\update-ivyshine.txt") ? "Yes" : MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install the newest version: v" NewVersionID "?"
+        Update := (FileExist(A_Temp "\update-ivyshine.txt") ? "Yes" : MsgBox("You are currently running version v" CurrentVersionID ".`r`nWould you like to install version v" NewVersionID "?"
             , "New version found!"
             , "YesNo Icon!"))
         
@@ -135,8 +135,15 @@ Try
         ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
     }
 }
-Catch Any
-    UnableToCreateFileError()
+Catch Any {
+    If (A_IsAdmin)
+        UnableToCreateFileError()
+    Else
+        Try {
+        Run("*RunAs " A_AhkPath " /restart " A_ScriptFullPath)
+        ExitApp
+    }
+}
 
 ;=====================================
 ; Check Monitor
@@ -183,7 +190,7 @@ Try {
 
 #Include *i lib\ahk\GUI\Gui.ahk
 
-WinActivate(IvyshineGui.Hwnd)
+WinActivate(IvyshineGui)
 
 ;=====================================
 ; Tray Menu
@@ -226,7 +233,7 @@ Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P20 S0")
 
 Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0")
 
-Hotkey("F5", IvyshineGuiMinimize, "T1 P10 S")
+Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P10 S")
 
 HotIfWinActive("ahk_id " IvyshineGui.Hwnd)
 
@@ -235,8 +242,8 @@ Hotkey("~LButton Up", StopMoveGui, "T1 P3 S")
 
 HotIfWinActive()
 
-Hotkey("^F2", OpenDebug, "T1 P10 S")
-Hotkey("^F3", SuspendHotkeys, "T1 P10 S")
+Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "T1 P10 S")
+Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P10 S")
 
 ;=====================================
 ; Main Functions
@@ -249,7 +256,6 @@ OnExit(ExitMacro)
 
 Try {
     ReleaseAllKeys()
-    pToken := Gdip_Startup()
 } Catch Any
     MissingFilesError()
 
@@ -277,7 +283,8 @@ ReloadMacro(*) {
             IvyshineGuiRestore()
         
         If (DirExist("lib\init")) {
-            WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+            DetectHiddenWindows(1)
+            WinGetPos(&GuiX, &GuiY,,, IvyshineGui)
             Globals["GUI"]["Position"]["GUIX"] := GuiX
             Globals["GUI"]["Position"]["GUIY"] := GuiY
             For ini, Section in Globals
@@ -295,7 +302,8 @@ ExitMacro(*) {
             IvyshineGuiRestore()
         
         If (DirExist("lib\init")) {
-            WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
+            DetectHiddenWindows(1)
+            WinGetPos(&GuiX, &GuiY,,, IvyshineGui)
             Globals["GUI"]["Position"]["GUIX"] := GuiX
             Globals["GUI"]["Position"]["GUIY"] := GuiY
             For ini, Section in Globals

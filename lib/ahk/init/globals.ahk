@@ -155,7 +155,10 @@ Globals["Settings"]["Hotkeys"] := Map(
 "StartHotkey", "F1",
 "PauseHotkey", "F2",
 "StopHotkey", "F3",
-"AutoclickerHotkey", "F4"
+"AutoclickerHotkey", "F4",
+"TrayHotkey", "F5",
+"DebugHotkey", "^F2",
+"SuspendHotkey", "^F3"
 )
 
 Globals["Settings"]["GUI"] := Map(
