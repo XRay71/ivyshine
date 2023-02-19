@@ -5,21 +5,24 @@ IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s8", "Calibri")
 
-StartHotkeyButton := IvyshineGui.Add("Button", "xs ys+4 wp-3 h20 Left -Wrap vStartHotkeyButton", " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")")
-StartHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
-PauseHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 wp h20 Left -Wrap vPauseHotkeyButton", " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")")
-PauseHotkeyButton.OnEvent("Click", StartEditHotkeys)
+HotkeysListBox := IvyshineGui.Add("ListBox", "xs ys+4 wp-3 h60 0x100", ["Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", "Autoclicker (" Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"] ")", "Tray (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", "Debug (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", "Suspend (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")"])
 
-StopHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 wp h20 Left -Wrap vStopHotkeyButton", " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")")
-StopHotkeyButton.OnEvent("Click", StartEditHotkeys)
+; StartHotkeyButton := IvyshineGui.Add("Button", "xs ys+4 wp-3 h20 Left -Wrap vStartHotkeyButton", " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")")
+; StartHotkeyButton.OnEvent("Click", StartEditHotkeys)
+
+; PauseHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 wp h20 Left -Wrap vPauseHotkeyButton", " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")")
+; PauseHotkeyButton.OnEvent("Click", StartEditHotkeys)
+
+; StopHotkeyButton := IvyshineGui.Add("Button", "xs yp+40 wp h20 Left -Wrap vStopHotkeyButton", " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")")
+; StopHotkeyButton.OnEvent("Click", StartEditHotkeys)
 
 HotkeysInfoButton := IvyshineGui.Add("Button", "xs+49 ys-19 h16 w15 vHotkeysInfoButton", "?")
 HotkeysInfoButton.OnEvent("Click", ShowHotkeysInfo)
 
 ShowHotkeysInfo(*) {
-    MsgBox("^: Ctrl`r`n+: Shift`r`n!: Alt`r`n#: Windows Key"
-        , "Hotkey Symbol Information"
+    MsgBox("Click on a hotkey in the listbox to edit it!`r`n`r`nSYMBOL MEANINGS:`r`n^: Ctrl`r`n+: Shift`r`n!: Alt`r`n#: Windows Key"
+        , "Hotkey Information"
         , "Icon? Owner" IvyshineGui.Hwnd)
 }
 

@@ -8,7 +8,7 @@ IvyshineGui.SetFont("s8", "Calibri")
 RunAntiAFKCheckBox := IvyshineGui.Add("CheckBox", "xs yp+4 h20 -Wrap vRunAntiAFKCheckBox Checked" Globals["Settings"]["AntiAFK"]["RunAntiAFK"], "Run Anti-AFK?")
 RunAntiAFKCheckBox.OnEvent("Click", SubmitSettings)
 
-IvyshineGui.Add("Text", "xs yp+21 h18 -Wrap +BackgroundTrans", "Run every ")
+IvyshineGui.Add("Text", "xs yp+22 h18 -Wrap +BackgroundTrans", "Run every ")
 AntiAFKIntervalEdit := IvyshineGui.Add("Edit", "x+2 yp-2 w20 hp -Wrap Center Limit2 Number vAntiAFKIntervalEdit Disabled" (Globals["Settings"]["AntiAFK"]["RunAntiAFK"] ? "0" : "1"))
 AntiAFKIntervalText := IvyshineGui.Add("Text", "x+2 yp+2 hp w100 -Wrap +BackgroundTrans vAntiAFKIntervalText", ((Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] != 1 || !AntiAFKIntervalEdit.Enabled) ? " minutes." : " minute."))
 AntiAFKIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
@@ -19,7 +19,7 @@ If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
     SetTimer(AntiAFK, 500, -1)
 }
 
-AntiAFKProgress := IvyshineGui.Add("Progress", "xs yp+20 h18 w116 vAntiAFKProgress Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60))
+AntiAFKProgress := IvyshineGui.Add("Progress", "xs yp+19 h18 w116 vAntiAFKProgress Range0-" (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60))
 
 AntiAFKInfoButton := IvyshineGui.Add("Button", "xs+52 ys-19 h16 w15 vAntiAFKInfoButton", "?")
 AntiAFKInfoButton.OnEvent("Click", ShowAntiAFKInfo)

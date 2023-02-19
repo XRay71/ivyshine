@@ -48,13 +48,8 @@ SubmitEditHotkeys(*) {
     ThisControl := EditHotkeysGui.FocusedCtrl
     
     Try {
-        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
-        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
-        Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], "Off")
-        Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
-        TrayMenu.Disable("12&")
-        TrayMenu.Disable("13&")
-        TrayMenu.Disable("14&")
+        For Key in Globals["Settings"]["Hotkeys"]
+            Hotkey(Key, "Off")
         StartButton.Enabled := 0
         PauseButton.Enabled := 0
         StopButton.Enabled := 0

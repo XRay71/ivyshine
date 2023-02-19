@@ -455,11 +455,11 @@ SetSettingsTabValues(*) {
     NumberOfBeesEdit.Value := NumberOfBeesEdit.Text := ""
     SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
     
-    StartHotkeyButton.Text := " Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")"
+
     
-    PauseHotkeyButton.Text := " Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")"
-    
-    StopHotkeyButton.Text := " Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")"
+
+
+
     
     AlwaysOnTopCheckBox.Value := Globals["Settings"]["GUI"]["AlwaysOnTop"]
     
@@ -501,8 +501,6 @@ SetSettingsTabValues(*) {
     
     ClickAmountEdit.Value := ClickAmountEdit.Text := ""
     SetCueBanner(ClickAmountEdit.Hwnd, (Globals["Settings"]["Autoclicker"]["ClickAmount"] ? Globals["Settings"]["Autoclicker"]["ClickAmount"] : "infinite"))
-    
-    AutoclickerHotkeyButton.Text := "Hotkey: " Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"]
 }
 
 SettingsTabOn := True
@@ -561,12 +559,6 @@ SettingsTabSwitch(*) {
     
     HotkeysInfoButton.Enabled := SettingsTabOn
     
-    StartHotkeyButton.Enabled := SettingsTabOn
-    
-    PauseHotkeyButton.Enabled := SettingsTabOn
-    
-    StopHotkeyButton.Enabled := SettingsTabOn
-    
     AlwaysOnTopCheckBox.Enabled := SettingsTabOn
     
     TransparencyList.Enabled := SettingsTabOn
@@ -602,6 +594,4 @@ SettingsTabSwitch(*) {
     ClickIntervalEdit.Enabled := SettingsTabOn
     
     ClickAmountEdit.Enabled := SettingsTabOn
-    
-    AutoclickerHotkeyButton.Enabled := SettingsTabOn
 }

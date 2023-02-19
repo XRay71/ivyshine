@@ -101,13 +101,14 @@ MouseWheel(w) {
 ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=88693
 HyperSleep(ms)
 {
-    SysBeginTime := SystemTime()
-    Static SysTimeFreq := 0, SysTimeTick := 0
-    DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
-    SysEndTime := (SysBeginTime + ms) * SysTimeFreq / 1000
+    Static SysTimeFreq := 0, SysTimeTick
+    If (!SysTimeFreq)
+        DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
+    DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)
+    SysEndTime := (SysTimeTick / SysTimeFreq * 1000 + ms) * (SysTimeFreq * 0.001)
     Current := 0
     While (Current < SysEndTime) {
-        If (SysEndTime - Current) > 10000 {
+        If (SysEndTime - Current) > 30000 {
             DllCall("Winmm.dll\timeBeginPeriod", "UInt", 1)
             DllCall("Sleep", "UInt", 1)
             DllCall("Winmm.dll\timeEndPeriod", "UInt", 1)
@@ -116,12 +117,12 @@ HyperSleep(ms)
         Else
             DllCall("QueryPerformanceCounter", "Int64*", &Current)
     }
-    
-    Return (Current - SysEndTime) / SysTimeFreq * 1000 + ms
+    DllCall("QueryPerformanceCounter", "Int64*", &Current)
+    Return (Current - SysEndTime) / SysTimeFreq * 1000
 }
 
 SystemTime() {
-    Static SysTimeFreq := 0, SysTimeTick := 0
+    Static SysTimeFreq := 0, SysTimeTick
     If (!SysTimeFreq)
         DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
     DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)

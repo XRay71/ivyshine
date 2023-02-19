@@ -10,13 +10,13 @@ ClickIntervalEdit := IvyshineGui.Add("Edit", "x+1 yp-2 w48 h19 Limit6 -Wrap Left
 ClickIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(ClickIntervalEdit.Hwnd, Globals["Settings"]["Autoclicker"]["ClickInterval"])
 
-IvyshineGui.Add("Text", "xs yp+21 h20 -Wrap +BackgroundTrans", "Amount: ")
+IvyshineGui.Add("Text", "xs yp+22 h20 -Wrap +BackgroundTrans", "Amount: ")
 ClickAmountEdit := IvyshineGui.Add("Edit", "x+1 yp-2 w48 h19 Limit6 -Wrap Left Number vClickAmountEdit")
 ClickAmountEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(ClickAmountEdit.Hwnd, (Globals["Settings"]["Autoclicker"]["ClickAmount"] ? Globals["Settings"]["Autoclicker"]["ClickAmount"] : "infinite"))
 
-AutoclickerHotkeyButton := IvyshineGui.Add("Button", "xs yp+21 w92 h20 Center vAutoclickerHotkeyButton", "Hotkey: " Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"])
-AutoclickerHotkeyButton.OnEvent("Click", StartEditHotkeys)
+AutoclickerProgress := IvyshineGui.Add("Progress", "xs yp+21 h18 w91 vAutoclickerProgress Range0-1")
+AutoclickerText := IvyshineGui.Add("Text", "xs yp+2 h18 w91 +BackgroundTrans vAutoclickerText Center", "Autoclicker OFF")
 
 AutoclickerRunning := False
 
@@ -24,33 +24,34 @@ Autoclick(*) {
     Global AutoclickerRunning
     CriticalSetting := A_IsCritical
     Critical "Off"
+    ListLines(0)
+    ProcessSetPriority("R")
+    SetMouseDelay(-1)
+    SetKeyDelay(-1)
     
     AutoclickerRunning := !AutoclickerRunning
+    AutoclickerText.Text := "Autoclicker ON"
     
     If (AutoclickerRunning) {
         GuiMasterSwitch()
         GuiSwitch()
         
-        Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
-        
         ClickIntervalEdit.Enabled := False
         ClickAmountEdit.Enabled := False
-        AutoclickerHotkeyButton.Enabled := False
         
         IntervalTemp := A_HotkeyInterval
         A_HotkeyInterval := 0
-        
+	Diff := 0
         If (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0) {
             While (AutoclickerRunning) {
                 MouseLeftClick()
-                HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
+                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff)
             }
         }
         Else {
-            While (AutoclickerRunning && (Globals["Settings"]["Autoclicker"]["ClickCounter"] < Globals["Settings"]["Autoclicker"]["ClickAmount"])) {
+            While (AutoclickerRunning && A_Index <= Globals["Settings"]["Autoclicker"]["ClickAmount"]) {
                 MouseLeftClick()
-                Globals["Settings"]["Autoclicker"]["ClickCounter"]++
-                HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"])
+                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff)
             }
         }
         
@@ -58,16 +59,17 @@ Autoclick(*) {
         
         ClickIntervalEdit.Enabled := True
         ClickAmountEdit.Enabled := True
-        AutoclickerHotkeyButton.Enabled := True
-        
-        Globals["Settings"]["Autoclicker"]["ClickCounter"] := 0
+        AutoclickerProgress.Value := 0
+        AutoclickerText.Text := "Autoclicker OFF"
         
         AutoclickerRunning := False
         
+        ProcessSetPriority("A")
         SetAllGuiValues()
         GuiMasterSwitch()
         GuiSwitch()
     }
     
+    ListLines(1)
     Critical CriticalSetting
 }

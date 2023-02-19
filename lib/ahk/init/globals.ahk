@@ -114,11 +114,18 @@ Globals["Constants"]["Scan Codes"] := Map(
 "Right", "SC14D"
 )
 
+Globals["Constants"]["Game Values"] := Map(
+"Flower Length", "140",
+"Base MoveSpeed", "28",
+"Jump Duration", "800",
+"Base Jump Power", "77"
+)
+
 Globals["GUI"] := Map()
 
 Globals["GUI"]["Position"] := Map(
-"GUIX", "0",
-"GUIY", "350"
+"GUIX", "5",
+"GUIY", "5"
 )
 Globals["GUI"]["Settings"] := Map(
 "CurrentGUITab", "Settings"
