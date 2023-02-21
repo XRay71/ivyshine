@@ -23,7 +23,7 @@ AutoclickerRunning := False
 Autoclick(*) {
     Global AutoclickerRunning
     CriticalSetting := A_IsCritical
-    Critical "Off"
+    Critical("Off")
     ListLines(0)
     ProcessSetPriority("R")
     SetMouseDelay(-1)
@@ -41,17 +41,17 @@ Autoclick(*) {
         
         IntervalTemp := A_HotkeyInterval
         A_HotkeyInterval := 0
-	Diff := 0
+        Diff := 0
         If (Globals["Settings"]["Autoclicker"]["ClickAmount"] == 0) {
             While (AutoclickerRunning) {
                 MouseLeftClick()
-                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff)
+                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff - 1.25)
             }
         }
         Else {
             While (AutoclickerRunning && A_Index <= Globals["Settings"]["Autoclicker"]["ClickAmount"]) {
                 MouseLeftClick()
-                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff)
+                Diff := HyperSleep(Globals["Settings"]["Autoclicker"]["ClickInterval"] - Diff - 1.25)
             }
         }
         

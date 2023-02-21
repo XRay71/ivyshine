@@ -31,6 +31,7 @@ DetectHiddenText(0) ; does not check for hidden text
 DetectHiddenWindows(0) ; does not check for hidden windows
 Thread("Priority", 0) ; sets default thread priority
 Thread("NoTimers", True) ; makes it so that timers don't interrupt threads
+KeyHistory(0) ; no key logging
 
 SendMode("Input") ; by default use SendInput
 CoordMode("Pixel", "Client") ; by default exclude title bar, etc. from image checks
@@ -227,18 +228,21 @@ WinActivate(IvyshineGui) ; activates the main GUI
 A_TrayMenu.Delete() ; clears the tray menu
 Loop(3) ; aesthetic lines
     A_TrayMenu.Add()
-A_TrayMenu.Add("Restore GUI (F5)", IvyshineGuiRestore, "P10") ; adds restore gui
-A_TrayMenu.Default := "Restore GUI (F5)" ; makes it default
+A_TrayMenu.Add("Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", IvyshineGuiRestore, "P10") ; adds restore gui
+A_TrayMenu.Default := "Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")" ; makes it default
 Loop(3) ; aesthetic lines
     A_TrayMenu.Add()
-A_TrayMenu.Add("Open Logs (^F2)", OpenDebug) ; adds debug
+A_TrayMenu.Add("Open Logs (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", OpenDebug) ; adds debug
 OpenDebug(*) {
     ListLines
 }
 A_TrayMenu.Add() ; aesthetic lines
-A_TrayMenu.Add("Suspend Hotkeys (^F3)", SuspendHotkeys) ; adds suspend
+A_TrayMenu.Add("Suspend Hotkeys (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")", SuspendHotkeys) ; adds suspend
 SuspendHotkeys(*){
     Suspend(-1)
+    TitleText.Text := (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended)" : "Ivyshine Macro")
+    GuiCloseButton.Redraw()
+    GuiMinimizeButton.Redraw()
     A_TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)")) ; aesthetics
 }
 A_TrayMenu.Add() ; aesthetic lines
@@ -276,8 +280,6 @@ Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P10 
 ; MAIN FUNCTIONS
 ;=====================================
 
-OnExit(ExitMacro) ; exit function
-
 #Include *i lib\ahk\Main\Functions.ahk ; main functions used in the macro
 #Include *i lib\ahk\Libraries\Gdip_All.ahk ; gdi+ library NEED TO UPDATE
 #Include *i lib\ahk\Libraries\ImagePut.ahk ; imageput library
@@ -292,10 +294,13 @@ Try {
 StartMacro(*) {
     ReleaseAllKeys() ; unpresses any key pressed
     MacroInfoGuiClose() ; closes external GUIs
-    MoveFlowers(["w"], 33)
+    Reset()
+    HiveToCorner()
 }
 
 PauseMacro(*) {
+    If (Globals["Variables"]["Externals"]["CurrentMovePID"] && WinExist("ahk_class AutoHotkey ahk_pid " Globals["Externals"]["Externals"]["CurrentMovePID"]))
+        PostMessage(0x2000) ; sends pause command to external script
     MsgBox("Pause")
 }
 
@@ -337,26 +342,9 @@ ExitMacro(*) { ; same as ReloadMacro() but with ExitApp
             For ini, Section in Globals
                 UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         }
+        IvyshineGui.Destroy()
     }
     HyperSleep(25)
-    ExitApp
-}
-
-;=====================================
-; Errors
-;=====================================
-
-MissingFilesError() {
-    MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit."
-        , "Error: file not found!"
-        , "OK Icon!")
-    ExitApp
-}
-
-UnableToCreateFileError() {
-    MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit."
-        , "Error: file not found!"
-        , "OK Icon!")
     ExitApp
 }
 

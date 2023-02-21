@@ -2,7 +2,7 @@ IvyshineGui := Gui("-SysMenu -Resize +LastFound +OwnDialogs" (Globals["Settings"
 
 WinSetTransparent(255 - Floor(Globals["Settings"]["GUI"]["Transparency"] * 2.55))
 
-IvyshineGui.OnEvent("Close", IvyshineGuiClose)
+IvyshineGui.OnEvent("Close", ExitMacro)
 IvyshineGui.OnEvent("Escape", IvyshineGuiMinimize)
 
 IvyshineGui.MarginX := 4
@@ -40,18 +40,7 @@ DllCall("SetMenu", "Ptr", IvyshineGui.Hwnd, "Ptr", 0)
 MainTabChanged(MainTabs)
 
 IvyshineGui.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
-WinActivate(IvyshineGui.Hwnd)
-
-IvyshineGuiClose(*) {
-    RestoreFPSUnlocker()
-    WinGetPos(&GuiX, &GuiY,,, IvyshineGui.Hwnd)
-    Globals["GUI"]["Position"]["GUIX"] := GuiX
-    Globals["GUI"]["Position"]["GUIY"] := GuiY
-    For ini, Section in Globals
-        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-    HyperSleep(25)
-    ExitApp
-}
+WinActivate(IvyshineGui)
 
 #Include *i MacroInfoGui\Macro Info.ahk
 ShowMacroInfoGui := 0
@@ -91,7 +80,7 @@ MouseX := MouseY := 0
 StartMoveGui(*) {
     Global GuiMoving
     Global MouseX, MouseY
-    If (!WinActive(IvyshineGui.Hwnd) || GuiMoving)
+    If (!WinActive(IvyshineGui) || GuiMoving)
         Return
     MouseGetPos(&MouseX, &MouseY)
     If (MouseY >= 0 && MouseY <= 25) {
@@ -107,7 +96,7 @@ StopMoveGui(*) {
     Global GuiMoving
     GuiMoving := False
     SetTimer(MoveGui, 0)
-    WinGetPos(&WinX, &WinY,,, IvyshineGui.Hwnd)
+    WinGetPos(&WinX, &WinY,,, IvyshineGui)
     Globals["GUI"]["Position"]["GUIX"] := WinX
     Globals["GUI"]["Position"]["GUIY"] := WinY
     IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GuiX")
@@ -128,16 +117,16 @@ MoveGui() {
     CoordMode("Mouse", "Client")
     DiffMouseX := MouseX - OldMouseX
     DiffMouseY := MouseY - OldMouseY
-    WinGetPos(&WinX, &WinY,,, IvyshineGui.Hwnd)
-    WinMove(WinX + DiffMouseX, WinY + DiffMouseY,,, IvyshineGui.Hwnd)
+    WinGetPos(&WinX, &WinY,,, IvyshineGui)
+    WinMove(WinX + DiffMouseX, WinY + DiffMouseY,,, IvyshineGui)
 }
 
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s10", "Calibri")
-IvyshineGui.Add("Text", "x0 y0 w550 h20 0x200 Center BackgroundSilver", "Ivyshine Macro")
+TitleText := IvyshineGui.Add("Text", "x0 y0 w550 h20 0x200 Center BackgroundSilver", "Ivyshine Macro")
 
 GuiCloseButton := IvyshineGui.Add("Button", "x530 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGuiCloseButton", "X")
-GuiCloseButton.OnEvent("Click", IvyshineGuiClose)
+GuiCloseButton.OnEvent("Click", ExitMacro)
 
 GuiMinimizeButton := IvyshineGui.Add("Button", "x511 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGuiMinimizeButton", "-")
 GuiMinimizeButton.OnEvent("Click", IvyshineGuiMinimize)
@@ -147,15 +136,13 @@ IvyshineGuiMinimize(*) {
     IvyshineGui.Hide()
     EditHotkeysGuiClose()
     MacroInfoGuiClose()
-    Global PreviousEditHotkeysControl
-    PreviousEditHotkeysControl := ""
-    Hotkey("F5", IvyshineGuiRestore, "T1 P10 On")
+    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiRestore, "T1 P10 On")
 }
 
 IvyshineGuiRestore(*) {
     A_IconHidden := 1
     IvyshineGui.Show()
-    Hotkey("F5", IvyshineGuiMinimize, "T1 P10 On")
+    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P10 On")
 }
 
 GuiOn := True

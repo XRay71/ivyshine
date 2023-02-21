@@ -4,6 +4,7 @@ Globals["Constants"] := Map()
 
 Globals["Constants"]["ini FilePaths"] := Map(
 "Constants", "lib\init\constants.ini",
+"Variables", "lib\init\variables.ini",
 "GUI", "lib\init\gui.ini",
 "Settings", "lib\init\settings.ini",
 "Fields", "lib\init\fields.ini",
@@ -121,12 +122,123 @@ Globals["Constants"]["Game Values"] := Map(
 "Base Jump Power", "77"
 )
 
+Globals["Variables"] := Map()
+
+
+Globals["Variables"]["Externals"] := Map(
+"CurrentMovePID", "0",
+"CurrentMoveName", ""
+)
+
+Globals["Variables"]["Keystates"] := Map(
+"SC001", "0",
+"SC03B", "0",
+"SC03C", "0",
+"SC03D", "0",
+"SC03E", "0",
+"SC03F", "0",
+"SC040", "0",
+"SC041", "0",
+"SC042", "0",
+"SC043", "0",
+"SC044", "0",
+"SC057", "0",
+"SC058", "0",
+"SC137", "0",
+"SC152", "0",
+"SC153", "0",
+"SC149", "0",
+"SC151", "0",
+"SC147", "0",
+"SC14F", "0",
+"SC145", "0",
+"SC135", "0",
+"SC037", "0",
+"SC04E", "0",
+"SC11C", "0",
+"SC04F", "0",
+"SC050", "0",
+"SC051", "0",
+"SC04B", "0",
+"SC04C", "0",
+"SC04D", "0",
+"SC047", "0",
+"SC048", "0",
+"SC049", "0",
+"SC053", "0",
+"SC029", "0",
+"SC002", "0",
+"SC003", "0",
+"SC004", "0",
+"SC005", "0",
+"SC006", "0",
+"SC007", "0",
+"SC008", "0",
+"SC009", "0",
+"SC00A", "0",
+"SC00B", "0",
+"SC00C", "0",
+"SC00D", "0",
+"SC00E", "0",
+"SC00F", "0",
+"SC010", "0",
+"SC011", "0",
+"SC012", "0",
+"SC013", "0",
+"SC014", "0",
+"SC015", "0",
+"SC016", "0",
+"SC017", "0",
+"SC018", "0",
+"SC019", "0",
+"SC02B", "0",
+"SC01A", "0",
+"SC01B", "0",
+"SC03A", "0",
+"SC01E", "0",
+"SC01F", "0",
+"SC020", "0",
+"SC021", "0",
+"SC022", "0",
+"SC023", "0",
+"SC024", "0",
+"SC025", "0",
+"SC026", "0",
+"SC027", "0",
+"SC028", "0",
+"SC01C", "0",
+"SC02A", "0",
+"SC02C", "0",
+"SC02D", "0",
+"SC02E", "0",
+"SC02F", "0",
+"SC030", "0",
+"SC031", "0",
+"SC032", "0",
+"SC033", "0",
+"SC034", "0",
+"SC035", "0",
+"SC136", "0",
+"SC01D", "0",
+"SC15B", "0",
+"SC038", "0",
+"SC039", "0",
+"SC138", "0",
+"SC11D", "0",
+"SC14B", "0",
+"SC150", "0",
+"SC148", "0",
+"SC14D", "0",
+"LButton", "0"
+)
+
 Globals["GUI"] := Map()
 
 Globals["GUI"]["Position"] := Map(
 "GUIX", "5",
 "GUIY", "5"
 )
+
 Globals["GUI"]["Settings"] := Map(
 "CurrentGUITab", "Settings"
 )

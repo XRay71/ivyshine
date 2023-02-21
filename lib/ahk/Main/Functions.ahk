@@ -1,18 +1,27 @@
-ReleaseAllKeys() {
+ReleaseAllKeys() { ; checks if each key is currently pressed, unpresses and logs
     For Key, Code in Globals["Constants"]["Scan Codes"]
-        If (GetKeyState(Format("vk{:X}", GetKeyVK(Code))))
+        If (Globals["Variables"]["Keystates"][Code] := GetKeyState(Format("vk{:X}", GetKeyVK(Code))))
             SendInput("{" Code " Up}")
-    Click("Up")
+    If (Globals["Variables"]["Keystates"]["LButton"] := GetKeyState("LButton"))
+        MouseLeftUp()
 }
 
-CurrentUnixTime() {
+RestoreKeyStates() { ; re-presses any keys that were released
+    For Key, Code in Globals["Constants"]["Scan Codes"]
+        If (Globals["Variables"]["Keystates"][Code])
+            SendInput("{" Code " Down}")
+    If (Globals["Variables"]["Keystates"]["LButton"])
+        MouseLeftDown()
+}
+
+CurrentUnixTime() { ; returns unix time in seconds
     Return DateDiff(A_NowUTC, 19700101000000, "Seconds")
 }
 
-ActivateWindowWithCheck(WindowName, ProcessName) {
+ActivateWindowWithCheck(WindowName, ProcessName) { ; activates a specific window by name AND process name
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
-    DetectHiddenWindows(1)
     SetTitleMatchModeSetting := A_TitleMatchMode
+    DetectHiddenWindows(1)
     SetTitleMatchMode(3)
     
     WinValues := Array()
@@ -47,7 +56,6 @@ ActivateWindowWithCheck(WindowName, ProcessName) {
     
     SetTitleMatchMode(SetTitleMatchModeSetting)
     DetectHiddenWindows(DetectHiddenWindowsSetting)
-    
     Return 0
 }
 
@@ -101,12 +109,11 @@ MouseWheel(w) {
 ; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=88693
 HyperSleep(ms)
 {
-    Static SysTimeFreq := 0, SysTimeTick
-    If (!SysTimeFreq)
-        DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
+    Static SysTimeFreq, SysTimeTick
+    DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
     DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)
-    SysEndTime := (SysTimeTick / SysTimeFreq * 1000 + ms) * (SysTimeFreq * 0.001)
-    Current := 0
+    SysEndTime := SysTimeTick + ms * SysTimeFreq * 0.001
+    DllCall("QueryPerformanceCounter", "Int64*", &Current := 0)
     While (Current < SysEndTime) {
         If (SysEndTime - Current) > 30000 {
             DllCall("Winmm.dll\timeBeginPeriod", "UInt", 1)
@@ -117,25 +124,16 @@ HyperSleep(ms)
         Else
             DllCall("QueryPerformanceCounter", "Int64*", &Current)
     }
-    DllCall("QueryPerformanceCounter", "Int64*", &Current)
     Return (Current - SysEndTime) / SysTimeFreq * 1000
 }
 
-SystemTime() {
-    Static SysTimeFreq := 0, SysTimeTick
-    If (!SysTimeFreq)
-        DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
-    DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)
-    Return SysTimeTick / SysTimeFreq * 1000
-}
-
 DefaultErrorBalloonTip(Text, Title, Hwnd) {
-    EBT := Buffer(4 * A_PtrSize)
-    NumPut("UInt", EBT.Size, EBT, 0)
-    NumPut("Ptr", StrPtr(Title), EBT, A_PtrSize)
-    NumPut("Ptr", StrPtr(Text), EBT, A_PtrSize * 2)
-    NumPut("UInt", 3, EBT, A_PtrSize * 3)
-    DllCall("User32.dll\SendMessage", "Ptr", Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", EBT, "Ptr")
+    ErrorBalloonTip := Buffer(4 * A_PtrSize)
+    NumPut("UInt", ErrorBalloonTip.Size, ErrorBalloonTip, 0)
+    NumPut("Ptr", StrPtr(Title), ErrorBalloonTip, A_PtrSize)
+    NumPut("Ptr", StrPtr(Text), ErrorBalloonTip, A_PtrSize * 2)
+    NumPut("UInt", 3, ErrorBalloonTip, A_PtrSize * 3)
+    DllCall("User32.dll\SendMessage", "Ptr", Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", ErrorBalloonTip, "Ptr")
 }
 
 ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84750
@@ -208,7 +206,7 @@ CustomToolTip(Content
     }
     
     If (X == "" || Y == "")
-        DllCall("GetCursorPos", "Int64P", pt)
+        DllCall("GetCursorPos", "Int64P", &pt := 0)
     (X == "" && X := (pt & 0xFFFFFFFF) + 15), (Y == "" && Y := (pt >> 32) + 15)
     
     TOOLINFO := Buffer(24 + A_PtrSize * 6)
@@ -231,4 +229,22 @@ CustomToolTip(Content
     WinExist("ahk_id" lastFoundPrev)
     DetectHiddenWindows(dhwPrev)
     Return hWnd
+}
+
+;=====================================
+; Errors
+;=====================================
+
+MissingFilesError() {
+    MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit."
+        , "Error: file not found!"
+        , "OK Icon!")
+    ExitApp
+}
+
+UnableToCreateFileError() {
+    MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit."
+        , "Error: file not found!"
+        , "OK Icon!")
+    ExitApp
 }

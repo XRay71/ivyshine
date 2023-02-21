@@ -5,7 +5,6 @@ IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGui.SetFont()
 IvyshineGui.SetFont("s8", "Calibri")
 
-; IvyshineGui.Add("Text", "xs yp+6 h20 -Wrap +BackgroundTrans", "Reconnect Interval: ")
 IvyshineGui.Add("Text", "xs yp+6 h20 -Wrap +BackgroundTrans", "Every ")
 ReconnectIntervalEdit := IvyshineGui.Add("Edit", "x+2 yp-2 h16 w20 Center Limit2 Number vReconnectIntervalEdit")
 ReconnectIntervalText := IvyshineGui.Add("Text", "x+2 yp+2 h20 -Wrap +BackgroundTrans vReconnectIntervalText", (Globals["Settings"]["Reconnect"]["ReconnectInterval"] == 1 ? " hour," : " hours,"))

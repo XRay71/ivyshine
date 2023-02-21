@@ -30,15 +30,16 @@ Catch Any
 ResetAll(*) {
     Reset := MsgBox("This will reset the entire macro to its default settings, excluding stats.", "Warning!", "OKCancel Icon! Default2 Owner" IvyshineGui.Hwnd)
     If (Reset == "OK") {
+        Globals := ""
         #IncludeAgain *i ..\..\init\Globals.ahk
-        For ini, Section in Globals
+        For ini in Globals
         {
             If (FileExist(Globals["Constants"]["ini FilePaths"][ini]))
                 FileDelete(Globals["Constants"]["ini FilePaths"][ini])
             If (ini != "Field Rotation")
                 UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-            ReloadMacro()
         }
+        Reload
     }
 }
 
@@ -455,12 +456,6 @@ SetSettingsTabValues(*) {
     NumberOfBeesEdit.Value := NumberOfBeesEdit.Text := ""
     SetCueBanner(NumberOfBeesEdit.Hwnd, Globals["Settings"]["Unlocks"]["NumberOfBees"])
     
-
-    
-
-
-
-    
     AlwaysOnTopCheckBox.Value := Globals["Settings"]["GUI"]["AlwaysOnTop"]
     
     TransparencyList.Choose(Globals["Settings"]["GUI"]["Transparency"])
@@ -556,6 +551,8 @@ SettingsTabSwitch(*) {
     HasDarkScytheCheckBox.Enabled := SettingsTabOn
     
     NumberOfBeesEdit.Enabled := SettingsTabOn
+    
+    HotkeysListBox.Enabled := SettingsTabOn
     
     HotkeysInfoButton.Enabled := SettingsTabOn
     
