@@ -5,7 +5,9 @@ HiveToCorner() {
             "Move([`"d`"], Globals[`"Settings`"][`"Basic Settings`"][`"HiveSlotNumber`"] * 1250)`r`n"
         )
     )
-    KeyWait("F14", "D T5 L")
-    KeyWait("F14", "T60 L")
+    While (!MovementFlag)
+        Sleep(0)
+    While (MovementFlag)
+        Sleep(0)
     EndMovement()
 }

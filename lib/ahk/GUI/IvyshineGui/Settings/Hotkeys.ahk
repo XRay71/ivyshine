@@ -20,6 +20,9 @@ ShowHotkeysInfo(*) {
 CurrentlyEditedHotkey := ""
 
 StartEditHotkeys(ThisControl, *) {
+    If (MacroRunning == 1)
+        Return
+    
     Global CurrentlyEditedHotkey, ShowEditHotkeysGui
     
     If (!CurrentlyEditedHotkey || HotkeysListBox.Text == CurrentlyEditedHotkey)

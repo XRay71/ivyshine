@@ -16,7 +16,6 @@ WinSetStyle(-0xC40000)
 DllCall("SetMenu", "Ptr", WinExist(), "Ptr", 0)
 
 MacroInfoGuiClose(*) {
-    Global ShowMacroInfoGui
-    ShowMacroInfoGui := 0
+    Global ShowMacroInfoGui := 0
     MacroInfoGui.Hide()
 }

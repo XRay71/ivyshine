@@ -15,7 +15,7 @@ AntiAFKIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
 SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
 
 If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
-    Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
+    Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
     SetTimer(AntiAFK, 500, -1)
 }
 
@@ -31,12 +31,13 @@ ShowAntiAFKInfo(*) {
 }
 
 AntiAFK() {
-    TimeDifference := CurrentUnixTime() - Globals["Settings"]["AntiAFK"]["LastRun"]
+    Critical
+    TimeDifference := CurrentTime() - Globals["Settings"]["AntiAFK"]["LastRun"]
     
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     DetectHiddenWindows(1)
     If (!ProcessExist("RobloxPlayerBeta.exe") || WinActive("ahk_exe RobloxPlayerBeta.exe")) {
-        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
+        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
         TimeDifference := 0
     }
     DetectHiddenWindows(DetectHiddenWindowsSetting)
@@ -44,7 +45,7 @@ AntiAFK() {
     AntiAFKProgress.Value := TimeDifference
     
     If (TimeDifference > Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] * 60) {
-        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
+        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
         Try {
             CurrentWindowName := WinGetTitle("A")
             CurrentWindowProcessName := WinGetProcessName("A")
@@ -62,4 +63,5 @@ AntiAFK() {
             ActivateWindowWithCheck(CurrentWindowName, CurrentWindowProcessName)
         BlockInput("Off")
     }
+    Critical("Off")
 }

@@ -124,7 +124,6 @@ Globals["Constants"]["Game Values"] := Map(
 
 Globals["Variables"] := Map()
 
-
 Globals["Variables"]["Externals"] := Map(
 "CurrentMovePID", "0",
 "CurrentMoveName", ""
@@ -248,7 +247,7 @@ Globals["Settings"] := Map()
 Globals["Settings"]["AntiAFK"] := Map(
 "RunAntiAFK", "0",
 "AntiAFKInterval", "10",
-"LastRun", CurrentUnixTime()
+"LastRun", CurrentTime()
 )
 
 Globals["Settings"]["Autoclicker"] := Map(
@@ -286,7 +285,7 @@ Globals["Settings"]["GUI"] := Map(
 )
 
 Globals["Settings"]["Convert Settings"] := Map(
-"ConvertDelay", "8",
+"ConvertDelay", "1",
 "BalloonConvertSetting", "Auto",
 "BalloonConvertInterval", "30",
 )

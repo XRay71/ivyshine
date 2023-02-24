@@ -26,15 +26,17 @@ EditHotkeysGuiClose(*) {
     CurrentlyEditedHotkey := ""
     EditHotkeysGui.Hide()
     Try {
-        Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T1 P0 S0")
-        Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0 S0")
+        If (MacroRunning != 1)
+            Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T" (MacroRunning == 2 ? "2" : "1") " P0 S0")
+        If (MacroRunning == 1)
+            Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0 S0")
         Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "On T1 P20 S0")
         Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1 S0")
-        Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "On T1 P10 S")
-        Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "On T1 P10 S")
-        Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "On T1 P10 S")
-        StartButton.Enabled := 1
-        PauseButton.Enabled := 1
+        Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "On T1 P15 S")
+        Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "On T1 P15 S0")
+        Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "On T1 P15 S")
+        StartButton.Enabled := MacroRunning != 1
+        PauseButton.Enabled := MacroRunning == 1
         StopButton.Enabled := 1
     }
 }
@@ -42,7 +44,7 @@ EditHotkeysGuiClose(*) {
 SubmitEditHotkeys(*) {
     Global CurrentlyEditedHotkey
     For Key, Value in Globals["Settings"]["Hotkeys"]
-        If (!EditHotkeysHotkey.Value || (Value == EditHotkeysHotkey.Value && !InStr(CurrentlyEditedHotkey, StrReplace(Key, "Hotkey"))))
+        If (!EditHotkeysHotkey.Value || (Value == EditHotkeysHotkey.Value && !InStr(CurrentlyEditedHotkey, StrReplace(Key, "Hotkey"))) || !StrLen(StrReplace(StrReplace(StrReplace(EditHotkeysHotkey.Value, "+"), "!"), "^")))
             Return
     For Key, Value in Globals["Settings"]["Hotkeys"]
         If (InStr(CurrentlyEditedHotkey, StrReplace(Key, "Hotkey"))) {

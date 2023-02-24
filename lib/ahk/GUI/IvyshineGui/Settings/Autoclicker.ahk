@@ -22,17 +22,15 @@ AutoclickerRunning := False
 
 Autoclick(*) {
     Global AutoclickerRunning
-    CriticalSetting := A_IsCritical
-    Critical("Off")
-    ListLines(0)
-    ProcessSetPriority("R")
-    SetMouseDelay(-1)
-    SetKeyDelay(-1)
     
     AutoclickerRunning := !AutoclickerRunning
     AutoclickerText.Text := "Autoclicker ON"
     
     If (AutoclickerRunning) {
+        ListLines(0)
+        ProcessSetPriority("R")
+        SetMouseDelay(-1)
+        SetKeyDelay(-1)
         GuiMasterSwitch()
         GuiSwitch()
         
@@ -68,8 +66,6 @@ Autoclick(*) {
         SetAllGuiValues()
         GuiMasterSwitch()
         GuiSwitch()
+        ListLines(1)
     }
-    
-    ListLines(1)
-    Critical CriticalSetting
 }

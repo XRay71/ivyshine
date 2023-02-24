@@ -37,6 +37,7 @@ RunFPSUnlocker(FPS := 30) {
         HyperSleep(5)
     Until (ProcessExist("rbxfpsunlocker.exe")) ; waits until it exists
     HyperSleep(5)
+    Critical("Off")
 }
 
 RestoreFPSUnlocker() {
@@ -57,6 +58,7 @@ RestoreFPSUnlocker() {
     }
     
     HyperSleep(50)
+    Critical("Off")
 }
 
 CloseFPSUnlocker() {
@@ -92,5 +94,6 @@ CloseFPSUnlocker() {
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     
     HyperSleep(50)
+    Critical("Off")
 }
 

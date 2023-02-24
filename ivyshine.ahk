@@ -79,11 +79,14 @@ CheckResolution() {
 CurrentVersionID := "001"
 ; CheckForUpdates()
 CheckForUpdates() {
-    WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1") ; opens a winhttps request
-    WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true) ; sends a GET request to the github version file
-    WinHttpRequest.Send() ; sends the request
-    WinHttpRequest.WaitForResponse() ; waits for response
-    NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+") ; trims all whitespace from the version file
+    Try {
+        WinHttpRequest := ComObject("WinHttp.WinHttpRequest.5.1") ; opens a winhttps request
+        WinHttpRequest.Open("GET", "https://raw.githubusercontent.com/XRay71/ivyshine/main/version.txt", true) ; sends a GET request to the github version file
+        WinHttpRequest.Send() ; sends the request
+        WinHttpRequest.WaitForResponse() ; waits for response
+        NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+") ; trims all whitespace from the version file
+    } Catch Any
+        Return -1
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) { ; checks if the request was successful, checks if it's a number, and checks if it's different from the current version
         Update := (FileExist(A_Temp "\update-ivyshine.txt") ? "Yes" : ; checks if the update flag is there, otherwise prompts the user
@@ -226,55 +229,63 @@ WinActivate(IvyshineGui) ; activates the main GUI
 ;=====================================
 
 A_TrayMenu.Delete() ; clears the tray menu
+
 Loop(3) ; aesthetic lines
     A_TrayMenu.Add()
-A_TrayMenu.Add("Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", IvyshineGuiRestore, "P10") ; adds restore gui
+
+A_TrayMenu.Add("Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", IvyshineGuiRestore, "P15") ; adds restore gui
 A_TrayMenu.Default := "Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")" ; makes it default
-Loop(3) ; aesthetic lines
-    A_TrayMenu.Add()
-A_TrayMenu.Add("Open Logs (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", OpenDebug) ; adds debug
-OpenDebug(*) {
-    ListLines
-}
-A_TrayMenu.Add() ; aesthetic lines
-A_TrayMenu.Add("Suspend Hotkeys (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")", SuspendHotkeys) ; adds suspend
-SuspendHotkeys(*){
-    Suspend(-1)
-    TitleText.Text := (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended)" : "Ivyshine Macro")
-    GuiCloseButton.Redraw()
-    GuiMinimizeButton.Redraw()
-    A_TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)")) ; aesthetics
-}
-A_TrayMenu.Add() ; aesthetic lines
-A_TrayMenu.Add("Start Macro (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", StartMacro)
-A_TrayMenu.Add("Pause Macro (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", PauseMacro)
-A_TrayMenu.Add("Stop Macro (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", StopMacro)
-A_TrayMenu.Add() ; aesthetic lines
 A_TrayMenu.ClickCount := 1 ; makes it so that you only have to click once
 
-A_IconTip := "Ivyshine" ; changes the tip to be the name
+Loop(3) ; aesthetic lines
+    A_TrayMenu.Add()
+
+A_TrayMenu.Add("Open Logs (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", OpenDebug, "P15") ; adds debug
+OpenDebug(*) {
+    ListLines()
+}
+
+A_TrayMenu.Add() ; aesthetic lines
+
+A_TrayMenu.Add("Suspend Hotkeys (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")", SuspendHotkeys, "P15") ; adds suspend
+SuspendHotkeys(*){
+    Suspend(-1) ; suspends hotkeys
+    UpdateTitleText() ; changes title to match state
+    A_TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)"), "P15") ; updates tray option
+}
+
+A_TrayMenu.Add() ; aesthetic lines
+
+A_TrayMenu.Add("Start Macro (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", StartMacro, "P0") ; 12& start macro
+A_TrayMenu.Add("Pause Macro (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", PauseMacro, "P0") ; 13& pause macro
+A_TrayMenu.Disable("13&") ; initially disabled as macro not started
+A_TrayMenu.Add("Stop Macro (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", StopMacro, "P20") ; stop macro
+
+A_TrayMenu.Add() ; aesthetic lines
+
+A_IconTip := "Ivyshine Macro" ; changes the tip to be the name
 
 ;=====================================
 ; CREATE HOTKEYS
 ;=====================================
 
-Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0 S0")
-Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "T1 P0 S0")
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P20 S0")
+Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0 S0") ; start hotkey
+Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "Off T1 P0 S0") ; pause hotkey, disabled
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P20 S0") ; stop hotkey
 
-Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0")
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0") ; autoclicker hotkey T2 to toggle
 
-Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P10 S")
+Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P15 S") ; minimise to tray hotkey
+
+Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "T1 P15 S0") ; open debug hotkey
+Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P15 S") ; suspend hotkeys
 
 HotIfWinActive("ahk_id " IvyshineGui.Hwnd) ; custom title bar
 
-Hotkey("~LButton", StartMoveGui, "T1 P2 S")
-Hotkey("~LButton Up", StopMoveGui, "T1 P3 S")
+Hotkey("~LButton", StartMoveGui, "T1 P2 S") ; move using title bar
+Hotkey("~LButton Up", StopMoveGui, "T1 P3 S") ; stop move using title bar
 
 HotIfWinActive()
-
-Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "T1 P10 S")
-Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P10 S")
 
 ;=====================================
 ; MAIN FUNCTIONS
@@ -285,32 +296,106 @@ Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P10 
 #Include *i lib\ahk\Libraries\ImagePut.ahk ; imageput library
 #Include *i lib\ahk\Movement\Base.ahk ; movement functions
 
+; SetTitleMatchMode(2)
+; now := ImagePutBuffer(0)
+; buf := ImagePutBuffer([50, 50, 1000, 500])
+; ImagePutClipboard(buf)
+; ImageShow(now)
+; results := now.ImageSearch([60, 50, 1000, 500])
+; MsgBox(results[1])
+
 Try {
-    ReleaseAllKeys()
-    pToken := Gdip_Startup()
+    ReleaseAllKeys() ; releases all keys
+    pToken := Gdip_Startup() ; starts gdi+ lib
+    MacroRunning := False ; section beginning
 } Catch Any
     MissingFilesError()
 
 StartMacro(*) {
+    PauseFlag := MacroRunning ; to check if was paused
+    Global MacroRunning := 1 ; 1 == running
+    
     ReleaseAllKeys() ; unpresses any key pressed
-    MacroInfoGuiClose() ; closes external GUIs
-    Reset()
-    HiveToCorner()
+    
+    If (WinExist(EditHotkeysGui)) ; closes external gui
+        EditHotkeysGuiClose()
+    
+    If (WinExist(MacroInfoGui)) ; closes external gui
+        MacroInfoGuiClose()
+    
+    If (AutoclickerRunning) ; stops autoclicker
+        Autoclick()
+    
+    If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) ; stops antiAFK
+        SetTimer(AntiAFK, 0)
+    
+    DetectHiddenWindowsSetting := A_DetectHiddenWindows ; unpauses external script
+    DetectHiddenWindows(1)
+    If (Globals["Variables"]["Externals"]["CurrentMovePID"] && WinExist("ahk_class AutoHotkey ahk_pid " Globals["Variables"]["Externals"]["CurrentMovePID"]))
+        PostMessage(0x2001) ; 0x2001 == pause toggle
+    DetectHiddenWindows(DetectHiddenWindowsSetting)
+    
+    ; turns on pause hotkey, turns off start hotkey
+    Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0 S0")
+    Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
+    
+    GuiMasterSwitch() ; locks macros
+    
+    StartButton.Enabled := False
+    PauseButton.Enabled := True
+    A_TrayMenu.Disable("12&")
+    A_TrayMenu.Enable("13&")
+    
+    UpdateTitleText() ; updates title
+    
+    If (PauseFlag != 2) { ; starts the macro loop if just started
+        Loop {
+            HiveToCorner() ; temp test function
+            Sleep(1000)
+        }
+    }
 }
 
 PauseMacro(*) {
-    If (Globals["Variables"]["Externals"]["CurrentMovePID"] && WinExist("ahk_class AutoHotkey ahk_pid " Globals["Externals"]["Externals"]["CurrentMovePID"]))
-        PostMessage(0x2000) ; sends pause command to external script
-    MsgBox("Pause")
+    Global MacroRunning := 2 ; 2 == paused
+    
+    DetectHiddenWindowsSetting := A_DetectHiddenWindows ; pause external scripts
+    DetectHiddenWindows(1)
+    If (Globals["Variables"]["Externals"]["CurrentMovePID"] && WinExist("ahk_class AutoHotkey ahk_pid " Globals["Variables"]["Externals"]["CurrentMovePID"]))
+        PostMessage(0x2001)
+    DetectHiddenWindows(DetectHiddenWindowsSetting)
+    
+    If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) { ; restarts AntiAFK if applicable
+        Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
+        SetTimer(AntiAFK, 500, -1)
+    }
+    
+    ; turns on start hotkey, turns off pause hotkey
+    Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
+    Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T2 P0 S0")
+    
+    GuiMasterSwitch() ; unlocks macro
+    
+    StartButton.Enabled := True
+    PauseButton.Enabled := False
+    A_TrayMenu.Disable("13&")
+    A_TrayMenu.Enable("12&")
+    
+    UpdateTitleText() ; updates title
+    
 }
 
 StopMacro(*) {
-    MsgBox("Stop")
+    Critical
+    Gdip_Shutdown(pToken) ; unloads gdi+ library
     ReloadMacro() ; reloads the macro
 }
 
 ReloadMacro(*) {
+    Critical
     RestoreFPSUnlocker() ; re-opens rbxfpsunlocker if applicable
+    EndMovement() ; stops external script
+    
     If (IvyshineGui) { ; if it exists
         If (!A_IconHidden)
             IvyshineGuiRestore() ; if minimised, unminimise
@@ -329,7 +414,10 @@ ReloadMacro(*) {
 }
 
 ExitMacro(*) { ; same as ReloadMacro() but with ExitApp
+    Critical
     RestoreFPSUnlocker()
+    EndMovement()
+    
     If (IvyshineGui) {
         If (!A_IconHidden)
             IvyshineGuiRestore()
@@ -342,7 +430,7 @@ ExitMacro(*) { ; same as ReloadMacro() but with ExitApp
             For ini, Section in Globals
                 UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         }
-        IvyshineGui.Destroy()
+        IvyshineGui.Destroy() ; destroys GUI
     }
     HyperSleep(25)
     ExitApp

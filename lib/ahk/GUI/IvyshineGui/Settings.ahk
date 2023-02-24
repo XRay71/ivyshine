@@ -50,8 +50,10 @@ SubmitSettings(ThisControl, *) {
     
     SubmitButton := (ThisControl.Hwnd == SubmitSettingsButton.Hwnd)
     ThisControl := (ThisControl.Hwnd == SubmitSettingsButton.Hwnd ? IvyshineGui.FocusedCtrl : ThisControl)
+    If (!ThisControl)
+        Return
     
-    If (ThisControl.Hwnd == MoveSpeedEdit.Hwnd) {
+    Else If (ThisControl.Hwnd == MoveSpeedEdit.Hwnd) {
         NewMoveSpeed := Trim(MoveSpeedEdit.Value)
         If (IsNumber(NewMoveSpeed) && NewMoveSpeed <= 50 && NewMoveSpeed > 0) {
             NewMoveSpeed := Round(Number(NewMoveSpeed), 2)
@@ -343,7 +345,7 @@ SubmitSettings(ThisControl, *) {
             AntiAFKIntervalEdit.Value := AntiAFKIntervalEdit.Text := ""
             SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
             AntiAFKIntervalText.Text := (Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] == 1 ? " minute." : " minutes.")
-            Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentUnixTime()
+            Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
             SetTimer(AntiAFK, 500, -1)
             AntiAFKProgress.Value := 0
         } Else {
