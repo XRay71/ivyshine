@@ -10,10 +10,9 @@
 #UseHook True ; make it so that movements don't trigger hotkeys
 #Warn All, Off ; remove warnings
 #MaxThreads 255 ; allows more multi-threading
-#SingleInstance Ignore ; don't replace with new instance
+#SingleInstance Force ; force replace with new instance
 #Include %A_ScriptDir% ; sets current #Include to the working directory
 #Requires AutoHotkey v2.0 32-bit ; requires AHK v2.0+, 32-bit for stability
-
 Critical("Off") ; makes threads interruptible by default
 
 SetRegView(32) ; removes complexity in registry reads
@@ -220,9 +219,10 @@ Try { ; close the current instance of rbxfpsunlocker, open the macro's instance 
 ; CREATE GUI
 ;=====================================
 
-#Include *i lib\ahk\GUI\Gui.ahk ; all of the work is done in this file
+MacroState := 0
+#Include *i lib\ahk\GUI\GUI.ahk ; all of the work is done in this file
 
-WinActivate(IvyshineGui) ; activates the main GUI
+WinActivate(IvyshineGUI) ; activates the main GUI
 
 ;=====================================
 ; CREATE TRAY MENU
@@ -233,25 +233,25 @@ A_TrayMenu.Delete() ; clears the tray menu
 Loop(3) ; aesthetic lines
     A_TrayMenu.Add()
 
-A_TrayMenu.Add("Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", IvyshineGuiRestore, "P15") ; adds restore gui
+A_TrayMenu.Add("Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", IvyshineGUIRestore, "P20") ; adds restore gui
 A_TrayMenu.Default := "Restore GUI (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")" ; makes it default
 A_TrayMenu.ClickCount := 1 ; makes it so that you only have to click once
 
 Loop(3) ; aesthetic lines
     A_TrayMenu.Add()
 
-A_TrayMenu.Add("Open Logs (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", OpenDebug, "P15") ; adds debug
+A_TrayMenu.Add("Open Logs (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", OpenDebug, "P20") ; adds debug
 OpenDebug(*) {
     ListLines()
 }
 
 A_TrayMenu.Add() ; aesthetic lines
 
-A_TrayMenu.Add("Suspend Hotkeys (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")", SuspendHotkeys, "P15") ; adds suspend
+A_TrayMenu.Add("Suspend Hotkeys (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")", SuspendHotkeys, "P20") ; adds suspend
 SuspendHotkeys(*){
     Suspend(-1) ; suspends hotkeys
     UpdateTitleText() ; changes title to match state
-    A_TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)"), "P15") ; updates tray option
+    A_TrayMenu.Rename("10&", (A_IsSuspended ? "Unsuspend Hotkeys (^F3)" : "Suspend Hotkeys (^F3)"), "P20") ; updates tray option
 }
 
 A_TrayMenu.Add() ; aesthetic lines
@@ -271,19 +271,66 @@ A_IconTip := "Ivyshine Macro" ; changes the tip to be the name
 
 Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "T1 P0 S0") ; start hotkey
 Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "Off T1 P0 S0") ; pause hotkey, disabled
-Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P20 S0") ; stop hotkey
+Hotkey(Globals["Settings"]["Hotkeys"]["StopHotkey"], StopMacro, "T1 P100 S0") ; stop hotkey
 
-Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0") ; autoclicker hotkey T2 to toggle
+Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "T2 P1 S0") ; autoclicker hotkey T2 for toggle
 
-Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P15 S") ; minimise to tray hotkey
+Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGUIMinimise, "T1 P20 S") ; minimise to tray hotkey
 
-Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "T1 P15 S0") ; open debug hotkey
-Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P15 S") ; suspend hotkeys
+Hotkey(Globals["Settings"]["Hotkeys"]["DebugHotkey"], OpenDebug, "T1 P20 S0") ; open debug hotkey
+Hotkey(Globals["Settings"]["Hotkeys"]["SuspendHotkey"], SuspendHotkeys, "T1 P20 S") ; suspend hotkeys
 
-HotIfWinActive("ahk_id " IvyshineGui.Hwnd) ; custom title bar
+HotIfWinActive("ahk_id " IvyshineGUI.Hwnd) ; custom title bar
 
-Hotkey("~LButton", StartMoveGui, "T1 P2 S") ; move using title bar
-Hotkey("~LButton Up", StopMoveGui, "T1 P3 S") ; stop move using title bar
+Hotkey("~LButton", StartMoveGUI, "T1 P2 S") ; move using title bar
+Hotkey("~LButton Up", StopMoveGUI, "T1 P4 S") ; stop move using title bar
+
+GUIMoving := False
+MovingMouseX := MovingMouseY := 0
+
+StartMoveGUI(*) {
+    Global GUIMoving
+    Global MovingMouseX, MovingMouseY
+    If (!WinActive(IvyshineGUI) || GUIMoving)
+        Return
+    MouseGetPos(&MovingMouseX, &MovingMouseY)
+    If (MovingMouseY >= 0 && MovingMouseY <= 25) {
+        CoordMode("Mouse", "Screen")
+        MouseGetPos(&MovingMouseX, &MovingMouseY)
+        CoordMode("Mouse", "Client")
+        GUIMoving := True
+        SetTimer(MoveGUI, 1, 3)
+    }
+}
+
+StopMoveGUI(*) {
+    Global GUIMoving
+    GUIMoving := False
+    SetTimer(MoveGUI, 0)
+    WinGetPos(&WinX, &WinY,,, IvyshineGUI)
+    Globals["GUI"]["Position"]["GUIX"] := WinX
+    Globals["GUI"]["Position"]["GUIY"] := WinY
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIX")
+    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIY")
+}
+
+MoveGUI() {
+    Global GUIMoving
+    Global MovingMouseX, MovingMouseY
+    If (!GUIMoving || !GetKeyState("LButton")) {
+        StopMoveGUI()
+        Return
+    }
+    OldMovingMouseX := MovingMouseX
+    OldMovingMouseY := MovingMouseY
+    CoordMode("Mouse", "Screen")
+    MouseGetPos(&MovingMouseX, &MovingMouseY)
+    CoordMode("Mouse", "Client")
+    DiffMovingMouseX := MovingMouseX - OldMovingMouseX
+    DiffMovingMouseY := MovingMouseY - OldMovingMouseY
+    WinGetPos(&WinX, &WinY,,, IvyshineGUI)
+    WinMove(WinX + DiffMovingMouseX, WinY + DiffMovingMouseY,,, IvyshineGUI)
+}
 
 HotIfWinActive()
 
@@ -307,21 +354,20 @@ HotIfWinActive()
 Try {
     ReleaseAllKeys() ; releases all keys
     pToken := Gdip_Startup() ; starts gdi+ lib
-    MacroRunning := False ; section beginning
 } Catch Any
     MissingFilesError()
 
 StartMacro(*) {
-    PauseFlag := MacroRunning ; to check if was paused
-    Global MacroRunning := 1 ; 1 == running
+    PauseFlag := MacroState ; to check if was paused
+    Global MacroState := 1 ; 1 == running
     
     ReleaseAllKeys() ; unpresses any key pressed
     
-    If (WinExist(EditHotkeysGui)) ; closes external gui
-        EditHotkeysGuiClose()
+    If (WinExist(EditHotkeysGUI)) ; closes external gui
+        EditHotkeysGUIClose()
     
-    If (WinExist(MacroInfoGui)) ; closes external gui
-        MacroInfoGuiClose()
+    If (WinExist(MacroInfoGUI)) ; closes external gui
+        MacroInfoGUIClose()
     
     If (AutoclickerRunning) ; stops autoclicker
         Autoclick()
@@ -332,14 +378,15 @@ StartMacro(*) {
     DetectHiddenWindowsSetting := A_DetectHiddenWindows ; unpauses external script
     DetectHiddenWindows(1)
     If (Globals["Variables"]["Externals"]["CurrentMovePID"] && WinExist("ahk_class AutoHotkey ahk_pid " Globals["Variables"]["Externals"]["CurrentMovePID"]))
-        PostMessage(0x2001) ; 0x2001 == pause toggle
+        PostMessage(0x2002) ; 0x2001 == pause toggle
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     
     ; turns on pause hotkey, turns off start hotkey
     Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], PauseMacro, "On T1 P0 S0")
     Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], "Off")
+    Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], "Off")
     
-    GuiMasterSwitch() ; locks macros
+    GUIMasterSwitch() ; locks macro
     
     StartButton.Enabled := False
     PauseButton.Enabled := True
@@ -348,7 +395,10 @@ StartMacro(*) {
     
     UpdateTitleText() ; updates title
     
-    If (PauseFlag != 2) { ; starts the macro loop if just started
+    If (A_IsPaused)
+        Pause(-1)
+    
+    If (PauseFlag == 0) { ; starts the macro loop if just started
         Loop {
             HiveToCorner() ; temp test function
             Sleep(1000)
@@ -357,7 +407,7 @@ StartMacro(*) {
 }
 
 PauseMacro(*) {
-    Global MacroRunning := 2 ; 2 == paused
+    Global MacroState := 2 ; 2 == paused
     
     DetectHiddenWindowsSetting := A_DetectHiddenWindows ; pause external scripts
     DetectHiddenWindows(1)
@@ -365,7 +415,7 @@ PauseMacro(*) {
         PostMessage(0x2001)
     DetectHiddenWindows(DetectHiddenWindowsSetting)
     
-    If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) { ; restarts AntiAFK if applicable
+    If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) { ; rdestarts AntiAFK if applicable
         Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
         SetTimer(AntiAFK, 500, -1)
     }
@@ -373,8 +423,9 @@ PauseMacro(*) {
     ; turns on start hotkey, turns off pause hotkey
     Hotkey(Globals["Settings"]["Hotkeys"]["PauseHotkey"], "Off")
     Hotkey(Globals["Settings"]["Hotkeys"]["StartHotkey"], StartMacro, "On T2 P0 S0")
+    Hotkey(Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"], Autoclick, "On T2 P1 S0")
     
-    GuiMasterSwitch() ; unlocks macro
+    GUIMasterSwitch() ; unlocks macro
     
     StartButton.Enabled := True
     PauseButton.Enabled := False
@@ -382,7 +433,7 @@ PauseMacro(*) {
     A_TrayMenu.Enable("12&")
     
     UpdateTitleText() ; updates title
-    
+    Pause(-1)
 }
 
 StopMacro(*) {
@@ -396,15 +447,15 @@ ReloadMacro(*) {
     RestoreFPSUnlocker() ; re-opens rbxfpsunlocker if applicable
     EndMovement() ; stops external script
     
-    If (IvyshineGui) { ; if it exists
+    If (IvyshineGUI) { ; if it exists
         If (!A_IconHidden)
-            IvyshineGuiRestore() ; if minimised, unminimise
+            IvyshineGUIRestore() ; if minimised, unminimise
         
         If (DirExist("lib\init")) { ; if settings exist, save them
             DetectHiddenWindows(1)
-            WinGetPos(&GuiX, &GuiY,,, IvyshineGui)
-            Globals["GUI"]["Position"]["GUIX"] := GuiX
-            Globals["GUI"]["Position"]["GUIY"] := GuiY
+            WinGetPos(&GUIX, &GUIY,,, IvyshineGUI)
+            Globals["GUI"]["Position"]["GUIX"] := GUIX
+            Globals["GUI"]["Position"]["GUIY"] := GUIY
             For ini, Section in Globals
                 UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         }
@@ -418,19 +469,19 @@ ExitMacro(*) { ; same as ReloadMacro() but with ExitApp
     RestoreFPSUnlocker()
     EndMovement()
     
-    If (IvyshineGui) {
+    If (IvyshineGUI) {
         If (!A_IconHidden)
-            IvyshineGuiRestore()
+            IvyshineGUIRestore()
         
         If (DirExist("lib\init")) {
             DetectHiddenWindows(1)
-            WinGetPos(&GuiX, &GuiY,,, IvyshineGui)
-            Globals["GUI"]["Position"]["GUIX"] := GuiX
-            Globals["GUI"]["Position"]["GUIY"] := GuiY
+            WinGetPos(&GUIX, &GUIY,,, IvyshineGUI)
+            Globals["GUI"]["Position"]["GUIX"] := GUIX
+            Globals["GUI"]["Position"]["GUIY"] := GUIY
             For ini, Section in Globals
                 UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
         }
-        IvyshineGui.Destroy() ; destroys GUI
+        IvyshineGUI.Destroy() ; destroys GUI
     }
     HyperSleep(25)
     ExitApp

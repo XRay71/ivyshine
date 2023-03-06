@@ -3,13 +3,13 @@ MainTabs.UseTab(2)
 #Include *i Fields\Field Rotation.ahk
 #Include *i Fields\Field View.ahk
 
-SubmitFieldsButton := IvyshineGui.Add("Button", "x0 y0 w1 h1 Hidden vSubmitFieldsButton")
+SubmitFieldsButton := IvyshineGUI.Add("Button", "x0 y0 w1 h1 Hidden vSubmitFieldsButton")
 SubmitFieldsButton.OnEvent("Click", SubmitFields)
 
 SubmitFields(ThisControl, *) {
     
     SubmitButton := (ThisControl.Hwnd == SubmitFieldsButton.Hwnd)
-    ThisControl := (ThisControl.Hwnd == SubmitFieldsButton.Hwnd ? IvyshineGui.FocusedCtrl : ThisControl)
+    ThisControl := (ThisControl.Hwnd == SubmitFieldsButton.Hwnd ? IvyshineGUI.FocusedCtrl : ThisControl)
     
     If (ThisControl.Hwnd == FieldRotationListBox.Hwnd) {
         Globals["Fields"]["Settings"]["CurrentlySelectedField"] := FieldRotationListBox.Value

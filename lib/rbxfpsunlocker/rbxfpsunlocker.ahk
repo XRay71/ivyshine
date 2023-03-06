@@ -75,18 +75,18 @@ CloseFPSUnlocker() {
                 If (CurrentExecPath && InStr(CurrentExecPath, "\lib\rbxfpsunlocker\rbxfpsunlocker.exe"))
                     PostMessage(0x0010, 0xF060,,, "ahk_pid " rbxfpsunlockerPID) ; sends message if macro instance
                 Else If (CurrentExecPath && CurrentExecPath == Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"]) {
-                    BlockInput("Send")
+                    CurrentWindowID := WinGetID("A")
                     PostMessage(0x8000 + 1,, 0x0204,, "ahk_pid " rbxfpsunlockerPID) ; opens rbxfpsunlocker tray menu
-                    HyperSleep(75)
+                    HyperSleep(100)
                     Send("{" Globals["Constants"]["Scan Codes"]["Up"] "}{" Globals["Constants"]["Scan Codes"]["Enter"] "}") ; presses exit
                     WinActivate("ahk_pid " rbxfpsunlockerPID) ; closes menu in case unsuccessful
-                    BlockInput("Default")
+                    WinActivate(CurrentWindowID)
                 }
             }
             Catch Any
                 Break
         }
-        HyperSleep(100)
+        HyperSleep(500)
     }
     
     If (FileExist("lib\rbxfpsunlocker\settings")) ; deletes settings file

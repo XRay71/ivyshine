@@ -1,27 +1,46 @@
-IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "xs+129 y28 w106 h223 Section", "Miscellaneous")
-IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
+IvyshineGUI.SetFont("s10 Norm cBlack", "Calibri")
+IvyshineGUI.Add("GroupBox", "xs+129 y28 w106 h223 Section", "Miscellaneous")
+IvyshineGUI.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
-IvyshineGui.SetFont()
-IvyshineGui.SetFont("s8", "Calibri")
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s8", "Calibri")
 
-MoveSpeedCorrectionCheckBox := IvyshineGui.Add("CheckBox", "xs ys+4 h18 w90 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Correct speed?")
+MoveSpeedCorrectionCheckBox := IvyshineGUI.Add("CheckBox", "xs ys+4 h18 w90 -Wrap vMoveSpeedCorrectionCheckBox Checked" Globals["Settings"]["Miscellaneous"]["MoveSpeedCorrection"], "Adjust speed?")
 MoveSpeedCorrectionCheckBox.OnEvent("Click", SubmitSettings)
 
-ShiftlockMovingCheckBox := IvyshineGui.Add("CheckBox", "xs yp+17 h18 w90 -Wrap vShiftLockWhenPossibleCheckBox Checked" Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], "Shiftlock move?")
+ShiftlockMovingCheckBox := IvyshineGUI.Add("CheckBox", "xs yp+17 h18 w90 -Wrap vShiftLockWhenPossibleCheckBox Checked" Globals["Settings"]["Miscellaneous"]["ShiftlockMoving"], "Shiftlock move?")
 ShiftlockMovingCheckBox.OnEvent("Click", SubmitSettings)
 
-IvyshineGui.Add("Text", "xs yp+20 h17 -Wrap +BackgroundTrans", "Key Delay:")
-AdditionalKeyDelayEdit := IvyshineGui.Add("Edit", "xs+60 yp-2 w30 h17 Right Limit3 Number -Wrap vAdditionalKeyDelayEdit")
+IvyshineGUI.Add("Text", "xs yp+20 h17 -Wrap +BackgroundTrans", "Key Delay:")
+AdditionalKeyDelayEdit := IvyshineGUI.Add("Edit", "xs+60 yp-2 w30 h17 Right Limit3 Number -Wrap vAdditionalKeyDelayEdit")
 SetCueBanner(AdditionalKeyDelayEdit.Hwnd, Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"])
 AdditionalKeyDelayEdit.OnEvent("LoseFocus", SubmitSettings)
 
-IvyshineGui.Add("Text", "xs yp+20 h20 -Wrap +BackgroundTrans", "Reset Multiplier: ")
-ResetMultiplierSlider := IvyshineGui.Add("Slider", "xs yp+18 h20 w90 Page1 Range1-5 TickInterval1 ToolTip vResetMultiplierSlider", Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
+IvyshineGUI.Add("Text", "xs yp+20 h20 -Wrap +BackgroundTrans", "Reset Multiplier: ")
+ResetMultiplierSlider := IvyshineGUI.Add("Slider", "xs yp+18 h20 w90 Page1 Range1-5 TickInterval1 ToolTip vResetMultiplierSlider", Globals["Settings"]["Miscellaneous"]["ResetMultiplier"])
 ResetMultiplierSlider.OnEvent("Change", SubmitSettings)
 
-ImportSettingsButton := IvyshineGui.Add("Button", "xs yp+26 h20 w90 -Wrap Center vImportSettingsButton", "Import Settings")
+ImportSettingsButton := IvyshineGUI.Add("Button", "xs yp+26 h20 w90 -Wrap Center vImportSettingsButton", "Import Settings")
 ImportSettingsButton.OnEvent("Click", ImportSettings)
+
+ResetButton := IvyshineGUI.Add("Button", "xs yp+22 h20 w90 vResetButton", "Restore Defaults")
+ResetButton.OnEvent("Click", ResetAll)
+
+ResetAll(*) {
+    Reset := MsgBox("This will reset the entire macro to its default settings, excluding stats.", "Warning!", "OKCancel Icon! Default2 Owner" IvyshineGUI.Hwnd)
+    If (Reset == "OK") {
+        Globals := ""
+        #IncludeAgain *i ..\..\..\init\Globals.ahk
+        For ini in Globals
+        {
+            If (FileExist(Globals["Constants"]["ini FilePaths"][ini]))
+                FileDelete(Globals["Constants"]["ini FilePaths"][ini])
+            If (ini != "Field Rotation")
+                UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+        }
+        Reload
+    }
+}
 
 ImportSettings(*) {
     OpenedFiles := FileSelect("M 3",,, "Configuration Files (*.ini)")

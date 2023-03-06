@@ -1,20 +1,20 @@
-IvyshineGui.SetFont("s10 Norm cBlack", "Calibri")
-IvyshineGui.Add("GroupBox", "xs-8 ys+205 w132 h90 Section", "Hotkeys")
-IvyshineGui.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
+IvyshineGUI.SetFont("s10 Norm cBlack", "Calibri")
+IvyshineGUI.Add("GroupBox", "xs-8 ys+203 w132 h92 Section", "Hotkeys")
+IvyshineGUI.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 
-IvyshineGui.SetFont()
-IvyshineGui.SetFont("s8", "Calibri")
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s8", "Calibri")
 
-HotkeysListBox := IvyshineGui.Add("ListBox", "xs ys+4 wp-3 h60 0x100", ["Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", "Autoclicker (" Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"] ")", "Tray (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", "Debug (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", "Suspend (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")"])
+HotkeysListBox := IvyshineGUI.Add("ListBox", "xs ys+4 wp-3 h62 0x100", ["Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", "Autoclicker (" Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"] ")", "Tray (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", "Debug (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", "Suspend (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")"])
 HotkeysListBox.OnEvent("Change", StartEditHotkeys)
 
-HotkeysInfoButton := IvyshineGui.Add("Button", "xs+49 ys-19 h16 w15 vHotkeysInfoButton", "?")
+HotkeysInfoButton := IvyshineGUI.Add("Button", "xs+49 ys-19 h16 w15 vHotkeysInfoButton", "?")
 HotkeysInfoButton.OnEvent("Click", ShowHotkeysInfo)
 
 ShowHotkeysInfo(*) {
     MsgBox("Click on a hotkey in the listbox to edit it!`r`n`r`nSYMBOL MEANINGS:`r`n^: Ctrl`r`n+: Shift`r`n!: Alt`r`n#: Windows Key"
         , "Hotkey Information"
-        , "Icon? Owner" IvyshineGui.Hwnd)
+        , "Icon? Owner" IvyshineGUI.Hwnd)
 }
 
 CurrentlyEditedHotkey := ""
@@ -23,10 +23,10 @@ StartEditHotkeys(ThisControl, *) {
     If (MacroRunning == 1)
         Return
     
-    Global CurrentlyEditedHotkey, ShowEditHotkeysGui
+    Global CurrentlyEditedHotkey, ShowEditHotkeysGUI
     
     If (!CurrentlyEditedHotkey || HotkeysListBox.Text == CurrentlyEditedHotkey)
-        ShowEditHotkeysGui := !ShowEditHotkeysGui
+        ShowEditHotkeysGUI := !ShowEditHotkeysGUI
     CurrentlyEditedHotkey := HotkeysListBox.Text
     For Key, Value in Globals["Settings"]["Hotkeys"]
         If (InStr(CurrentlyEditedHotkey, StrReplace(Key, "Hotkey"))) {
@@ -35,7 +35,7 @@ StartEditHotkeys(ThisControl, *) {
         }
     EditHotkeysHotkey.Focus()
     HotkeysListBox.Choose(0)
-    If (ShowEditHotkeysGui){
+    If (ShowEditHotkeysGUI){
         Try {
             For Key, Value in Globals["Settings"]["Hotkeys"]
                 Hotkey(Value, "Off")
@@ -43,9 +43,9 @@ StartEditHotkeys(ThisControl, *) {
             PauseButton.Enabled := 0
             StopButton.Enabled := 0
         }
-        EditHotkeysGui.Show("AutoSize NoActivate")
+        EditHotkeysGUI.Show("AutoSize NoActivate")
     } Else {
-        EditHotkeysGuiClose()
+        EditHotkeysGUIClose()
         CurrentlyEditedHotkey := ""
     }
 }

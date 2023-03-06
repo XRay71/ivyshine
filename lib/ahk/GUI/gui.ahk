@@ -1,184 +1,138 @@
 ; create GUI object
-IvyshineGui := Gui("-SysMenu -Resize +LastFound +OwnDialogs" (Globals["Settings"]["GUI"]["AlwaysOnTop"] ? " +AlwaysOnTop" : ""), "Ivyshine Macro")
+IvyshineGUI := Gui("-SysMenu -Resize +LastFound +OwnDialogs", "Ivyshine Macro")
+IvyshineGUI.OnEvent("Close", ExitMacro)
+IvyshineGUI.OnEvent("Escape", IvyshineGUIMinimise)
+IvyshineGUI.MarginX := 4
+IvyshineGUI.MarginY := 4
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s7", "Calibri")
+WinSetStyle(-0xC40000)
+DllCall("SetMenu", "Ptr", IvyshineGUI.Hwnd, "Ptr", 0)
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s10", "Calibri")
+TitleText := IvyshineGUI.Add("Text", "x0 y0 w550 h20 0x200 Center BackgroundSilver", "Ivyshine Macro")
 
-WinSetTransparent(255 - Floor(Globals["Settings"]["GUI"]["Transparency"] * 2.55))
+UpdateTitleText() {
+    TitleText.Text := (MacroState == 1 ?
+    (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended) (LOCKED WHILE RUNNING)" : "Ivyshine Macro (LOCKED WHILE RUNNING)")
+    : MacroState == 2 ? (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended) (PAUSED)" : "Ivyshine Macro (PAUSED)")
+    : A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended)" : "Ivyshine Macro")
+    GUICloseButton.Redraw()
+    GUIMinimiseButton.Redraw()
+}
 
-IvyshineGui.OnEvent("Close", ExitMacro)
-IvyshineGui.OnEvent("Escape", IvyshineGuiMinimize)
+GUICloseButton := IvyshineGUI.Add("Button", "x530 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGUICloseButton", "X")
+GUICloseButton.OnEvent("Click", ExitMacro)
 
-IvyshineGui.MarginX := 4
-IvyshineGui.MarginY := 4
+GUIMinimiseButton := IvyshineGUI.Add("Button", "x511 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGUIMinimiseButton", "-")
+GUIMinimiseButton.OnEvent("Click", IvyshineGUIMinimise)
 
-IvyshineGui.SetFont()
-IvyshineGui.SetFont("s7", "Calibri")
+IvyshineGUIMinimise(*) {
+    A_IconHidden := 0
+    IvyshineGUI.Hide()
+    If (WinExist(EditHotkeysGUI))
+        EditHotkeysGUIClose()
+    If (WinExist(MacroInfoGUI))
+        MacroInfoGUIClose()
+    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGUIRestore, "T1 P15 On")
+}
 
-StartButton := IvyshineGui.Add("Button", "x397 y351 w38 h18 Center vStartButton", Globals["Settings"]["Hotkeys"]["StartHotkey"])
+IvyshineGUIRestore(*) {
+    A_IconHidden := 1
+    IvyshineGUI.Show()
+    StartButton.Enabled := (GUIOn ? (MacroState == 1 ? False : True) : False)
+    PauseButton.Enabled := (GUIOn ? (MacroState == 2 || !MacroState ? False : True) : False)
+    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGUIMinimise, "T1 P15 On")
+}
+
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s7", "Calibri")
+
+StartButton := IvyshineGUI.Add("Button", "x397 y351 w38 h18 Center vStartButton")
 StartButton.OnEvent("Click", StartMacro)
 
-PauseButton := IvyshineGui.Add("Button", "xp+38 yp wp hp Center vPauseButton Disabled", Globals["Settings"]["Hotkeys"]["PauseHotkey"])
+PauseButton := IvyshineGUI.Add("Button", "xp+38 yp wp hp Center vPauseButton Disabled")
 PauseButton.OnEvent("Click", PauseMacro)
 
-StopButton := IvyshineGui.Add("Button", "xp+38 yp wp hp Center vStopButton", Globals["Settings"]["Hotkeys"]["StopHotkey"])
+StopButton := IvyshineGUI.Add("Button", "xp+38 yp wp hp Center vStopButton")
 StopButton.OnEvent("Click", StopMacro)
 
-InfoButton := IvyshineGui.Add("Button", "xp+38 yp wp hp Center vInfoButton", "v" CurrentVersionID)
+InfoButton := IvyshineGUI.Add("Button", "xp+38 yp wp hp Center vInfoButton")
 InfoButton.OnEvent("Click", ShowMacroInfo)
 
-IvyshineGui.SetFont()
-IvyshineGui.SetFont("s8 Norm cBlack", "Calibri")
-MainTabs := IvyshineGui.Add("Tab3", "x0 y20 w550 h350 vMainTabs Section -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status", "Boo"])
-MainTabs.Choose(Globals["GUI"]["Settings"]["CurrentGUITab"])
-MainTabs.OnEvent("Change", MainTabChanged)
-
-#Include *i IvyshineGui\Settings.ahk
-#Include *i IvyshineGui\Fields.ahk
-
-MainTabs.UseTab()
-IvyshineGui.Show("Hide Center AutoSize")
-IvyshineGui.Opt("+LastFound")
-WinSetStyle(-0xC40000)
-DllCall("SetMenu", "Ptr", IvyshineGui.Hwnd, "Ptr", 0)
-MainTabChanged(MainTabs)
-
-#Include *i MacroInfoGui\Macro Info.ahk
-ShowMacroInfoGui := 0
-
-IvyshineGui.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
-WinActivate(IvyshineGui)
-
-Try
-MacroInfoGui.Show("Hide")
-Catch Any
-    MissingFilesError()
-
 ShowMacroinfo(*) {
-    Global ShowMacroInfoGui
-    ShowMacroInfoGui := !ShowMacroInfoGui
-    MacroInfoGui.Show(ShowMacroInfoGui ? "AutoSize" : "Hide")
+    Global ShowMacroInfoGUI
+    ShowMacroInfoGUI := !ShowMacroInfoGUI
+    MacroInfoGUI.Show(ShowMacroInfoGUI ? "AutoSize" : "Hide")
 }
+
+IvyshineGUI.SetFont()
+IvyshineGUI.SetFont("s8 Norm cBlack", "Calibri")
+MainTabs := IvyshineGUI.Add("Tab3", "x0 y20 w550 h350 vMainTabs Section -Wrap +0x8 +Bottom", ["Settings", "Fields", "Boost", "Mobs", "Quests", "Planters", "Status", "Boo"])
+MainTabs.OnEvent("Change", MainTabChanged)
 
 MainTabChanged(MainTab, *) {
     Globals["GUI"]["Settings"]["CurrentGUITab"] := MainTab.Text
     IniWrite(Globals["GUI"]["Settings"]["CurrentGUITab"], Globals["Constants"]["ini FilePaths"]["GUI"], "Settings", "CurrentGUITab")
-    
-    If (Globals["GUI"]["Settings"]["CurrentGUITab"] == "Settings")
-        SubmitSettingsButton.Opt("+Default")
-    Else If (Globals["GUI"]["Settings"]["CurrentGUITab"] == "Fields")
-        SubmitFieldsButton.Opt("+Default")
+    Submit%Globals["GUI"]["Settings"]["CurrentGUITab"]%Button.Opt("+Default")
 }
+
+#Include *i IvyshineGUI\Settings.ahk
+#Include *i IvyshineGUI\Fields.ahk
+
+#Include *i MacroInfoGUI\Macro Info.ahk
+ShowMacroInfoGUI := 0
+
+Try {
+    SetAllGUIValues()
+    MacroInfoGUI.Show("Hide")
+} Catch Any
+    MissingFilesError()
+
+IvyshineGUI.Show("x" Globals["GUI"]["Position"]["GUIX"] " y" Globals["GUI"]["Position"]["GUIY"] " w550 h370")
+WinActivate(IvyshineGUI)
 
 SetCueBanner(HWND, Text, Show := True)
 {
     DllCall("user32\SendMessage", "ptr", HWND, "uint", 0x1501, "int", Show, "str", Text, "int")
 }
 
-GuiMoving := False
-MouseX := MouseY := 0
+GUIOn := True
 
-StartMoveGui(*) {
-    Global GuiMoving
-    Global MouseX, MouseY
-    If (!WinActive(IvyshineGui) || GuiMoving)
-        Return
-    MouseGetPos(&MouseX, &MouseY)
-    If (MouseY >= 0 && MouseY <= 25) {
-        CoordMode("Mouse", "Screen")
-        MouseGetPos(&MouseX, &MouseY)
-        CoordMode("Mouse", "Client")
-        GuiMoving := True
-        SetTimer(MoveGui, 1, 3)
-    }
-}
-
-StopMoveGui(*) {
-    Global GuiMoving
-    GuiMoving := False
-    SetTimer(MoveGui, 0)
-    WinGetPos(&WinX, &WinY,,, IvyshineGui)
-    Globals["GUI"]["Position"]["GUIX"] := WinX
-    Globals["GUI"]["Position"]["GUIY"] := WinY
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GuiX")
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GuiY")
-}
-
-MoveGui() {
-    Global MouseX, MouseY
-    Global GuiMoving
-    If (!GuiMoving || !GetKeyState("LButton")) {
-        StopMoveGui()
-        Return
-    }
-    OldMouseX := MouseX
-    OldMouseY := MouseY
-    CoordMode("Mouse", "Screen")
-    MouseGetPos(&MouseX, &MouseY)
-    CoordMode("Mouse", "Client")
-    DiffMouseX := MouseX - OldMouseX
-    DiffMouseY := MouseY - OldMouseY
-    WinGetPos(&WinX, &WinY,,, IvyshineGui)
-    WinMove(WinX + DiffMouseX, WinY + DiffMouseY,,, IvyshineGui)
-}
-
-IvyshineGui.SetFont()
-IvyshineGui.SetFont("s10", "Calibri")
-TitleText := IvyshineGui.Add("Text", "x0 y0 w550 h20 0x200 Center BackgroundSilver", "Ivyshine Macro")
-
-UpdateTitleText() {
-    TitleText.Text := (MacroRunning == 1 ?
-    (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended) (LOCKED WHILE RUNNING)" : "Ivyshine Macro (LOCKED WHILE RUNNING)")
-    : MacroRunning == 2 ? (A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended) (PAUSED)" : "Ivyshine Macro (PAUSED)")
-    : A_IsSuspended ? "Ivyshine Macro (Hotkeys Suspended)" : "Ivyshine Macro")
-    GuiCloseButton.Redraw()
-    GuiMinimizeButton.Redraw()
-}
-
-GuiCloseButton := IvyshineGui.Add("Button", "x530 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGuiCloseButton", "X")
-GuiCloseButton.OnEvent("Click", ExitMacro)
-
-GuiMinimizeButton := IvyshineGui.Add("Button", "x511 y3 w15 h14 -TabStop -Border -Theme 0x200 Center vGuiMinimizeButton", "-")
-GuiMinimizeButton.OnEvent("Click", IvyshineGuiMinimize)
-
-IvyshineGuiMinimize(*) {
-    A_IconHidden := 0
-    IvyshineGui.Hide()
-    If (WinExist(EditHotkeysGui))
-        EditHotkeysGuiClose()
-    If (WinExist(MacroInfoGui))
-        MacroInfoGuiClose()
-    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiRestore, "T1 P15 On")
-}
-
-IvyshineGuiRestore(*) {
-    A_IconHidden := 1
-    IvyshineGui.Show()
-    StartButton.Enabled := (GuiOn ? (MacroRunning == 1 ? False : True) : False)
-    PauseButton.Enabled := (GuiOn ? (MacroRunning == 2 || !MacroRunning ? False : True) : False)
-    Hotkey(Globals["Settings"]["Hotkeys"]["TrayHotkey"], IvyshineGuiMinimize, "T1 P15 On")
-}
-
-GuiOn := True
-
-GuiSwitch(*) {
-    Global GuiOn
-    GuiOn := !GuiOn
+GUISwitch(*) {
+    Global GUIOn
+    GUIOn := !GUIOn
     
-    StartButton.Enabled := (GuiOn ? (MacroRunning == 1 ? False : True) : False)
-    PauseButton.Enabled := (GuiOn ? (MacroRunning == 2 || !MacroRunning ? False : True) : False)
-    StopButton.Enabled := GuiOn
-    GuiCloseButton.Enabled := GuiOn
-    GuiMinimizeButton.Enabled := GuiOn
-    InfoButton.Enabled := GuiOn
+    StartButton.Enabled := (GUIOn ? (MacroState == 1 ? False : True) : False)
+    PauseButton.Enabled := (GUIOn ? (MacroState == 2 || !MacroState ? False : True) : False)
+    StopButton.Enabled := GUIOn
+    GUICloseButton.Enabled := GUIOn
+    GUIMinimiseButton.Enabled := GUIOn
+    InfoButton.Enabled := GUIOn
 }
 
-GuiMasterSwitch(*) {
-    If (WinExist(EditHotkeysGui))
-        EditHotkeysGuiClose()
-    If (WinExist(MacroInfoGui))
-        MacroInfoGuiClose()
+SetGUIValues(*) {
+    UpdateTitleText()
+    IvyshineGUI.Opt(Globals["Settings"]["GUI"]["AlwaysOnTop"] ? "+AlwaysOnTop" : "-AlwaysOnTop")
+    WinSetTransparent(255 - Floor(Globals["Settings"]["GUI"]["Transparency"] * 2.55), IvyshineGUI)
+    MainTabs.Choose(Globals["GUI"]["Settings"]["CurrentGUITab"])
+    MainTabChanged(MainTabs)
+    StartButton.Text := Globals["Settings"]["Hotkeys"]["StartHotkey"]
+    PauseButton.Text := Globals["Settings"]["Hotkeys"]["PauseHotkey"]
+    StopButton.Text := Globals["Settings"]["Hotkeys"]["StopHotkey"]
+    InfoButton.Text := "v" CurrentVersionID
+}
+
+GUIMasterSwitch(*) {
+    If (WinExist(EditHotkeysGUI))
+        EditHotkeysGUIClose()
+    If (WinExist(MacroInfoGUI))
+        MacroInfoGUIClose()
     SettingsTabSwitch()
     FieldsTabSwitch()
 }
 
-SetAllGuiValues(*) {
+SetAllGUIValues(*) {
+    SetGUIValues()
     SetSettingsTabValues()
 }

@@ -95,9 +95,7 @@ MouseRelativeMove(x, y) {
 }
 
 MouseAbsoluteMove(x, y) {
-    SysX := 65535 // A_ScreenWidth
-    SysY := 65535 // A_ScreenHeight
-    DllCall("mouse_event", "UInt", 0x8001, "UInt", x * SysX, "UInt", y * SysY, "UInt", 0, "UInt", 0)
+    DllCall("mouse_event", "UInt", 0x8001, "UInt", x * (65535 // A_ScreenWidth), "UInt", y * (65535 // A_ScreenHeight), "UInt", 0, "UInt", 0)
 }
 
 MouseWheel(w) {
@@ -200,12 +198,12 @@ CustomToolTip(Content
     }
     
     If (FontName || FontOptions) {
-        TempGui := Gui()
-        TempGui.SetFont(FontOptions, FontName)
-        TempText := TempGui.Add("Text")
+        TempGUI := Gui()
+        TempGUI.SetFont(FontOptions, FontName)
+        TempText := TempGUI.Add("Text")
         ResultFont := SendMessage(WM_GETFONT,,,, TempText.Hwnd)
         SendMessage(WM_SETFONT, ResultFont)
-        TempGui.Destroy()
+        TempGUI.Destroy()
     }
     
     If (X == "" || Y == "")
