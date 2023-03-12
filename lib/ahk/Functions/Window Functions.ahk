@@ -1,23 +1,3 @@
-ReleaseAllKeys() { ; checks if each key is currently pressed, unpresses and logs
-    For Key, Code in Globals["Constants"]["Scan Codes"]
-        If (Globals["Variables"]["Keystates"][Code] := GetKeyState(Format("vk{:X}", GetKeyVK(Code))))
-            SendInput("{" Code " Up}")
-    If (Globals["Variables"]["Keystates"]["LButton"] := GetKeyState("LButton"))
-        MouseLeftUp()
-}
-
-RestoreKeyStates() { ; re-presses any keys that were released
-    For Key, Code in Globals["Constants"]["Scan Codes"]
-        If (Globals["Variables"]["Keystates"][Code])
-            SendInput("{" Code " Down}")
-    If (Globals["Variables"]["Keystates"]["LButton"])
-        MouseLeftDown()
-}
-
-CurrentTime() { ; returns unix time in seconds
-    Return DateDiff(A_NowUTC, 19700101000000, "Seconds")
-}
-
 ActivateWindowWithCheck(WindowName, ProcessName) { ; activates a specific window by name AND process name
     DetectHiddenWindowsSetting := A_DetectHiddenWindows
     SetTitleMatchModeSetting := A_TitleMatchMode
@@ -59,75 +39,6 @@ ActivateWindowWithCheck(WindowName, ProcessName) { ; activates a specific window
     Return 0
 }
 
-MouseLeftClick() {
-    DllCall("mouse_event", "UInt", 0x02, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-    DllCall("mouse_event", "UInt", 0x04, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseLeftDown() {
-    DllCall("mouse_event", "UInt", 0x02, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseLeftUp() {
-    DllCall("mouse_event", "UInt", 0x04, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseRightClick() {
-    DllCall("mouse_event", "UInt", 0x08, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-    DllCall("mouse_event", "UInt", 0x10, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseRightDown() {
-    DllCall("mouse_event", "UInt", 0x08, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseRightUp() {
-    DllCall("mouse_event", "UInt", 0x10, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseMiddleClick() {
-    DllCall("mouse_event", "UInt", 0x20, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-    DllCall("mouse_event", "UInt", 0x40, "UInt", 0, "UInt", 0, "UInt", 0, "UInt", 0)
-}
-
-MouseRelativeMove(x, y) {
-    DllCall("mouse_event", "UInt", 0x01, "UInt", x, "UInt", y, "UInt", 0, "UInt", 0)
-}
-
-MouseAbsoluteMove(x, y) {
-    DllCall("mouse_event", "UInt", 0x8001, "UInt", x * (65535 // A_ScreenWidth), "UInt", y * (65535 // A_ScreenHeight), "UInt", 0, "UInt", 0)
-}
-
-MouseWheel(w) {
-    DllCall("mouse_event", "UInt", 0x800, "UInt", 0, "UInt", 0, "UInt", w, "UInt", 0, "UInt", 0)
-}
-
-; Accurate sleep
-; Credits to the Natro dev team & the link below for base function
-; https://www.autohotkey.com/boards/viewtopic.php?style=19&t=88693
-HyperSleep(ms)
-{
-    ListLines(0)
-    Static SysTimeFreq, SysTimeTick
-    If (!IsSet(SysTimeFreq))
-        DllCall("QueryPerformanceFrequency", "Int64*", &SysTimeFreq := 0)
-    DllCall("QueryPerformanceCounter", "Int64*", &SysTimeTick := 0)
-    SysEndTime := SysTimeTick + ms * SysTimeFreq * 0.001
-    DllCall("QueryPerformanceCounter", "Int64*", &Current := 0)
-    While (Current < SysEndTime) {
-        If (SysEndTime - Current) > 30000 {
-            DllCall("Winmm.dll\timeBeginPeriod", "UInt", 1)
-            DllCall("Sleep", "UInt", 1)
-            DllCall("Winmm.dll\timeEndPeriod", "UInt", 1)
-            DllCall("QueryPerformanceCounter", "Int64*", &Current)
-        }
-        Else
-            DllCall("QueryPerformanceCounter", "Int64*", &Current)
-    }
-    ListLines(1)
-    Return (Current - SysEndTime) / SysTimeFreq * 1000
-}
-
 DefaultErrorBalloonTip(Text, Title, Hwnd) {
     ErrorBalloonTip := Buffer(4 * A_PtrSize)
     NumPut("UInt", ErrorBalloonTip.Size, ErrorBalloonTip, 0)
@@ -137,6 +48,7 @@ DefaultErrorBalloonTip(Text, Title, Hwnd) {
     DllCall("User32.dll\SendMessage", "Ptr", Hwnd, "UInt", 0x1503, "Ptr", 0, "Ptr", ErrorBalloonTip, "Ptr")
 }
 
+/*
 ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=84750
 CustomToolTip(Content
     , Title := ""
@@ -231,21 +143,4 @@ CustomToolTip(Content
     DetectHiddenWindows(dhwPrev)
     Return hWnd
 }
-
-;=====================================
-; Errors
-;=====================================
-
-MissingFilesError() {
-    MsgBox("It appears that some files are missing!`r`nPlease ensure that you have not moved any files.`r`nThis script will now exit."
-        , "Error: file not found!"
-        , "OK Icon!")
-    ExitApp
-}
-
-UnableToCreateFileError() {
-    MsgBox("The macro was unable to create needed files!`r`nPlease ensure that the script has enough permissions to do so.`r`nYou may need to run the script as admin.`r`nThis script will now exit."
-        , "Error: file not found!"
-        , "OK Icon!")
-    ExitApp
-}
+*/

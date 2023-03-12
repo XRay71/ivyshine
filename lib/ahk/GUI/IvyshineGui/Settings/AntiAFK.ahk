@@ -5,14 +5,13 @@ IvyshineGUI.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGUI.SetFont()
 IvyshineGUI.SetFont("s8", "Calibri")
 
-RunAntiAFKCheckBox := IvyshineGUI.Add("CheckBox", "xs yp+4 h20 -Wrap vRunAntiAFKCheckBox Checked" Globals["Settings"]["AntiAFK"]["RunAntiAFK"], "Run Anti-AFK?")
+RunAntiAFKCheckBox := IvyshineGUI.Add("CheckBox", "xs yp+4 h20 -Wrap vRunAntiAFKCheckBox", "Run Anti-AFK?")
 RunAntiAFKCheckBox.OnEvent("Click", SubmitSettings)
 
 IvyshineGUI.Add("Text", "xs yp+23 h18 -Wrap +BackgroundTrans", "Run every ")
 AntiAFKIntervalEdit := IvyshineGUI.Add("Edit", "x+2 yp-2 w20 hp -Wrap Center Limit2 Number vAntiAFKIntervalEdit Disabled" (Globals["Settings"]["AntiAFK"]["RunAntiAFK"] ? "0" : "1"))
-AntiAFKIntervalText := IvyshineGUI.Add("Text", "x+2 yp+2 hp w100 -Wrap +BackgroundTrans vAntiAFKIntervalText", ((Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] != 1 || !AntiAFKIntervalEdit.Enabled) ? " minutes." : " minute."))
 AntiAFKIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
-SetCueBanner(AntiAFKIntervalEdit.Hwnd, Globals["Settings"]["AntiAFK"]["AntiAFKInterval"])
+AntiAFKIntervalText := IvyshineGUI.Add("Text", "x+2 yp+2 hp w100 -Wrap +BackgroundTrans vAntiAFKIntervalText", ((Globals["Settings"]["AntiAFK"]["AntiAFKInterval"] != 1 || !AntiAFKIntervalEdit.Enabled) ? " minutes." : " minute."))
 
 If (Globals["Settings"]["AntiAFK"]["RunAntiAFK"]) {
     Globals["Settings"]["AntiAFK"]["LastRun"] := CurrentTime()
@@ -51,7 +50,6 @@ AntiAFK() {
             CurrentWindowProcessName := WinGetProcessName("A")
         }
         ReleaseAllKeys()
-        BlockInput("On")
         If (RobloxWindow := ActivateWindowWithCheck("Roblox", "RobloxPlayerBeta.exe")) {
             Send("{" Globals["Constants"]["Scan Codes"]["LControl"] "}" "{" Globals["Constants"]["Scan Codes"]["F7"] "}")
             HyperSleep(15)
@@ -61,7 +59,6 @@ AntiAFK() {
         }
         If (CurrentWindowName && CurrentWindowProcessName)
             ActivateWindowWithCheck(CurrentWindowName, CurrentWindowProcessName)
-        BlockInput("Off")
     }
     Critical("Off")
 }

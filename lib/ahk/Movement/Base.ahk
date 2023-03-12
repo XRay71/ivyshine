@@ -9,15 +9,15 @@ RunMovement(Path, Name := "") {
     
     Script :=
     (
+    "ListLines(0)`r`n"
+    "KeyHistory(0)`r`n"
     "OnMessage(0x2000, StartMovement)`r`n"
     "OnMessage(0x2001, PauseMovement)`r`n"
     "OnMessage(0x2002, UnpauseMovement)`r`n"
     "Persistent`r`n"
-    "#SingleInstance Off`r`n"
     "#Requires AutoHotkey v2.0 32-bit`r`n"
-    "KeyHistory(0)`r`n"
-    "ListLines(0)`r`n"
     "ProcessSetPriority(`"H`")`r`n"
+    "#SingleInstance Off`r`n"
     "DetectHiddenWindows(1)`r`n"
     "SetTitleMatchMode(2)`r`n"
     "SetMouseDelay(-1)`r`n"
@@ -93,18 +93,6 @@ HandshakeMovementStart(*) {
 HandshakeMovementEnd(*) {
     Global MovementFlag := 0
     OnMessage(0x2003, HandshakeMovementEnd, 0)
-}
-
-PressKey(Key, State := "") { ; presses a specified key in a specified state, returns unslept time
-    Diff := 0
-    If (State)
-        Send("{" Globals["Constants"]["Scan Codes"][Key] " " State "}")
-    Else {
-        Send("{" Globals["Constants"]["Scan Codes"][Key] " Down}")
-        Diff := HyperSleep(30 + Globals["Settings"]["Miscellaneous"]["AdditionalKeyDelay"]) ; least amount of time Roblox requires to detect keypress
-        Send("{" Globals["Constants"]["Scan Codes"][Key] " Up}")
-    }
-    Return Diff
 }
 
 Move(Keys, MoveTime) { ; movement in game, in ms. Returns difference

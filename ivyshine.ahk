@@ -55,20 +55,17 @@ CheckResolution() {
         
         Run("ms-settings:display") ; opens Windows displays settings
         
-        DoReload := MsgBox(
+        If (MsgBox(
             (
             "Press `"OK`" when you have changed your scaling to 100`%.
             Press `"Cancel`" to continue regardless."
             )
             ,
-            , "OKCancel Iconx")
-        
-        If (DoReload == "OK")
+            , "OKCancel Iconx") == "OK")
             Reload
     }
     
-    If (WinExist("Settings"))
-        WinClose()
+    Try WinClose(WinExist("Settings"))
 }
 
 ;=====================================
@@ -85,19 +82,20 @@ CheckForUpdates() {
         WinHttpRequest.WaitForResponse() ; waits for response
         NewVersionID := RegExReplace(Trim(WinHttpRequest.ResponseText), "\.? *(\n|\r)+") ; trims all whitespace from the version file
     } Catch Any
-        Return -1
+        Return MsgBox("Unable to connect to GitHub to check for updates!"
+            , "Warning: check for updates blocked!"
+            , "OK Icon!")
     
     If (NewVersionID && IsNumber(NewVersionID) && (CurrentVersionID != NewVersionID)) { ; checks if the request was successful, checks if it's a number, and checks if it's different from the current version
-        Update := (FileExist(A_Temp "\update-ivyshine.txt") ? "Yes" : ; checks if the update flag is there, otherwise prompts the user
-        MsgBox(
+        ; checks if the update flag is there, otherwise prompts the user
+        If ((FileExist(A_Temp "\update-ivyshine.txt") ? "Yes" :
+            MsgBox(
             (
             "You are currently running version v" CurrentVersionID ".
             Would you like to install version v" NewVersionID "?"
             )
-            , "New version found!"
-            , "YesNo Icon!"))
-        
-        If (Update != "No") {
+                , "New version found!"
+                , "YesNo Icon!")) != "No") {
             FileAppend("boo", A_Temp "\update-ivyshine.txt") ; creates update flag
             If (!A_IsAdmin) { ; restarts as admin
                 Try {
@@ -106,11 +104,9 @@ CheckForUpdates() {
                 }
             }
             
-            If (FileExist(A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe")) ; checks if the installer is already present
-                FileMove(A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe", "..\ivyshine-installer.exe", 1) ; moves it
-            Else {
-                Try ; otherwise download the installer in that place
-                Download("https://github.com/XRay71/ivyshine/raw/main/lib/ahk/Installer/ivyshine-installer.exe", "..\ivyshine-installer.exe")
+            Try FileMove(A_ScriptDir "\lib\ahk\Installer\ivyshine-installer.exe", "..\ivyshine-installer.exe", 1) ; checks if the installer is already present
+            Catch Any {
+                Try Download("https://github.com/XRay71/ivyshine/raw/main/lib/ahk/Installer/ivyshine-installer.exe", "..\ivyshine-installer.exe") ; otherwise download the installer in that place
                 Catch Any {
                     MsgBox(
                         (
@@ -119,8 +115,7 @@ CheckForUpdates() {
                         )
                         , "Error!"
                         , "OK Iconx")
-                    Try
-                    FileDelete("..\ivyshine-installer.exe") ; delete it if anything goes wrong
+                    Try FileDelete("..\ivyshine-installer.exe") ; delete it if anything goes wrong
                     Return
                 }
             }
@@ -131,8 +126,7 @@ CheckForUpdates() {
             
             Run("*RunAs ..\ivyshine-installer.exe") ; run the installer
             
-            If (FileExist(A_Temp "\update-ivyshine.txt"))
-                FileDelete(A_Temp "\update-ivyshine.txt") ; deletes update flag
+            Try FileDelete(A_Temp "\update-ivyshine.txt") ; deletes update flag
             
             ExitApp
         }
@@ -155,14 +149,8 @@ Try { ; double checks the functions, if error then the files did not include pro
 
 Try { ; loads all of the ini data into the Globals[] variable
     DirCreate("lib\init")
-    For ini in Globals {
-        If (FileExist(Globals["Constants"]["ini FilePaths"][ini])) ; if the file already exists, read from it
-            ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-        Else ; otherwise create it
-            UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
-        
-        ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini]) ; read it once more for good measure
-    }
+    For ini in Globals
+        InitialiseIni(ini)
 } Catch Any {
     If (A_IsAdmin) ; if you're already running it as admin, good luck
         UnableToCreateFileError()
@@ -204,9 +192,9 @@ EnsureGUIVisibility() {
 
 #Include *i lib\rbxfpsunlocker\rbxfpsunlocker.ahk ; includes the functions dealing with rbxfpsunlocker
 
-Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := "" ; clear any old directories
-If (rbxfpsunlockerPID := ProcessExist("rbxfpsunlocker.exe")) ; if it's running, get the PID
-    Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ProcessGetPath(rbxfpsunlockerPID) ; using the PID, get the directory
+Try Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := ProcessGetPath(ProcessExist("rbxfpsunlocker.exe")) ; using the PID, get the directory
+Catch Any
+    Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"] := "" ; does not exist
 IniWrite(Globals["Settings"]["rbxfpsunlocker"]["rbxfpsunlockerDirectory"], Globals["Constants"]["ini FilePaths"]["Settings"], "rbxfpsunlocker", "rbxfpsunlockerDirectory") ; save it
 Try { ; close the current instance of rbxfpsunlocker, open the macro's instance if applicable
     CloseFPSUnlocker()
@@ -289,7 +277,6 @@ GUIMoving := False
 MovingMouseX := MovingMouseY := 0
 
 StartMoveGUI(*) {
-    Global GUIMoving
     Global MovingMouseX, MovingMouseY
     If (!WinActive(IvyshineGUI) || GUIMoving)
         Return
@@ -298,24 +285,20 @@ StartMoveGUI(*) {
         CoordMode("Mouse", "Screen")
         MouseGetPos(&MovingMouseX, &MovingMouseY)
         CoordMode("Mouse", "Client")
-        GUIMoving := True
+        Global GUIMoving := True
         SetTimer(MoveGUI, 1, 3)
     }
 }
 
 StopMoveGUI(*) {
-    Global GUIMoving
-    GUIMoving := False
+    Global GUIMoving := False
     SetTimer(MoveGUI, 0)
     WinGetPos(&WinX, &WinY,,, IvyshineGUI)
-    Globals["GUI"]["Position"]["GUIX"] := WinX
-    Globals["GUI"]["Position"]["GUIY"] := WinY
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIX")
-    IniWrite(Globals["GUI"]["Position"]["GUIX"], Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIY")
+    IniWrite(Globals["GUI"]["Position"]["GUIX"] := WinX, Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIX")
+    IniWrite(Globals["GUI"]["Position"]["GUIY"] := WinY, Globals["Constants"]["ini FilePaths"]["GUI"], "Position", "GUIY")
 }
 
 MoveGUI() {
-    Global GUIMoving
     Global MovingMouseX, MovingMouseY
     If (!GUIMoving || !GetKeyState("LButton")) {
         StopMoveGUI()
@@ -338,7 +321,9 @@ HotIfWinActive()
 ; MAIN FUNCTIONS
 ;=====================================
 
-#Include *i lib\ahk\Main\Functions.ahk ; main functions used in the macro
+#Include *i lib\ahk\Functions\Time Functions.ahk ; main functions used in the macro
+; #Include *i lib\ahk\Functions\Errsor Functions.ahk ; main functions used in the macro
+#Include *i lib\ahk\Functions\Key Functions.ahk ; main functions used in the macro
 #Include *i lib\ahk\Libraries\Gdip_All.ahk ; gdi+ library NEED TO UPDATE
 #Include *i lib\ahk\Libraries\ImagePut.ahk ; imageput library
 #Include *i lib\ahk\Movement\Base.ahk ; movement functions
@@ -353,7 +338,7 @@ HotIfWinActive()
 
 Try {
     ReleaseAllKeys() ; releases all keys
-    pToken := Gdip_Startup() ; starts gdi+ lib
+    ; pToken := Gdip_Startup() ; starts gdi+ lib
 } Catch Any
     MissingFilesError()
 

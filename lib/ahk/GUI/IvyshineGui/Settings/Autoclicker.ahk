@@ -8,12 +8,10 @@ IvyshineGUI.SetFont("s8", "Calibri")
 IvyshineGUI.Add("Text", "xs ys+6 h21 -Wrap +BackgroundTrans", "Interval: ")
 ClickIntervalEdit := IvyshineGUI.Add("Edit", "x+1 yp-2 w48 h19 Limit6 -Wrap Left Number vClickIntervalEdit")
 ClickIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
-SetCueBanner(ClickIntervalEdit.Hwnd, Globals["Settings"]["Autoclicker"]["ClickInterval"])
 
 IvyshineGUI.Add("Text", "xs yp+23 h20 -Wrap +BackgroundTrans", "Amount: ")
 ClickAmountEdit := IvyshineGUI.Add("Edit", "x+1 yp-2 w48 h19 Limit6 -Wrap Left Number vClickAmountEdit")
 ClickAmountEdit.OnEvent("LoseFocus", SubmitSettings)
-SetCueBanner(ClickAmountEdit.Hwnd, (Globals["Settings"]["Autoclicker"]["ClickAmount"] ? Globals["Settings"]["Autoclicker"]["ClickAmount"] : "infinite"))
 
 AutoclickerProgress := IvyshineGUI.Add("Progress", "xs yp+22 h18 w91 vAutoclickerProgress Range0-1")
 AutoclickerText := IvyshineGUI.Add("Text", "xs yp+2 h18 w91 +BackgroundTrans vAutoclickerText Center", "Autoclicker OFF")
@@ -31,11 +29,12 @@ Autoclick(*) {
         ProcessSetPriority("R")
         SetMouseDelay(-1)
         SetKeyDelay(-1)
-        GUIMasterSwitch()
         GUISwitch()
-        
-        ClickIntervalEdit.Enabled := False
-        ClickAmountEdit.Enabled := False
+        If (MacroState != 1) {
+            GUIMasterSwitch()
+            ClickIntervalEdit.Enabled := False
+            ClickAmountEdit.Enabled := False
+        }
         
         IntervalTemp := A_HotkeyInterval
         A_HotkeyInterval := 0
@@ -55,17 +54,19 @@ Autoclick(*) {
         
         A_HotkeyInterval := IntervalTemp
         
-        ClickIntervalEdit.Enabled := True
-        ClickAmountEdit.Enabled := True
         AutoclickerProgress.Value := 0
         AutoclickerText.Text := "Autoclicker OFF"
         
         AutoclickerRunning := False
         
         ProcessSetPriority("A")
-        SetAllGUIValues()
-        GUIMasterSwitch()
         GUISwitch()
+        If (MacroState != 1) {
+            ClickIntervalEdit.Enabled := True
+            ClickAmountEdit.Enabled := True
+            SetAllGUIValues()
+            GUIMasterSwitch()
+        }
         ListLines(1)
     }
 }

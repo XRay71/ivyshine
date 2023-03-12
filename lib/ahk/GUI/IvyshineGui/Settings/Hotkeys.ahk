@@ -5,7 +5,7 @@ IvyshineGUI.Add("Text", "xs+8 ys+20 wp-12 0x10 Section")
 IvyshineGUI.SetFont()
 IvyshineGUI.SetFont("s8", "Calibri")
 
-HotkeysListBox := IvyshineGUI.Add("ListBox", "xs ys+4 wp-3 h62 0x100", ["Start (" Globals["Settings"]["Hotkeys"]["StartHotkey"] ")", "Pause (" Globals["Settings"]["Hotkeys"]["PauseHotkey"] ")", "Stop (" Globals["Settings"]["Hotkeys"]["StopHotkey"] ")", "Autoclicker (" Globals["Settings"]["Hotkeys"]["AutoclickerHotkey"] ")", "Tray (" Globals["Settings"]["Hotkeys"]["TrayHotkey"] ")", "Debug (" Globals["Settings"]["Hotkeys"]["DebugHotkey"] ")", "Suspend (" Globals["Settings"]["Hotkeys"]["SuspendHotkey"] ")"])
+HotkeysListBox := IvyshineGUI.Add("ListBox", "xs ys+4 wp-3 h62 0x100")
 HotkeysListBox.OnEvent("Change", StartEditHotkeys)
 
 HotkeysInfoButton := IvyshineGUI.Add("Button", "xs+49 ys-19 h16 w15 vHotkeysInfoButton", "?")
@@ -20,7 +20,7 @@ ShowHotkeysInfo(*) {
 CurrentlyEditedHotkey := ""
 
 StartEditHotkeys(ThisControl, *) {
-    If (MacroRunning == 1)
+    If (MacroState == 1)
         Return
     
     Global CurrentlyEditedHotkey, ShowEditHotkeysGUI

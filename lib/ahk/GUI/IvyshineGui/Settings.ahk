@@ -339,8 +339,6 @@ SetSettingsTabValues(*) {
     MoveSpeedEdit.Value := MoveSpeedEdit.Text := ""
     SetCueBanner(MoveSpeedEdit.Hwnd, Round(Number(Globals["Settings"]["Basic Settings"]["MoveSpeed"]), 2))
     
-    UpdateMoveMethods()
-    
     NumberOfSprinklersList.Choose(Globals["Settings"]["Basic Settings"]["NumberOfSprinklers"])
     
     HiveSlotNumberList.Choose(Globals["Settings"]["Basic Settings"]["HiveSlotNumber"])
@@ -366,6 +364,8 @@ SetSettingsTabValues(*) {
     HasParachuteCheckBox.Value := Globals["Settings"]["Unlocks"]["HasParachute"]
     
     HasGliderCheckBox.Value := Globals["Settings"]["Unlocks"]["HasGlider"]
+    
+    UpdateMoveMethods()
     
     HasGummyMaskCheckBox.Value := Globals["Settings"]["Unlocks"]["HasGummyMask"]
     

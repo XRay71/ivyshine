@@ -37,3 +37,12 @@ ReadIni(FilePath, Data) {
     
     UpdateIni(FilePath, Data)
 }
+
+InitialiseIni(ini) {
+    If (FileExist(Globals["Constants"]["ini FilePaths"][ini])) ; if the file already exists, read from it
+        ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+    Else ; otherwise create it
+        UpdateIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini])
+    
+    ReadIni(Globals["Constants"]["ini FilePaths"][ini], Globals[ini]) ; read it once more for good measure
+}

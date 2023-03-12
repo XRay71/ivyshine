@@ -7,17 +7,14 @@ IvyshineGUI.SetFont("s8", "Calibri")
 
 IvyshineGUI.Add("Text", "xs yp+6 h20 -Wrap +BackgroundTrans", "Convert Delay:")
 ConvertDelayEdit := IvyshineGUI.Add("Edit", "x+4 yp-1 w18 h16 -Wrap Center Limit2 Number vConvertDelayEdit")
-SetCueBanner(ConvertDelayEdit.Hwnd, Globals["Settings"]["Convert Settings"]["ConvertDelay"])
 ConvertDelayEdit.OnEvent("LoseFocus", SubmitSettings)
 IvyshineGUI.Add("Text", "x+4 yp+1 h20 -Wrap +BackgroundTrans", "sec.")
 
 IvyshineGUI.Add("Text", "xs yp+16 h20 -Wrap +BackgroundTrans", "Convert Balloon: ")
 BalloonConvertSettingList := IvyshineGUI.Add("DropDownList", "xs yp+16 w55 vBalloonConvertSettingList", ["Auto", "Every", "Never"])
-BalloonConvertSettingList.Choose(Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"])
 BalloonConvertSettingList.OnEvent("Change", SubmitSettings)
 
 BalloonConvertIntervalEdit := IvyshineGUI.Add("Edit", "x+4 yp+2 h16 w20 Limit2 Number Center vBalloonConvertIntervalEdit Hidden" (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every" ? "0" : "1"))
 BalloonConvertIntervalEdit.OnEvent("LoseFocus", SubmitSettings)
-SetCueBanner(BalloonConvertIntervalEdit.Hwnd, Globals["Settings"]["Convert Settings"]["BalloonConvertInterval"])
 
 BalloonConvertIntervalText := IvyshineGUI.Add("Text", "x+4 yp+2 h20 -Wrap +BackgroundTrans vBalloonConvertIntervalText Hidden" (Globals["Settings"]["Convert Settings"]["BalloonConvertSetting"] == "Every" ? "0" : "1"), "min.")
